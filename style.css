@@ -1,0 +1,16 @@
+body {
+  font-family: Arial;
+  width: 90%;
+  margin: 1em;
+}
+
+.fieldname {
+  float: left;
+  width: 5em;
+  text-align: right;
+  padding-right: 1em;
+}
+
+.fe {
+  margin-bottom: 0.7em;
+}

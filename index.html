@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mulch Calculator</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <h1>Mulch Calculator</h1>
+  <form id="mulchForm">
+    <h3>Area to cover</h3>
+    <div class="fe">
+      <label class="fieldname">Zone:</label>
+      <input type="text" id="zone" size="25" placeholder="area name" required="required" />
+    </div>
+    <div class="fe">
+      <label class="fieldname">Width:</label>
+      <input type="number" id="width-ft" size="15" placeholder="feet" required="required" />
+      <input type="number" id="width-in" size="15" placeholder="inches (optional)" />
+    </div>
+    <div class="fe">
+      <label class="fieldname">Length:</label>
+      <input type="number" id="length-ft" size="15" placeholder="feet" required="required" />
+      <input type="number" id="length-in" size="15" placeholder="inches (optional)" />
+    </div>
+    <div class="fe">
+      <label class="fieldname">Depth:</label>
+      <input class="number" type="text" id="depth" size="15" placeholder="inches" required="required" />
+    </div>
+    <div class="submit">
+      <input type="submit" value="Add" />
+      <input type="submit" value="Total" />
+    </div>
+  </form>
+  <section id="display">
+    <h3>Material totals</h3>
+    <table id="table">
+      <tr>
+        <th>Zone</th>
+        <th>Width</th>
+        <th>Length</th>
+        <th>Depth</th>
+        <th>Volume</th>
+      </tr>
+      <tr id="totalrow">
+        <td>Total</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td id="totalcell"></td>
+      </tr >
+    </table>
+  </section>
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="app.js"></script>
+</body>
+</html>
