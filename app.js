@@ -32,15 +32,6 @@ var totalVolume = 0;
 var $form = $('#mulchForm');
 var $display = $('#display');
 
-
-// function addTableRow (z, dw, dl, dp, v) {
-//   var $newRow = $('<tr></tr>');
-//   for (var i = 0; i < arguments.length; i++) {
-//       $newRow.append('<td>' + arguments[i] + '</td>');
-//   }
-//   $('tr:last').before($newRow);
-// }
-
 function addTableRow (z, w, l, d, v) {
   var html = '';
   html += `
@@ -54,6 +45,15 @@ function addTableRow (z, w, l, d, v) {
   $('tr:last').before(html);
 }
 
+function updateTotalVolume (volume) {
+  totalVolume += parseFloat(volume);
+  $('#totalcell').text(totalVolume);
+}
+
+function clearForm () {
+  $('.fe input').val('');
+}
+
 $form.on('submit', function(e) {
   e.preventDefault();
   var $zone = $('#zone').val();
@@ -62,15 +62,11 @@ $form.on('submit', function(e) {
   var $lenFt = parseInt($('#length-ft').val());
   var $lenIn = parseInt($('#length-in').val()) || 0;
   var $depth = parseInt($('#depth').val());
+  var newMulch = new Mulch($zone, $widFt, $widIn, $lenFt, $lenIn, $depth);
   dispWidth = $widFt + "' " + $widIn + '"';
   dispLength = $lenFt + "' " + $lenIn + '"';
   volume = ((($widFt * 12 + $widIn) * ($lenFt * 12 + $lenIn) * $depth) / 46656).toFixed(2);
-  totalVolume += parseFloat(volume);
   addTableRow($zone, dispWidth, dispLength, $depth, volume);
-  //addTableRow($zone, $widFt, $widIn, $lenFt, $lenIn, $depth, volume);
-  $('#totalcell').text(totalVolume);
-  var newMulch = new Mulch($zone, $widFt, $widIn, $lenFt, $lenIn, $depth);
-  //var $p = $('<p>' + $widFt + '</p>');
-  //volume = allMulches[0].calculateVolume().toFixed(2);
-  //$display.append(volume);
-});
+  updateTotalVolume(volume);
+  clearForm();
+})
