@@ -41,6 +41,7 @@ function addTableRow (z, w, l, d, v) {
       <td class="length">${l}</td>
       <td class="depth">${d}</td>
       <td class="volume">${v}</td>
+    </tr>
   `
   $('tr:last').before(html);
 }
