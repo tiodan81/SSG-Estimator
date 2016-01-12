@@ -19,3 +19,7 @@ td {
   border: 1px solid #aaa;
   border-collapse: collapse;
 }
+
+#totalrow {
+  display: none;
+}

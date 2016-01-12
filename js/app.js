@@ -9,6 +9,11 @@
 //display total after 'total' - running total in table?
 //remove/edit(?) entries
 
+var Project = {
+  name: '',
+  totalVolume: 0
+};
+
 allMulches = [];
 
 function Mulch (z, wf, wi, lf, li, d) {
@@ -24,11 +29,6 @@ function Mulch (z, wf, wi, lf, li, d) {
   allMulches.push(this);
 }
 
-var dispWidth;
-var dispLength;
-var volume;
-var totalVolume = 0;
-
 var $form = $('#mulchForm');
 var $display = $('#display');
 
@@ -39,20 +39,32 @@ function addTableRow (z, w, l, d, v) {
       <td class="zone">${z}</td>
       <td class="width">${w}</td>
       <td class="length">${l}</td>
-      <td class="depth">${d}</td>
-      <td class="volume">${v}</td>
+      <td class="depth">${d}"</td>
+      <td class="volume">${v} yd</td>
+      <td><span class="icon-pencil2"></span></td>
+      <td><span class="icon-bin2"></span></td>
     </tr>
   `
   $('tr:last').before(html);
 }
+//
+// <span class="icon-bin2"></span>
 
 function updateTotalVolume (volume) {
-  totalVolume += parseFloat(volume);
-  $('#totalcell').text(totalVolume);
+  Project.totalVolume += parseFloat(volume);
+  $('#totalcell').text(Project.totalVolume + ' yd');
 }
 
 function clearForm () {
   $('.fe input').val('');
+}
+
+function showTotal() {
+  if (allMulches.length === 0) {
+    $('#totalrow').hide();
+  } else {
+    $('#totalrow').show();
+  }
 }
 
 $form.on('submit', function(e) {
@@ -64,10 +76,12 @@ $form.on('submit', function(e) {
   var $lenIn = parseInt($('#length-in').val()) || 0;
   var $depth = parseInt($('#depth').val());
   var newMulch = new Mulch($zone, $widFt, $widIn, $lenFt, $lenIn, $depth);
-  dispWidth = $widFt + "' " + $widIn + '"';
-  dispLength = $lenFt + "' " + $lenIn + '"';
-  volume = ((($widFt * 12 + $widIn) * ($lenFt * 12 + $lenIn) * $depth) / 46656).toFixed(2);
-  addTableRow($zone, dispWidth, dispLength, $depth, volume);
-  updateTotalVolume(volume);
+  addTableRow(newMulch.zone, newMulch.dispWidth, newMulch.dispLength, newMulch.depth, newMulch.volume);
+  updateTotalVolume(newMulch.volume);
+  showTotal();
   clearForm();
 })
+
+$(function() {
+  showTotal();
+});
