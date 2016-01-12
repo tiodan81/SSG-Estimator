@@ -11,12 +11,13 @@
 
 var Project = {
   name: '',
-  totalVolume: 0
+  id: 0,
+  totalVolume: 0,
+  allZones: []
 };
 
-allMulches = [];
-
-function Mulch (z, wf, wi, lf, li, d) {
+function Mulch (i, z, wf, wi, lf, li, d) {
+  this.id = i;
   this.zone = z;
   this.widFt = wf;
   this.widIn = wi;
@@ -26,13 +27,10 @@ function Mulch (z, wf, wi, lf, li, d) {
   this.dispWidth = this.widFt + "' " + this.widIn + '"';
   this.dispLength = this.lenFt + "' " + this.lenIn + '"';
   this.volume = parseFloat((((wf * 12 + wi) * (lf * 12 + li) * d) / 46656).toFixed(2));
-  allMulches.push(this);
+  Project.allZones.push(this);
 }
 
-var $form = $('#mulchForm');
-var $display = $('#display');
-
-function addTableRow (z, w, l, d, v) {
+function addTableRow (i, z, w, l, d, v) {
   var html = '';
   html += `
     <tr>
@@ -41,14 +39,12 @@ function addTableRow (z, w, l, d, v) {
       <td class="length">${l}</td>
       <td class="depth">${d}"</td>
       <td class="volume">${v} yd</td>
-      <td><span class="icon-pencil2"></span></td>
+      <td><span id="z${i}" class="icon-pencil2"></span></td>
       <td><span class="icon-bin2"></span></td>
     </tr>
   `
   $('tr:last').before(html);
 }
-//
-// <span class="icon-bin2"></span>
 
 function updateTotalVolume (volume) {
   Project.totalVolume += parseFloat(volume);
@@ -60,14 +56,35 @@ function clearForm () {
 }
 
 function showTotal() {
-  if (allMulches.length === 0) {
+  if (Project.allZones.length === 0) {
     $('#totalrow').hide();
   } else {
     $('#totalrow').show();
   }
 }
 
-$form.on('submit', function(e) {
+function editZone() {
+  $('.icon-pencil2').on('click', function() {
+    var curId = $(this).attr('id').slice(1);
+    Project.allZones.forEach(function(zone) {
+      if (zone.id === parseInt(curId)) {
+        populateForm(zone);
+      }
+    });
+  });
+}
+
+function populateForm(zone) {
+  $('#zone').val(zone.zone);
+  $('#width-ft').val(zone.widFt);
+  $('#width-in').val(zone.widIn);
+  $('#length-ft').val(zone.lenFt);
+  $('#length-in').val(zone.lenIn);
+  $('#depth').val(zone.depth);
+  //set ID, overwrite original object
+}
+
+$('#mulchForm').on('submit', function(e) {
   e.preventDefault();
   var $zone = $('#zone').val();
   var $widFt = parseInt($('#width-ft').val());
@@ -75,10 +92,12 @@ $form.on('submit', function(e) {
   var $lenFt = parseInt($('#length-ft').val());
   var $lenIn = parseInt($('#length-in').val()) || 0;
   var $depth = parseInt($('#depth').val());
-  var newMulch = new Mulch($zone, $widFt, $widIn, $lenFt, $lenIn, $depth);
-  addTableRow(newMulch.zone, newMulch.dispWidth, newMulch.dispLength, newMulch.depth, newMulch.volume);
+  var newMulch = new Mulch(Project.id, $zone, $widFt, $widIn, $lenFt, $lenIn, $depth);
+  addTableRow(Project.id, newMulch.zone, newMulch.dispWidth, newMulch.dispLength, newMulch.depth, newMulch.volume);
   updateTotalVolume(newMulch.volume);
+  Project.id += 1;
   showTotal();
+  editZone();
   clearForm();
 })
 

@@ -15,9 +15,12 @@ body {
   margin-bottom: 0.7em;
 }
 
+th {
+  border-bottom: 2px solid #111;
+}
+
 td {
-  border: 1px solid #aaa;
-  border-collapse: collapse;
+  padding: 0.7em 1em 0.7em 1em;
 }
 
 #totalrow {
