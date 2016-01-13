@@ -1,14 +1,3 @@
-//process form input
-  //zero inch if only ft specified
-  //validate all input using .isNumeric(value)
-  //convert all to inches
-  //calculate volume
-  //convert to yards
-//display each entry after 'add'
-  //display area name & dimensions *as entered* e.g. 5'6" x 4'10"
-//display total after 'total' - running total in table?
-//remove/edit(?) entries
-
 var Project = {
   name: '',
   id: 0,
@@ -82,6 +71,8 @@ function populateForm(zone) {
   $('#length-in').val(zone.lenIn);
   $('#depth').val(zone.depth);
   //set ID, overwrite original object
+  //don't increment Project.id when handling resubmit
+  //return Mulch{}
 }
 
 $('#mulchForm').on('submit', function(e) {
