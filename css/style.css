@@ -11,6 +11,10 @@ body {
   padding-right: 1em;
 }
 
+.dimension {
+  width: 9em;
+}
+
 .fe {
   margin-bottom: 0.7em;
 }

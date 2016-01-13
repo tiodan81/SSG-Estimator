@@ -92,6 +92,11 @@ $('#mulchForm').on('submit', function(e) {
   clearForm();
 })
 
+$('#projectForm').on('submit', function(e) {
+  e.preventDefault();
+  Project.name = $('#projectName').val();
+})
+
 $(function() {
   showTotal();
 });
