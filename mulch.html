@@ -15,6 +15,14 @@
       <input type="text" id="zone" size="25" placeholder="area name" required="required" />
     </div>
     <div class="fe">
+      <label class="fieldname">Material Type:</label>
+      <select id="type">
+        <option value="bark">Bark</option>
+        <option value="play chips">Play Chips</option>
+        <option value="GroCo">GroCo</option>
+      </select>
+    </div>
+    <div class="fe">
       <label class="fieldname">Width:</label>
       <input type="number" id="width-ft" class="dimension" placeholder="feet" required="required" />
       <input type="number" id="width-in" class="dimension" min="0" max="11" placeholder="inches (optional)" />
@@ -38,6 +46,7 @@
     <table id="table">
       <tr>
         <th>Zone</th>
+        <th>Type</th>
         <th>Width</th>
         <th>Length</th>
         <th>Depth</th>

@@ -5,9 +5,10 @@ var Project = {
   allZones: []
 };
 
-function Mulch (i, z, wf, wi, lf, li, d) {
+function Mulch (i, z, t, wf, wi, lf, li, d) {
   this.id = i;
   this.zone = z;
+  this.type = t;
   this.widFt = wf;
   this.widIn = wi;
   this.lenFt = lf;
@@ -19,11 +20,12 @@ function Mulch (i, z, wf, wi, lf, li, d) {
   Project.allZones.push(this);
 }
 
-function addTableRow (i, z, w, l, d, v) {
+function addTableRow (i, z, t, w, l, d, v) {
   var html = '';
   html += `
     <tr>
       <td class="zone">${z}</td>
+      <td class="type">${t}</td>
       <td class="width">${w}</td>
       <td class="length">${l}</td>
       <td class="depth">${d}"</td>
@@ -78,13 +80,14 @@ function populateForm(zone) {
 $('#mulchForm').on('submit', function(e) {
   e.preventDefault();
   var $zone = $('#zone').val();
+  var $type = $('#type').val();
   var $widFt = parseInt($('#width-ft').val());
   var $widIn = parseInt($('#width-in').val()) || 0;
   var $lenFt = parseInt($('#length-ft').val());
   var $lenIn = parseInt($('#length-in').val()) || 0;
   var $depth = parseInt($('#depth').val());
-  var newMulch = new Mulch(Project.id, $zone, $widFt, $widIn, $lenFt, $lenIn, $depth);
-  addTableRow(Project.id, newMulch.zone, newMulch.dispWidth, newMulch.dispLength, newMulch.depth, newMulch.volume);
+  var newMulch = new Mulch(Project.id, $zone, $type, $widFt, $widIn, $lenFt, $lenIn, $depth);
+  addTableRow(Project.id, newMulch.zone, newMulch.type, newMulch.dispWidth, newMulch.dispLength, newMulch.depth, newMulch.volume);
   updateTotalVolume(newMulch.volume);
   Project.id += 1;
   showTotal();
