@@ -98,9 +98,7 @@ $('#mulchForm').on('submit', function(e) {
   var $lenIn = parseInt($('#length-in').val()) || 0;
   var $depth = parseInt($('#depth').val());
   var curPrice = Prices[$type];
-  console.log(Prices[$type]);
   var newMulch = new Mulch(Project.id, $zone, $type, $widFt, $widIn, $lenFt, $lenIn, $depth, curPrice);
-  console.log(newMulch);
   addTableRow(Project.id, newMulch.zone, newMulch.type, newMulch.dispWidth, newMulch.dispLength, newMulch.depth, newMulch.volume, newMulch.price);
   updateTotals(newMulch.volume, newMulch.price);
   Project.id += 1;
