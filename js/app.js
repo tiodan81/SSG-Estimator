@@ -49,8 +49,13 @@ mulch.addTableRow = function(i, z, t, w, l, d, v, p) {
 }
 
 mulch.updateTotals = function(volume, price) {
-  mulch.totalVolume += volume;
-  mulch.totalPrice += price;
+  console.log(mulch.mulchZones);
+  mulch.totalVolume = 0;
+  mulch.totalPrice = 0;
+  mulch.mulchZones.forEach(function(e) {
+    mulch.totalVolume += e.volume;
+    mulch.totalPrice += e.price;
+  })
   $('#totalVol').text(mulch.totalVolume + ' yd');
   $('#totalPrice').text('$' + mulch.totalPrice);
 }
