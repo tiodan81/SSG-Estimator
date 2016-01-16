@@ -8,7 +8,7 @@
 </head>
 <body>
   <h1>Mulch Calculator</h1>
-  <form id="mulchForm">
+  <form id="mulchForm" action="#">
     <h3>Area to cover</h3>
     <div class="fe">
       <label class="fieldname">Zone:</label>
@@ -37,8 +37,8 @@
       <input type="number" id="depth" class="dimension" placeholder="inches" required="required" />
     </div>
     <div class="submit">
-      <input id="mulch-add" type="submit" value="Add" />
-      <input id="mulch-update" type="submit" value="Update" />
+      <button id="mulch-add">Add Zone</button>
+      <button id="mulch-update">Update Zone</button>
     </div>
   </form>
   <section id="display">

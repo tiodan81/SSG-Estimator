@@ -1,4 +1,4 @@
-var Project = {
+var project = {
   name: ''
 };
 
@@ -7,7 +7,6 @@ var mulch = {
   totalVolume: 0,
   totalPrice: 0,
   mulchZones: [],
-  editing: false
 }
 
 var mulchPrices = {
@@ -29,13 +28,12 @@ function MulchZone (i, z, t, wf, wi, lf, li, d, p) {
   this.dispLength = this.lenFt + "' " + this.lenIn + '"';
   this.volume = parseFloat((((wf * 12 + wi) * (lf * 12 + li) * d) / 46656).toFixed(2));
   this.price = parseFloat((this.volume * p).toFixed(2));
-  mulch.mulchZones.push(this);
 }
 
-function addTableRow (i, z, t, w, l, d, v, p) {
+mulch.addTableRow = function(i, z, t, w, l, d, v, p) {
   var html = '';
   html += `
-    <tr>
+    <tr id="mz${i}">
       <td class="zone">${z}</td>
       <td class="type">${t}</td>
       <td class="width">${w}</td>
@@ -71,34 +69,42 @@ mulch.showTotal = function() {
   }
 }
 
-function editZone() {
+mulch.editZone = function() {
   $('.icon-pencil2').on('click', function() {
-    mulch.editing = true;
     var curId = $(this).attr('id').slice(2);
-    console.log(curId);
     mulch.mulchZones.forEach(function(zone) {
       if (zone.id === parseInt(curId)) {
-        populateForm(zone);
+        mulch.populateForm(zone);
         $('#mulch-add').hide();
         $('#mulch-update').show().data('id', curId);
+      } else {
+        alert('No matching zone found.');
       }
     });
   });
 }
 
-function populateForm(zone) {
+mulch.populateForm = function(zone) {
   $('#zone').val(zone.zone);
   $('#width-ft').val(zone.widFt);
   $('#width-in').val(zone.widIn);
   $('#length-ft').val(zone.lenFt);
   $('#length-in').val(zone.lenIn);
   $('#depth').val(zone.depth);
-  //set ID, overwrite original object
-  //don't increment Project.id when handling resubmit
-  //return MulchZone{}
 }
 
-mulch.buildMulch = function() {
+mulch.findReplace = function(updated) {
+  mulch.mulchZones.forEach(function(zone, i) {
+    if (zone.id === updated.id) {
+      mulch.mulchZones[i] = updated;
+    } else {
+      alert('No matching zone found.')
+    }
+  });
+}
+
+mulch.buildMulch = function(id) {
+  console.log(id);
   var $zone = $('#zone').val();
   var $type = $('#type').val();
   var $widFt = parseInt($('#width-ft').val());
@@ -107,29 +113,57 @@ mulch.buildMulch = function() {
   var $lenIn = parseInt($('#length-in').val()) || 0;
   var $depth = parseInt($('#depth').val());
   var curPrice = mulchPrices[$type];
-  return new MulchZone(mulch.zoneId, $zone, $type, $widFt, $widIn, $lenFt, $lenIn, $depth, curPrice);
+  return new MulchZone(id, $zone, $type, $widFt, $widIn, $lenFt, $lenIn, $depth, curPrice);
 }
 
-mulch.handleNewMulch = function() {
+mulch.handleNew = function() {
   $('#mulch-add').on('click', function(e) {
     e.preventDefault();
-    var newMulchZone = mulch.buildMulch();
+    var newMulchZone = mulch.buildMulch(mulch.zoneId);
+    mulch.mulchZones.push(newMulchZone);
     console.log(newMulchZone);
-    addTableRow(mulch.zoneId, newMulchZone.zone, newMulchZone.type, newMulchZone.dispWidth, newMulchZone.dispLength, newMulchZone.depth, newMulchZone.volume, newMulchZone.price);
+    mulch.addTableRow(newMulchZone.id, newMulchZone.zone, newMulchZone.type, newMulchZone.dispWidth, newMulchZone.dispLength, newMulchZone.depth, newMulchZone.volume, newMulchZone.price);
     mulch.updateTotals(newMulchZone.volume, newMulchZone.price);
     mulch.zoneId += 1;
     mulch.showTotal();
-    editZone();
+    mulch.editZone();
     clearForm();
   });
 }
 
-$('#projectForm').on('submit', function(e) {
-  e.preventDefault();
-  Project.name = $('#projectName').val();
-})
+mulch.handleUpdate = function() {
+  $('#mulch-update').on('click', function(e) {
+    console.log('updating');
+    e.preventDefault();
+    var curId = parseInt($(this).data('id'));
+    console.log(curId);
+    var updated = mulch.buildMulch(curId);
+    console.log(updated);
+    mulch.findReplace(updated);
+    //overwrite table row
+    mulch.updateTotals(updated.volume, updated.price);
+    mulch.showTotal();
+    mulch.editZone();
+    clearForm();
+    $('#mulch-update').hide();
+    $('#mulch-add').show();
+  })
+}
+
+mulch.handleDelete = function() {
+
+}
+
+project.saveName = function() {
+  $('#projectForm').on('submit', function(e) {
+    e.preventDefault();
+    project.name = $('#projectName').val();
+  });
+}
 
 $(function() {
-  mulch.handleNewMulch();
+  project.saveName();
+  mulch.handleNew();
+  mulch.handleUpdate();
   mulch.showTotal();
 });
