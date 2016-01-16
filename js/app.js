@@ -30,26 +30,28 @@ function MulchZone (i, z, t, wf, wi, lf, li, d, p) {
   this.price = parseFloat((this.volume * p).toFixed(2));
 }
 
-mulch.addTableRow = function(i, z, t, w, l, d, v, p) {
-  var html = '';
-  html += `
-    <tr id="mz${i}">
-      <td class="zone">${z}</td>
-      <td class="type">${t}</td>
-      <td class="width">${w}</td>
-      <td class="length">${l}</td>
-      <td class="depth">${d}"</td>
-      <td class="volume">${v} yd</td>
-      <td class="price">$${p}</td>
-      <td><span id="mz${i}" class="icon-pencil2"></span></td>
-      <td><span class="icon-bin2"></span></td>
+mulch.makeTable = function() {
+  $('tbody').empty();
+  mulch.mulchZones.forEach(function(zone) {
+    var html = '';
+    html += `
+    <tr id="mz${zone.id}">
+    <td class="zone">${zone.zone}</td>
+    <td class="type">${zone.type}</td>
+    <td class="width">${zone.dispWidth}</td>
+    <td class="length">${zone.dispLength}</td>
+    <td class="depth">${zone.depth}"</td>
+    <td class="volume">${zone.volume} yd</td>
+    <td class="price">$${zone.price}</td>
+    <td><span id="mz${zone.id}" class="icon-pencil2"></span></td>
+    <td><span class="icon-bin2"></span></td>
     </tr>
-  `
-  $('#totalrow').before(html);
+    `
+    $('tbody').append(html);
+  });
 }
 
 mulch.updateTotals = function(volume, price) {
-  console.log(mulch.mulchZones);
   mulch.totalVolume = 0;
   mulch.totalPrice = 0;
   mulch.mulchZones.forEach(function(e) {
@@ -127,7 +129,7 @@ mulch.handleNew = function() {
     var newMulchZone = mulch.buildMulch(mulch.zoneId);
     mulch.mulchZones.push(newMulchZone);
     console.log(newMulchZone);
-    mulch.addTableRow(newMulchZone.id, newMulchZone.zone, newMulchZone.type, newMulchZone.dispWidth, newMulchZone.dispLength, newMulchZone.depth, newMulchZone.volume, newMulchZone.price);
+    mulch.makeTable();
     mulch.updateTotals(newMulchZone.volume, newMulchZone.price);
     mulch.zoneId += 1;
     mulch.showTotal();
@@ -145,10 +147,9 @@ mulch.handleUpdate = function() {
     var updated = mulch.buildMulch(curId);
     console.log(updated);
     mulch.findReplace(updated);
-    //overwrite table row
+    mulch.makeTable();
     mulch.updateTotals(updated.volume, updated.price);
     mulch.showTotal();
-    mulch.editZone();
     clearForm();
     $('#mulch-update').hide();
     $('#mulch-add').show();
