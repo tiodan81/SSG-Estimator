@@ -5,9 +5,10 @@ global project preferences
   labor rate
   markup
 
-be able to generate draft report with e.g. three different patio style options
-  only include highest price in total until one style chosen
+* be able to generate draft report with e.g. three different patio style options
+* only include highest price in total until one style chosen
 
 
 Hours
-  1/15: 1
+* 1/15: 1
+* 1/16: 10:45 - 2:15
