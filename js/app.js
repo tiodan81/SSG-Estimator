@@ -43,7 +43,7 @@ function addTableRow (i, z, t, w, l, d, v, p) {
       <td><span class="icon-bin2"></span></td>
     </tr>
   `
-  $('tr:last').before(html);
+  $('#totalrow').before(html);
 }
 
 function updateTotals (volume, price) {
