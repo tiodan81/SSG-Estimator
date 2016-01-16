@@ -1,7 +1,3 @@
-var project = {
-  name: ''
-};
-
 var mulch = {
   zoneId: 0,
   totalVolume: 0,
@@ -161,13 +157,6 @@ mulch.listen = function() {
   mulch.showTotal();
   mulch.editZone();
   mulch.deleteZone();
-}
-
-project.saveName = function() {
-  $('#projectForm').on('submit', function(e) {
-    e.preventDefault();
-    project.name = $('#projectName').val();
-  });
 }
 
 $(function() {
