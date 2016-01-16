@@ -50,7 +50,7 @@ function addTableRow (i, z, t, w, l, d, v, p) {
   $('#totalrow').before(html);
 }
 
-function updateTotals (volume, price) {
+mulch.updateTotals = function(volume, price) {
   mulch.totalVolume += volume;
   mulch.totalPrice += price;
   $('#totalVol').text(mulch.totalVolume + ' yd');
@@ -61,7 +61,7 @@ function clearForm () {
   $('.fe input').val('');
 }
 
-function showTotal() {
+mulch.showTotal = function() {
   if (mulch.mulchZones.length === 0) {
     $('#totalrow').hide();
     $('#save-mulch').hide();
@@ -74,7 +74,8 @@ function showTotal() {
 function editZone() {
   $('.icon-pencil2').on('click', function() {
     mulch.editing = true;
-    var curId = $(this).attr('id').slice(1);
+    var curId = $(this).attr('id').slice(2);
+    console.log(curId);
     mulch.mulchZones.forEach(function(zone) {
       if (zone.id === parseInt(curId)) {
         populateForm(zone);
@@ -109,19 +110,19 @@ mulch.buildMulch = function() {
   return new MulchZone(mulch.zoneId, $zone, $type, $widFt, $widIn, $lenFt, $lenIn, $depth, curPrice);
 }
 
-$('#mulch-add').on('click', function(e) {
-  e.preventDefault();
-  console.log('bang');
-  var newMulchZone = mulch.buildMulch();
-  mulch.zoneId += 1;
-
-  console.log(newMulchZone);
-  addTableRow(mulch.zoneId, newMulchZone.zone, newMulchZone.type, newMulchZone.dispWidth, newMulchZone.dispLength, newMulchZone.depth, newMulchZone.volume, newMulchZone.price);
-  updateTotals(newMulchZone.volume, newMulchZone.price);
-  showTotal();
-  editZone();
-  clearForm();
-})
+mulch.handleNewMulch = function() {
+  $('#mulch-add').on('click', function(e) {
+    e.preventDefault();
+    var newMulchZone = mulch.buildMulch();
+    console.log(newMulchZone);
+    addTableRow(mulch.zoneId, newMulchZone.zone, newMulchZone.type, newMulchZone.dispWidth, newMulchZone.dispLength, newMulchZone.depth, newMulchZone.volume, newMulchZone.price);
+    mulch.updateTotals(newMulchZone.volume, newMulchZone.price);
+    mulch.zoneId += 1;
+    mulch.showTotal();
+    editZone();
+    clearForm();
+  });
+}
 
 $('#projectForm').on('submit', function(e) {
   e.preventDefault();
@@ -129,5 +130,6 @@ $('#projectForm').on('submit', function(e) {
 })
 
 $(function() {
-  showTotal();
+  mulch.handleNewMulch();
+  mulch.showTotal();
 });
