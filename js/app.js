@@ -1,18 +1,22 @@
 var Project = {
-  name: '',
-  id: 0,
-  totalVolume: 0,
-  totalPrice: 0,
-  allZones: []
+  name: ''
 };
 
-var Prices = {
+var mulch = {
+  zoneId: 0,
+  totalVolume: 0,
+  totalPrice: 0,
+  mulchZones: [],
+  editing: false
+}
+
+var mulchPrices = {
   bark: 10,
   chips: 20,
   GroCo: 30
 };
 
-function Mulch (i, z, t, wf, wi, lf, li, d, p) {
+function MulchZone (i, z, t, wf, wi, lf, li, d, p) {
   this.id = i;
   this.zone = z;
   this.type = t;
@@ -25,7 +29,7 @@ function Mulch (i, z, t, wf, wi, lf, li, d, p) {
   this.dispLength = this.lenFt + "' " + this.lenIn + '"';
   this.volume = parseFloat((((wf * 12 + wi) * (lf * 12 + li) * d) / 46656).toFixed(2));
   this.price = parseFloat((this.volume * p).toFixed(2));
-  Project.allZones.push(this);
+  mulch.mulchZones.push(this);
 }
 
 function addTableRow (i, z, t, w, l, d, v, p) {
@@ -39,7 +43,7 @@ function addTableRow (i, z, t, w, l, d, v, p) {
       <td class="depth">${d}"</td>
       <td class="volume">${v} yd</td>
       <td class="price">$${p}</td>
-      <td><span id="z${i}" class="icon-pencil2"></span></td>
+      <td><span id="mz${i}" class="icon-pencil2"></span></td>
       <td><span class="icon-bin2"></span></td>
     </tr>
   `
@@ -47,10 +51,10 @@ function addTableRow (i, z, t, w, l, d, v, p) {
 }
 
 function updateTotals (volume, price) {
-  Project.totalVolume += parseFloat(volume);
-  Project.totalPrice += parseFloat(price);
-  $('#totalVol').text(Project.totalVolume + ' yd');
-  $('#totalPrice').text('$' + Project.totalPrice);
+  mulch.totalVolume += parseFloat(volume);
+  mulch.totalPrice += parseFloat(price);
+  $('#totalVol').text(mulch.totalVolume + ' yd');
+  $('#totalPrice').text('$' + mulch.totalPrice);
 }
 
 function clearForm () {
@@ -58,7 +62,7 @@ function clearForm () {
 }
 
 function showTotal() {
-  if (Project.allZones.length === 0) {
+  if (mulch.mulchZones.length === 0) {
     $('#totalrow').hide();
   } else {
     $('#totalrow').show();
@@ -67,8 +71,9 @@ function showTotal() {
 
 function editZone() {
   $('.icon-pencil2').on('click', function() {
+    mulch.editing = true;
     var curId = $(this).attr('id').slice(1);
-    Project.allZones.forEach(function(zone) {
+    mulch.mulchZones.forEach(function(zone) {
       if (zone.id === parseInt(curId)) {
         populateForm(zone);
       }
@@ -85,7 +90,7 @@ function populateForm(zone) {
   $('#depth').val(zone.depth);
   //set ID, overwrite original object
   //don't increment Project.id when handling resubmit
-  //return Mulch{}
+  //return MulchZone{}
 }
 
 $('#mulchForm').on('submit', function(e) {
@@ -97,11 +102,12 @@ $('#mulchForm').on('submit', function(e) {
   var $lenFt = parseInt($('#length-ft').val());
   var $lenIn = parseInt($('#length-in').val()) || 0;
   var $depth = parseInt($('#depth').val());
-  var curPrice = Prices[$type];
-  var newMulch = new Mulch(Project.id, $zone, $type, $widFt, $widIn, $lenFt, $lenIn, $depth, curPrice);
-  addTableRow(Project.id, newMulch.zone, newMulch.type, newMulch.dispWidth, newMulch.dispLength, newMulch.depth, newMulch.volume, newMulch.price);
-  updateTotals(newMulch.volume, newMulch.price);
-  Project.id += 1;
+  var curPrice = mulchPrices[$type];
+  var newMulchZone = new MulchZone(mulch.zoneId, $zone, $type, $widFt, $widIn, $lenFt, $lenIn, $depth, curPrice);
+  console.log(newMulchZone);
+  addTableRow(mulch.zoneId, newMulchZone.zone, newMulchZone.type, newMulchZone.dispWidth, newMulchZone.dispLength, newMulchZone.depth, newMulchZone.volume, newMulchZone.price);
+  updateTotals(newMulchZone.volume, newMulchZone.price);
+  mulch.zoneId += 1;
   showTotal();
   editZone();
   clearForm();
