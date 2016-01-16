@@ -51,8 +51,8 @@ function addTableRow (i, z, t, w, l, d, v, p) {
 }
 
 function updateTotals (volume, price) {
-  mulch.totalVolume += parseFloat(volume);
-  mulch.totalPrice += parseFloat(price);
+  mulch.totalVolume += volume;
+  mulch.totalPrice += price;
   $('#totalVol').text(mulch.totalVolume + ' yd');
   $('#totalPrice').text('$' + mulch.totalPrice);
 }
@@ -64,8 +64,10 @@ function clearForm () {
 function showTotal() {
   if (mulch.mulchZones.length === 0) {
     $('#totalrow').hide();
+    $('#save-mulch').hide();
   } else {
     $('#totalrow').show();
+    $('#save-mulch').show();
   }
 }
 
