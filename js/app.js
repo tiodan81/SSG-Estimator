@@ -78,6 +78,8 @@ function editZone() {
     mulch.mulchZones.forEach(function(zone) {
       if (zone.id === parseInt(curId)) {
         populateForm(zone);
+        $('#mulch-add').hide();
+        $('#mulch-update').show().data('id', curId);
       }
     });
   });
@@ -95,8 +97,7 @@ function populateForm(zone) {
   //return MulchZone{}
 }
 
-$('#mulchForm').on('submit', function(e) {
-  e.preventDefault();
+mulch.buildMulch = function() {
   var $zone = $('#zone').val();
   var $type = $('#type').val();
   var $widFt = parseInt($('#width-ft').val());
@@ -105,11 +106,18 @@ $('#mulchForm').on('submit', function(e) {
   var $lenIn = parseInt($('#length-in').val()) || 0;
   var $depth = parseInt($('#depth').val());
   var curPrice = mulchPrices[$type];
-  var newMulchZone = new MulchZone(mulch.zoneId, $zone, $type, $widFt, $widIn, $lenFt, $lenIn, $depth, curPrice);
+  return new MulchZone(mulch.zoneId, $zone, $type, $widFt, $widIn, $lenFt, $lenIn, $depth, curPrice);
+}
+
+$('#mulch-add').on('click', function(e) {
+  e.preventDefault();
+  console.log('bang');
+  var newMulchZone = mulch.buildMulch();
+  mulch.zoneId += 1;
+
   console.log(newMulchZone);
   addTableRow(mulch.zoneId, newMulchZone.zone, newMulchZone.type, newMulchZone.dispWidth, newMulchZone.dispLength, newMulchZone.depth, newMulchZone.volume, newMulchZone.price);
   updateTotals(newMulchZone.volume, newMulchZone.price);
-  mulch.zoneId += 1;
   showTotal();
   editZone();
   clearForm();

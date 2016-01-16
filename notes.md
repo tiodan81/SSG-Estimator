@@ -7,3 +7,7 @@ global project preferences
 
 be able to generate draft report with e.g. three different patio style options
   only include highest price in total until one style chosen
+
+
+Hours
+  1/15: 1
