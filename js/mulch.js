@@ -3,13 +3,12 @@ var mulch = {
   totalVolume: 0,
   totalPrice: 0,
   mulchZones: [],
+  mulchPrices: {
+    bark: 10,
+    chips: 20,
+    GroCo: 30
+  }
 }
-
-var mulchPrices = {
-  bark: 10,
-  chips: 20,
-  GroCo: 30
-};
 
 function MulchZone (i, z, t, wf, wi, lf, li, d, p) {
   this.id = i;
@@ -110,7 +109,7 @@ mulch.buildMulch = function(id) {
   var $lenFt = parseInt($('#length-ft').val());
   var $lenIn = parseInt($('#length-in').val()) || 0;
   var $depth = parseInt($('#depth').val());
-  var curPrice = mulchPrices[$type];
+  var curPrice = mulch.mulchPrices[$type];
   return new MulchZone(id, $zone, $type, $widFt, $widIn, $lenFt, $lenIn, $depth, curPrice);
 }
 
