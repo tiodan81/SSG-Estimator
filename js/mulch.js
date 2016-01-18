@@ -8,7 +8,7 @@ var mulch = {
     chips: 20,
     GroCo: 30
   }
-}
+};
 
 function MulchZone (i, z, t, wf, wi, lf, li, d, p) {
   this.id = i;
@@ -30,7 +30,7 @@ mulch.makeTable = function() {
   mulch.mulchZones.forEach(function(zone) {
     var html = '';
     html += `
-    <tr id="${zone.id}">
+    <tr>
     <td class="zone">${zone.zone}</td>
     <td class="type">${zone.type}</td>
     <td class="width">${zone.dispWidth}</td>
@@ -41,10 +41,10 @@ mulch.makeTable = function() {
     <td><span id="${zone.id}" class="icon-pencil2"></span></td>
     <td><span id="${zone.id}" class="icon-bin2"></span></td>
     </tr>
-    `
+    `;
     $('tbody').append(html);
   });
-}
+};
 
 mulch.updateTotals = function() {
   mulch.totalVolume = 0;
@@ -52,14 +52,14 @@ mulch.updateTotals = function() {
   mulch.mulchZones.forEach(function(e) {
     mulch.totalVolume += e.volume;
     mulch.totalPrice += e.price;
-  })
+  });
   $('#totalVol').text(mulch.totalVolume + ' yd');
   $('#totalPrice').text('$' + mulch.totalPrice);
-}
+};
 
-function clearForm () {
+mulch.clearForm = function() {
   $('.fe input').val('');
-}
+};
 
 mulch.showTotal = function() {
   if (mulch.mulchZones.length === 0) {
@@ -69,7 +69,7 @@ mulch.showTotal = function() {
     $('#totalrow').show();
     $('#save-mulch').show();
   }
-}
+};
 
 mulch.editZone = function() {
   $('.icon-pencil2').on('click', function() {
@@ -82,7 +82,7 @@ mulch.editZone = function() {
       }
     });
   });
-}
+};
 
 mulch.populateForm = function(zone) {
   $('#zone').val(zone.zone);
@@ -91,7 +91,7 @@ mulch.populateForm = function(zone) {
   $('#length-ft').val(zone.lenFt);
   $('#length-in').val(zone.lenIn);
   $('#depth').val(zone.depth);
-}
+};
 
 mulch.findReplace = function(updated) {
   mulch.mulchZones.forEach(function(zone, i) {
@@ -99,7 +99,7 @@ mulch.findReplace = function(updated) {
       mulch.mulchZones[i] = updated;
     }
   });
-}
+};
 
 mulch.buildMulch = function(id) {
   var $zone = $('#zone').val();
@@ -111,7 +111,7 @@ mulch.buildMulch = function(id) {
   var $depth = parseInt($('#depth').val());
   var curPrice = mulch.mulchPrices[$type];
   return new MulchZone(id, $zone, $type, $widFt, $widIn, $lenFt, $lenIn, $depth, curPrice);
-}
+};
 
 mulch.handleNew = function() {
   $('#mulch-add').on('click', function(e) {
@@ -120,9 +120,9 @@ mulch.handleNew = function() {
     mulch.mulchZones.push(newMulchZone);
     mulch.zoneId += 1;
     mulch.listen();
-    clearForm();
+    mulch.clearForm();
   });
-}
+};
 
 mulch.handleUpdate = function() {
   $('#mulch-update').on('click', function(e) {
@@ -131,11 +131,11 @@ mulch.handleUpdate = function() {
     var updated = mulch.buildMulch(curId);
     mulch.findReplace(updated);
     mulch.listen();
-    clearForm();
+    mulch.clearForm();
     $('#mulch-update').hide();
     $('#mulch-add').show();
-  })
-}
+  });
+};
 
 mulch.deleteZone = function() {
   $('.icon-bin2').on('click', function(e) {
@@ -148,7 +148,7 @@ mulch.deleteZone = function() {
     });
     mulch.listen();
   });
-}
+};
 
 mulch.listen = function() {
   mulch.makeTable();
@@ -156,7 +156,7 @@ mulch.listen = function() {
   mulch.showTotal();
   mulch.editZone();
   mulch.deleteZone();
-}
+};
 
 $(function() {
   project.saveName();

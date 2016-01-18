@@ -7,4 +7,4 @@ project.saveName = function() {
     e.preventDefault();
     project.name = $('#projectName').val();
   });
-}
+};
