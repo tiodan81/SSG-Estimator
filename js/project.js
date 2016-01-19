@@ -1,5 +1,10 @@
 var project = {
-  name: ''
+  name: '',
+  mulches: {
+    mulchZones: [],
+    totalVolume: 0,
+    totalPrice: 0 
+  }
 };
 
 project.saveName = function() {

@@ -1,5 +1,5 @@
 var mulch = {
-  zoneId: 0,
+  zoneId: 0,          //reset to mulchZones.length on first page load
   totalVolume: 0,
   totalPrice: 0,
   mulchZones: [],
