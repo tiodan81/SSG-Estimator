@@ -1,9 +1,3 @@
-var firebase = new Firebase('https://ssgestimator.firebaseio.com/');
-var projects = firebase.child('projects');
-var users = firebase.child('users');
-
-
-var user = {};
 // {
 //   'projects': {
 //     'one': {
@@ -21,7 +15,6 @@ var user = {};
 //   },
 //   'users': {
 //     'uid': 'user1',
-//     'pwd': 'pwd1'
 //     'projects': {
 //       'p1': true,
 //       'p2': true
@@ -29,18 +22,23 @@ var user = {};
 //   }
 // }
 
+var firebase = new Firebase('https://ssgestimator.firebaseio.com/');
+var projects = firebase.child('projects');
+var users = firebase.child('users');
 
-firebase.set({    //set JSON formatted object to FB; overwrites node and all children
-  "key": "val"
-}, function(error) {
-  if (error) {
-    //handle
-  } else {
-    console.log('success');
-  }
-});
+var user = {};
 
-firebase.update(); //update some keys at node
+// firebase.set({    //set JSON formatted object to FB; overwrites node and all children
+//   "key": "val"
+// }, function(error) {
+//   if (error) {
+//     //handle
+//   } else {
+//     console.log('success');
+//   }
+// });
+
+//firebase.update(); //update some keys at node
 
 firebase.child('key').on('value', function(snapshot) {    //read. 'value' event fires once for initial state of data, also every time data changes
   console.log(snapshot.val());                            //gets a snapshot including all child data
@@ -66,7 +64,8 @@ user.create = function(event) {
   });
 };
 
-user.authLogin = function() {
+user.authLogin = function(event) {
+  event.preventDefault();
 
 };
 
@@ -80,13 +79,17 @@ user.authenticate = function(pwd) {
       alert('Login failed. Please try again or create an account.');
     } else {
       console.log('Authenticated successfully with payload: ', authData);
-      //do we need uid here? do we get one?
-      //load user's projects
+      user.uid = authData.uid;
+
     }
   });
 };
 
+user.loadProjects = function() {
+
+};
+
 $(function() {
   $('#new-user-form').submit(user.create);
-  $('#login-form').submit(user.authenticate);
+  $('#login-form').submit(user.authLogin);
 });
