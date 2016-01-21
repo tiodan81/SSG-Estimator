@@ -66,7 +66,9 @@ user.create = function(event) {
 
 user.authLogin = function(event) {
   event.preventDefault();
-
+  user.email = $('#username').val();
+  var pwd = $('#password').val();
+  user.authenticate(pwd);
 };
 
 user.authenticate = function(pwd) {
