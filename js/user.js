@@ -82,7 +82,7 @@ user.authenticate = function(pwd) {
     } else {
       console.log('Authenticated successfully with payload: ', authData);
       user.uid = authData.uid;
-
+      user.loadProjects();
     }
   });
 };
