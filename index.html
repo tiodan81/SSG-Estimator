@@ -8,34 +8,42 @@
     <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
   </head>
   <body>
-    <h1>Stone Soup Project Planner</h1>
-    <form id="projectForm">
-      <label class="fieldname">Project Name</label>
-      <input id="projectName" type="text"></input>
-      <input type="submit" value="Submit" />
-    </form>
-    <ul>
-      <a href="mulch.html"><li>Mulch Calculator</li></a>
-      <li>Rain Garden</li>
-      <li>Cistern</li>
-      <li>Fence</li>
-      <li>Patio</li>
-      <li>Path</li>
-    </ul>
-    <section>
-      <h2>Create an Account</h2>
-      <form id="new-user-form">
-        <input id="new-user" type="email" placeholder="user@email.com" />
-        <input id="new-password" type="password" placeholder="password" />
-        <input id="new-user-submit" type="submit" value="Submit">
+    <nav>
+      <ul id="main-nav">
+        <a href="index.html"><li>Home</li></a>
+        <a href="mulch.html"><li>Mulch</li></a>
+      </ul>
+    </nav>
+    <main>
+      <h1>Stone Soup Project Planner</h1>
+      <form id="projectForm">
+        <label class="fieldname">Project Name</label>
+        <input id="projectName" type="text"></input>
+        <input type="submit" value="Submit" />
       </form>
-      <h2>Login</h2>
-      <form id="login-form">
-        <input id="username" type="email" placeholder="user@email.com" />
-        <input id="password" type="password" placeholder="password" />
-        <input id="login-submit" type="submit" value="Login">
-      </form>
-    </section>
+      <ul>
+        <a href="mulch.html"><li>Mulch Calculator</li></a>
+        <li>Rain Garden</li>
+        <li>Cistern</li>
+        <li>Fence</li>
+        <li>Patio</li>
+        <li>Path</li>
+      </ul>
+      <section>
+        <h2>Create an Account</h2>
+        <form id="new-user-form">
+          <input id="new-user" type="email" placeholder="user@email.com" />
+          <input id="new-password" type="password" placeholder="password" />
+          <input id="new-user-submit" type="submit" value="Submit">
+        </form>
+        <h2>Login</h2>
+        <form id="login-form">
+          <input id="username" type="email" placeholder="user@email.com" />
+          <input id="password" type="password" placeholder="password" />
+          <input id="login-submit" type="submit" value="Login">
+        </form>
+      </section>
+    </main>
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/project.js"></script>
     <script type="text/javascript" src="js/mulch.js"></script>
