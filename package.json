@@ -1,0 +1,23 @@
+{
+  "name": "ssgestimator",
+  "version": "1.0.0",
+  "description": "project planning tool for Stone Soup Gardens",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tiodan81/SSG-Estimator.git"
+  },
+  "author": "Dan Schwartz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tiodan81/SSG-Estimator/issues"
+  },
+  "homepage": "https://github.com/tiodan81/SSG-Estimator#readme",
+  "dependencies": {
+    "express": "^4.13.3",
+    "pushstate-server": "^1.8.1"
+  }
+}
