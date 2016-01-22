@@ -7,3 +7,4 @@ page(
   '/mulch',
   controller.mulchInit
 );
+page.start();
