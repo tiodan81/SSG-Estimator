@@ -24,3 +24,11 @@ project.saveName = function() {
     project.mulch = mulch;
   });
 };
+
+var indexView = {};
+
+indexView.init = function () {
+  $('#home-content').show()
+  .siblings().hide();
+  console.log('indexInit');
+};

@@ -4,14 +4,15 @@
     <meta charset="utf-8">
     <title>Stone Soup Planner</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" href="/css/icons.css">
     <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
   </head>
   <body>
     <nav>
       <ul id="main-nav">
-        <a href="/"><li>Home</li></a>
-        <a href="/mulch.html"><li>Mulch</li></a>
+        <li><a href="/">Home</a></li>
+        <li><a href="/mulch">Mulch</a></li>
       </ul>
     </nav>
     <main>
@@ -23,7 +24,7 @@
           <input type="submit" value="Submit" />
         </form>
         <ul>
-          <a href="mulch.html"><li>Mulch Calculator</li></a>
+          <a href="/mulch"><li>Mulch Calculator</li></a>
           <li>Rain Garden</li>
           <li>Cistern</li>
           <li>Fence</li>
@@ -114,8 +115,11 @@
       </section>
     </main>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script type="text/javascript" src="js/project.js"></script>
-    <script type="text/javascript" src="js/mulch.js"></script>
-    <script type="text/javascript" src="js/user.js"></script>
+    <script type="text/javascript" src="/js/vendor/page.js"></script>
+    <script type="text/javascript" src="/js/controller.js"></script>
+    <script type="text/javascript" src="/js/project.js"></script>
+    <script type="text/javascript" src="/js/mulch.js"></script>
+    <script type="text/javascript" src="/js/user.js"></script>
+    <script type="text/javascript" src="/js/router.js"></script>
   </body>
 </html>

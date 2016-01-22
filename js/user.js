@@ -40,11 +40,11 @@ var user = {};
 
 //firebase.update(); //update some keys at node
 
-firebase.child('key').on('value', function(snapshot) {    //read. 'value' event fires once for initial state of data, also every time data changes
-  console.log(snapshot.val());                            //gets a snapshot including all child data
-}, function (errorObject) {
-  console.log('Epic fail: ' + errorObject.code);
-});
+// firebase.child('key').on('value', function(snapshot) {    //read. 'value' event fires once for initial state of data, also every time data changes
+//   console.log(snapshot.val());                            //gets a snapshot including all child data
+// }, function (errorObject) {
+//   console.log('Epic fail: ' + errorObject.code);
+// });
 
 user.create = function(event) {
   event.preventDefault();
@@ -90,8 +90,3 @@ user.authenticate = function(pwd) {
 user.loadProjects = function() {
 
 };
-
-$(function() {
-  $('#new-user-form').submit(user.create);
-  $('#login-form').submit(user.authLogin);
-});

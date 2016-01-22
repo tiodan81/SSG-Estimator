@@ -158,9 +158,19 @@ mulch.listen = function() {
   mulch.deleteZone();
 };
 
+var mulchView = {};
+
+mulchView.init = function() {
+  $('#mulch-content').show()
+  .siblings().hide();
+  console.log('mulchInit');
+};
+
 $(function() {
   project.saveName();
   mulch.handleNew();
   mulch.handleUpdate();
   mulch.showTotal();
+  $('#new-user-form').submit(user.create);
+  $('#login-form').submit(user.authLogin);
 });

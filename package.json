@@ -15,7 +15,6 @@
   "bugs": {
     "url": "https://github.com/tiodan81/SSG-Estimator/issues"
   },
-  "homepage": "https://github.com/tiodan81/SSG-Estimator#readme",
   "dependencies": {
     "express": "^4.13.3",
     "pushstate-server": "^1.8.1"
