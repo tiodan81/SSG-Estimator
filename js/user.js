@@ -28,15 +28,6 @@ var users = firebase.child('users');
 
 var user = {};
 
-// firebase.set({    //set JSON formatted object to FB; overwrites node and all children
-//   "key": "val"
-// }, function(error) {
-//   if (error) {
-//     //handle
-//   } else {
-//     console.log('success');
-//   }
-// });
 
 //firebase.update(); //update some keys at node
 
@@ -60,6 +51,7 @@ user.create = function(event) {
     } else {
       console.log('Successfully created user account with uid: ', userData.uid);
       user.authenticate(userPassword);
+      $('#new-user, #new-password').val('');
     }
   });
 };

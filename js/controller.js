@@ -1,7 +1,6 @@
 var controller = {};
 
 controller.indexInit = function() {
-  console.log('bang');
   indexView.init();
 };
 

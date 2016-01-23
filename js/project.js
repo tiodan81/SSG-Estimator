@@ -3,7 +3,9 @@ var project = {
   owners: {
     //uid: t/f
   },
-  mulch: {}
+  mulch: {
+
+  }
 };
 
 // const project = (name) => {
@@ -22,7 +24,21 @@ project.saveName = function() {
     e.preventDefault();
     project.name = $('#projectName').val();
     project.mulch = mulch;
+    project.save();
   });
+};
+
+project.save = function() {
+  firebase.set({    //set JSON formatted object to FB; overwrites node and all children
+    "key": "val"
+  }, function(error) {
+    if (error) {
+      //handle
+    } else {
+      console.log('success');
+    }
+  });
+
 };
 
 var indexView = {};
@@ -30,5 +46,4 @@ var indexView = {};
 indexView.init = function () {
   $('#home-content').show()
   .siblings().hide();
-  console.log('indexInit');
 };

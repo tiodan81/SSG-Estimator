@@ -163,7 +163,6 @@ var mulchView = {};
 mulchView.init = function() {
   $('#mulch-content').show()
   .siblings().hide();
-  console.log('mulchInit');
 };
 
 $(function() {
