@@ -1,22 +1,22 @@
-QUESTIONS
+# Questions
 * do multiple users need to be able to access the same projects?
   * think yes: e.g. jake & project lead
 
 
-optional project add-ons
-  manual line-item (e.g. bike wheel structure $150)
-
+# Notes
+* optional project add-ons
+* manual line-item (e.g. bike wheel structure $150)
 * be able to generate draft report with e.g. three different patio style options
 * only include highest price in total until one style chosen
 
-HOME PAGE
+# Home page
 * if not logged in
   * login interface
 * if logged in
   * show existing projects (open/edit)
   * add new project
 
-CREATE NEW PROJECT
+#Create New Project
 * 'new project' view
   * enter project name
   * enter global preferences
@@ -24,15 +24,24 @@ CREATE NEW PROJECT
     * markup rate
   * start adding items (e.g. cistern, )
 
-EDIT PROJECT
+# Edit Project
 * show project summary
 * click to edit individual items
 
+# Cistern
+* input needed
+  * tank id name
+  * roof area
+  * tank brand (bushman, premier, slimline)     //slimline isn't right
+    * tank model (populate based on brand)
+  * base height (1 or 2)
+  * gutter regrade (ft)
+  * 3" inflow pipe (ft)
+  * 3" outflow pipe (ft)
 
-
-Hours
+# Hours
 * 1/15: 1
 * 1/16: 3.5
 * 1/18: 4
 * 1/22: 2
-* 1/23: 1 + (5:45 - 
+* 1/23: 3

@@ -8,6 +8,10 @@ body {
   display: inline-block;
 }
 
+.fe {
+  margin-bottom: 0.7em;
+}
+
 .fieldname {
   float: left;
   width: 7em;
@@ -17,10 +21,6 @@ body {
 
 .dimension {
   width: 9em;
-}
-
-.fe {
-  margin-bottom: 0.7em;
 }
 
 th {

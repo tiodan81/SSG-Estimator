@@ -12,6 +12,7 @@
       <ul id="main-nav">
         <li><a href="/">Home</a></li>
         <li><a href="/mulch">Mulch</a></li>
+        <li><a href="/cisterns">Cisterns</a></li>
       </ul>
     </nav>
     <main>
@@ -23,12 +24,12 @@
           <input type="submit" value="Submit" />
         </form>
         <ul>
-          <a href="/mulch"><li>Mulch Calculator</li></a>
-          <li>Rain Garden</li>
-          <li>Cistern</li>
-          <li>Fence</li>
-          <li>Patio</li>
-          <li>Path</li>
+          <li><a href="/mulch">Mulch Calculator</a></li>
+          <li>Rain Gardens</li>
+          <li><a href="/cisterns">Cisterns</a></li>
+          <li>Fences</li>
+          <li>Patios</li>
+          <li>Paths</li>
         </ul>
         <section>
           <h2>Create an Account</h2>
@@ -47,8 +48,8 @@
       </section>
       <section id="mulch-content">
         <h1>Mulch Calculator</h1>
+        <h3>Add a mulch zone</h3>
         <form id="mulchForm" action="#">
-          <h3>Area to cover</h3>
           <div class="fe">
             <label class="fieldname">Zone:</label>
             <input type="text" id="zone" size="25" placeholder="area name" required="required" />
@@ -112,6 +113,31 @@
           <input type="submit" value="Save" />
         </div>
       </section>
+      <section id="cistern-content">
+        <h1>Cisterns</h1>
+        <h3>Add a cistern</h3>
+        <form id="cisternForm" action="#">
+          <div class="fe">
+            <label class="fieldname">ID:</label>
+            <input type="text" id="cistern" size="25" placeholder="tank ID" required="required" />
+          </div>
+          <div class="fe">
+            <label class="fieldname">Roof area:</label>
+            <input type="number" id="roofArea" placeholder="ft²" required="required" />
+          </div>
+          <div class="fe">
+            <label class="fieldname">Cistern type:</label>
+            <select id="cisternBrand">
+              <option value="bushman">Bushman</option>
+              <option value="premier">Premier</option>
+              <option value="slimline">Slimline</option>
+            </select>
+            <select id="cisternModel">
+
+            </select>
+          </div>
+        </form>
+      </section>
     </main>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
@@ -119,6 +145,7 @@
     <script type="text/javascript" src="/js/controller.js"></script>
     <script type="text/javascript" src="/js/project.js"></script>
     <script type="text/javascript" src="/js/mulch.js"></script>
+    <script type="text/javascript" src="/js/cistern.js"></script>
     <script type="text/javascript" src="/js/user.js"></script>
     <script type="text/javascript" src="/js/router.js"></script>
   </body>

@@ -7,3 +7,7 @@ controller.indexInit = function() {
 controller.mulchInit = function() {
   mulchView.init();
 };
+
+controller.cisternInit = function() {
+  cisternView.init();
+};
