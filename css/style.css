@@ -4,6 +4,10 @@ body {
   margin: 1em;
 }
 
+#main-nav li {
+  display: inline-block;
+}
+
 .fieldname {
   float: left;
   width: 7em;
