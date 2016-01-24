@@ -23,8 +23,8 @@
 // }
 
 var firebase = new Firebase('https://ssgestimator.firebaseio.com/');
-var projects = firebase.child('projects');
-var users = firebase.child('users');
+var fbProjects = firebase.child('projects');
+var fbUsers = firebase.child('users');
 
 var user = {};
 
