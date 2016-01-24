@@ -35,9 +35,9 @@ project.save = function() {
     projectString,
     function(error) {
       if (error) {
-      //handle
+        console.log('Project failed to save.');
       } else {
-        console.log('success');
+        console.log('Project saved.');
       }
     }
   );
