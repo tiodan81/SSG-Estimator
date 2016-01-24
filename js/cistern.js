@@ -1,4 +1,12 @@
-var cistern = {};
+var cistern = {
+  totalPrice: 0,
+  cisterns: [],
+  tankModels: [
+    [
+      
+    ]
+  ]
+};
 
 
 

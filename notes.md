@@ -32,7 +32,7 @@
 * input needed
   * tank id name
   * roof area
-  * tank brand (bushman, premier, slimline)     //slimline isn't right
+  * tank brand (bushman, premier)
     * tank model (populate based on brand)
   * base height (1 or 2)
   * gutter regrade (ft)
