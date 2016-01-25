@@ -1,0 +1,202 @@
+[
+  {
+    "model": "b420",
+    "slimline": false,
+    "purchasePrice": 450,
+    "height": 64,
+    "width": null,
+    "depth": null,
+    "diameter": 45
+  },
+  {
+    "model": "b660",
+    "slimline": false,
+    "purchasePrice": 680,
+    "height": 48,
+    "width": null,
+    "depth": null,
+    "diameter": 71
+  },
+  {
+    "model": "b865",
+    "slimline": false,
+    "purchasePrice": 870,
+    "height": 75,
+    "width": null,
+    "depth": null,
+    "diameter": 61
+  },
+  {
+    "model": "b1110",
+    "slimline": false,
+    "purchasePrice": 900,
+    "height": 56,
+    "width": null,
+    "depth": null,
+    "diameter": 84
+  },
+  {
+    "model": "b1320",
+    "slimline": false,
+    "purchasePrice": 1050,
+    "height": 72,
+    "width": null,
+    "depth": null,
+    "diameter": 82
+  },
+  {
+    "model": "b2825",
+    "slimline": false,
+    "purchasePrice": 1600,
+    "height": 92,
+    "width": null,
+    "depth": null,
+    "diameter": 102
+  },
+  {
+    "model": "b265",
+    "slimline": true,
+    "purchasePrice": 450,
+    "height": 64,
+    "width": 59,
+    "depth": 25,
+    "diameter": null
+  },
+  {
+    "model": "b530",
+    "slimline": true,
+    "purchasePrice": 730,
+    "height": 78,
+    "width": 86,
+    "depth": 25,
+    "diameter": null
+  },
+  {
+    "model": "p480",
+    "slimline": false,
+    "purchasePrice": 564.34,
+    "height": 71,
+    "width": null,
+    "depth": null,
+    "diameter": 47
+  },
+  {
+    "model": "p575",
+    "slimline": false,
+    "purchasePrice": 627.21,
+    "height": 44,
+    "width": null,
+    "depth": null,
+    "diameter": 71
+  },
+  {
+    "model": "p625",
+    "slimline": false,
+    "purchasePrice": 670.15,
+    "height": 90,
+    "width": null,
+    "depth": null,
+    "diameter": 47
+  },
+  {
+    "model": "p795",
+    "slimline": false,
+    "purchasePrice": 791.30,
+    "height": 112,
+    "width": null,
+    "depth": null,
+    "diameter": 47
+  },
+  {
+    "model": "p840",
+    "slimline": false,
+    "purchasePrice": 706.96,
+    "height": 72,
+    "width": null,
+    "depth": null,
+    "diameter": 62
+  },
+  {
+    "model": "p960",
+    "slimline": false,
+    "purchasePrice": 725.36,
+    "height": 67,
+    "width": null,
+    "depth": null,
+    "diameter": 71
+  },
+  {
+    "model": "p1150",
+    "slimline": false,
+    "purchasePrice": 809.70,
+    "height": 79,
+    "width": null,
+    "depth": null,
+    "diameter": 71
+  },
+  {
+    "model": "p1440",
+    "slimline": false,
+    "purchasePrice": 898.65,
+    "height": 63,
+    "width": null,
+    "depth": null,
+    "diameter": 91
+  },
+  {
+    "model": "p1535",
+    "slimline": false,
+    "purchasePrice": 952.32,
+    "height": 103,
+    "width": null,
+    "depth": null,
+    "diameter": 71
+  },
+  {
+    "model": "p2000",
+    "slimline": false,
+    "purchasePrice": 1390.91,
+    "height": 66,
+    "width": null,
+    "depth": null,
+    "diameter": 102
+  },
+  {
+    "model": "p2340",
+    "slimline": false,
+    "purchasePrice": 1439.98,
+    "height": 92,
+    "width": null,
+    "depth": null,
+    "diameter": 91
+  },
+  {
+    "model": "p3000",
+    "slimline": false,
+    "purchasePrice": 1703.75,
+    "height": 95,
+    "width": null,
+    "depth": null,
+    "diameter": 102
+  },
+  {
+    "model": "p4000",
+    "slimline": false,
+    "purchasePrice": 2671.40,
+    "height": 123,
+    "width": null,
+    "depth": null,
+    "diameter": 102
+  },
+  {
+    "model": "p410",
+    "slimline": true,
+    "purchasePrice": 892.51,
+    "height": 75.5,
+    "width": 75.5,
+    "depth": 21.7,
+    "diameter": null
+  },
+
+
+]
