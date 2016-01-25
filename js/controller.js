@@ -9,5 +9,5 @@ controller.mulchInit = function() {
 };
 
 controller.cisternInit = function() {
-  cisternView.init();
+  cistern.getJSON(cisternView.init);
 };

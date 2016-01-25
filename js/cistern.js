@@ -8,7 +8,7 @@ var cistern = {
   ]
 };
 
-"ssgPrice": purchasePrice * mkup + delivery
+//"ssgPrice": purchasePrice * mkup + delivery
 
 
 function cisternMaker () {
@@ -18,10 +18,16 @@ function cisternMaker () {
   this.model = m;
   this.baseHeight = h;
   this.gutter = g;
-  this.inflow = in;
+  this.inflow = inf;
   this.outflow = out;
 }
 
+cistern.getJSON = function(callback) {
+  $.getJSON('/data/cisternModels.json', function(data) {
+    console.log(data);
+  });
+  callback();
+};
 
 
 var cisternView = {};
