@@ -3,9 +3,8 @@ var project = {
   owners: {
     //uid: t/f
   },
-  mulch: {
-
-  }
+  mulch: {},
+  markup: 1.35
 };
 
 // const project = (name) => {

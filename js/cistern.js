@@ -18,6 +18,7 @@ function cisternMaker (i, ci, a, m, h, g, inf, out) {
   this.gutter = g;
   this.inflow = inf;
   this.outflow = out;
+  this.salePrice = 0;
 }
 
 function Tank (props) {
@@ -48,14 +49,20 @@ cistern.buildCistern = function(index) {
   return new cisternMaker(index, $id, $ra, $m, $bh, $g, $inf, $out);
 }
 
+cistern.getSalePrice = function (model) {
+  let curTank = cistern.tankModels[model];
+  return curTank.purchasePrice * project.markup + curTank.delivery;
+}
+
 
 var cisternView = {};
 
 cisternView.handleNew = function() {
   $('#cistern-add').on('click', function(e) {
     e.preventDefault();
-    var newCistern = cistern.buildCistern(cistern.cisternIndex);
+    let newCistern = cistern.buildCistern(cistern.cisternIndex);
     cistern.cisterns.push(newCistern);
+    newCistern.salePrice = cistern.getSalePrice(newCistern.model);
     cistern.cisternIndex += 1;
     viewUtil.clearForm();
   })
