@@ -57,10 +57,6 @@ mulch.updateTotals = function() {
   $('#totalPrice').text('$' + mulch.totalPrice);
 };
 
-mulch.clearForm = function() {
-  $('.fe input').val('');
-};
-
 mulch.showTotal = function() {
   if (mulch.mulchZones.length === 0) {
     $('#totalrow').hide();
@@ -120,7 +116,7 @@ mulch.handleNew = function() {
     mulch.mulchZones.push(newMulchZone);
     mulch.zoneId += 1;
     mulch.listen();
-    mulch.clearForm();
+    viewUtil.clearForm();
   });
 };
 
@@ -131,7 +127,7 @@ mulch.handleUpdate = function() {
     var updated = mulch.buildMulch(curId);
     mulch.findReplace(updated);
     mulch.listen();
-    mulch.clearForm();
+    viewUtil.clearForm();
     $('#mulch-update').hide();
     $('#mulch-add').show();
   });
@@ -163,13 +159,13 @@ var mulchView = {};
 mulchView.init = function() {
   $('#mulch-content').show()
   .siblings().hide();
+  mulch.handleNew();
+  mulch.handleUpdate();
+  mulch.showTotal();
 };
 
 $(function() {
   project.saveName();
-  mulch.handleNew();
-  mulch.handleUpdate();
-  mulch.showTotal();
   $('#new-user-form').submit(user.create);
   $('#login-form').submit(user.authLogin);
 });
