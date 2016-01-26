@@ -25,27 +25,6 @@ function MulchZone (i, z, t, wf, wi, lf, li, d, p) {
   this.price = parseFloat((this.volume * p).toFixed(2));
 }
 
-mulch.makeTable = function() {
-  $('tbody').empty();
-  mulch.mulchZones.forEach(function(zone) {
-    var html = '';
-    html += `
-    <tr>
-    <td class="zone">${zone.zone}</td>
-    <td class="type">${zone.type}</td>
-    <td class="width">${zone.dispWidth}</td>
-    <td class="length">${zone.dispLength}</td>
-    <td class="depth">${zone.depth}"</td>
-    <td class="volume">${zone.volume} yd</td>
-    <td class="price">$${zone.price}</td>
-    <td><span id="${zone.id}" class="icon-pencil2"></span></td>
-    <td><span id="${zone.id}" class="icon-bin2"></span></td>
-    </tr>
-    `;
-    $('tbody').append(html);
-  });
-};
-
 mulch.updateTotals = function() {
   mulch.totalVolume = 0;
   mulch.totalPrice = 0;
@@ -55,38 +34,6 @@ mulch.updateTotals = function() {
   });
   $('#totalVol').text(mulch.totalVolume + ' yd');
   $('#totalPrice').text('$' + mulch.totalPrice);
-};
-
-mulch.showTotal = function() {
-  if (mulch.mulchZones.length === 0) {
-    $('#totalrow').hide();
-    $('#save-mulch').hide();
-  } else {
-    $('#totalrow').show();
-    $('#save-mulch').show();
-  }
-};
-
-mulch.editZone = function() {
-  $('.icon-pencil2').on('click', function() {
-    var curId = $(this).attr('id');
-    mulch.mulchZones.forEach(function(zone) {
-      if (zone.id === parseInt(curId)) {
-        mulch.populateForm(zone);
-        $('#mulch-add').hide();
-        $('#mulch-update').show().data('id', curId);
-      }
-    });
-  });
-};
-
-mulch.populateForm = function(zone) {
-  $('#zone').val(zone.zone);
-  $('#width-ft').val(zone.widFt);
-  $('#width-in').val(zone.widIn);
-  $('#length-ft').val(zone.lenFt);
-  $('#length-in').val(zone.lenIn);
-  $('#depth').val(zone.depth);
 };
 
 mulch.findReplace = function(updated) {
@@ -109,7 +56,78 @@ mulch.buildMulch = function(id) {
   return new MulchZone(id, $zone, $type, $widFt, $widIn, $lenFt, $lenIn, $depth, curPrice);
 };
 
-mulch.handleNew = function() {
+mulch.listen = function() {
+  mulchView.makeTable();
+  mulch.updateTotals();
+  mulchView.showTotal();
+  mulchView.editZone();
+  mulchView.deleteZone();
+};
+
+var mulchView = {};
+
+mulchView.init = function() {
+  $('#mulch-content').show()
+  .siblings().hide();
+  mulchView.handleNew();
+  mulchView.handleUpdate();
+  mulchView.showTotal();
+};
+
+mulchView.makeTable = function() {
+  $('tbody').empty();
+  mulch.mulchZones.forEach(function(zone) {
+    var html = '';
+    html += `
+    <tr>
+    <td class="zone">${zone.zone}</td>
+    <td class="type">${zone.type}</td>
+    <td class="width">${zone.dispWidth}</td>
+    <td class="length">${zone.dispLength}</td>
+    <td class="depth">${zone.depth}"</td>
+    <td class="volume">${zone.volume} yd</td>
+    <td class="price">$${zone.price}</td>
+    <td><span id="${zone.id}" class="icon-pencil2"></span></td>
+    <td><span id="${zone.id}" class="icon-bin2"></span></td>
+    </tr>
+    `;
+    $('tbody').append(html);
+  });
+};
+
+mulchView.showTotal = function() {
+  if (mulch.mulchZones.length === 0) {
+    $('#totalrow').hide();
+    $('#save-mulch').hide();
+  } else {
+    $('#totalrow').show();
+    $('#save-mulch').show();
+  }
+};
+
+mulchView.editZone = function() {
+  $('.icon-pencil2').on('click', function() {
+    var curId = $(this).attr('id');
+    mulch.mulchZones.forEach(function(zone) {
+      if (zone.id === parseInt(curId)) {
+        mulchView.populateForm(zone);
+        $('#mulch-add').hide();
+        $('#mulch-update').show().data('id', curId);
+      }
+    });
+  });
+};
+
+mulchView.populateForm = function(zone) {
+  $('#zone').val(zone.zone);
+  $('#width-ft').val(zone.widFt);
+  $('#width-in').val(zone.widIn);
+  $('#length-ft').val(zone.lenFt);
+  $('#length-in').val(zone.lenIn);
+  $('#depth').val(zone.depth);
+};
+
+mulchView.handleNew = function() {
   $('#mulch-add').on('click', function(e) {
     e.preventDefault();
     var newMulchZone = mulch.buildMulch(mulch.zoneId);
@@ -120,7 +138,7 @@ mulch.handleNew = function() {
   });
 };
 
-mulch.handleUpdate = function() {
+mulchView.handleUpdate = function() {
   $('#mulch-update').on('click', function(e) {
     e.preventDefault();
     var curId = parseInt($(this).data('id'));
@@ -133,7 +151,7 @@ mulch.handleUpdate = function() {
   });
 };
 
-mulch.deleteZone = function() {
+mulchView.deleteZone = function() {
   $('.icon-bin2').on('click', function(e) {
     e.preventDefault();
     var curId = parseInt($(this).attr('id'));
@@ -144,24 +162,6 @@ mulch.deleteZone = function() {
     });
     mulch.listen();
   });
-};
-
-mulch.listen = function() {
-  mulch.makeTable();
-  mulch.updateTotals();
-  mulch.showTotal();
-  mulch.editZone();
-  mulch.deleteZone();
-};
-
-var mulchView = {};
-
-mulchView.init = function() {
-  $('#mulch-content').show()
-  .siblings().hide();
-  mulch.handleNew();
-  mulch.handleUpdate();
-  mulch.showTotal();
 };
 
 $(function() {
