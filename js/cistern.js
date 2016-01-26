@@ -51,9 +51,8 @@ cistern.buildCistern = function(index) {
 
 cistern.getSalePrice = function (model) {
   let curTank = cistern.tankModels[model];
-  return curTank.purchasePrice * project.markup + curTank.delivery;
+  return Math.ceil(curTank.purchasePrice * project.markup + curTank.delivery);
 }
-
 
 var cisternView = {};
 
