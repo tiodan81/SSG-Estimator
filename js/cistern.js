@@ -19,6 +19,7 @@ function cisternMaker (i, ci, a, m, h, g, inf, out) {
   this.inflow = inf;
   this.outflow = out;
   this.salePrice = 0;
+  this.gravel = 0;
 }
 
 function Tank (props) {
@@ -49,9 +50,8 @@ cistern.buildCistern = function(index) {
   return new cisternMaker(index, $id, $ra, $m, $bh, $g, $inf, $out);
 }
 
-cistern.getSalePrice = function (model) {
-  let curTank = cistern.tankModels[model];
-  return Math.ceil(curTank.purchasePrice * project.markup + curTank.delivery);
+cistern.getSalePrice = function (tank) {
+  return Math.ceil(tank.purchasePrice * project.markup + tank.delivery);
 }
 
 var cisternView = {};
@@ -61,7 +61,9 @@ cisternView.handleNew = function() {
     e.preventDefault();
     let newCistern = cistern.buildCistern(cistern.cisternIndex);
     cistern.cisterns.push(newCistern);
-    newCistern.salePrice = cistern.getSalePrice(newCistern.model);
+    let modelInfo = cistern.tankModels[newCistern.model];
+    newCistern.salePrice = cistern.getSalePrice(modelInfo);
+    newCistern.gravel = util.ceilingHalf(util.volumeCyl(modelInfo.diameter, newCistern.baseHeight));
     cistern.cisternIndex += 1;
     viewUtil.clearForm();
   })
