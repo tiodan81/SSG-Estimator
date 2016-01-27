@@ -1,10 +1,11 @@
 var project = {
   name: '',
+  markup: 1.35,
+  laborRate: 45,
   owners: {
     //uid: t/f
   },
-  mulch: {},
-  markup: 1.35
+  mulch: {}
 };
 
 var bulkMaterials = {};
