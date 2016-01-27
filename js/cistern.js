@@ -5,10 +5,6 @@ var cistern = {
   tankModels: []
 };
 
-
-//"ssgPrice": purchasePrice * mkup + delivery
-
-
 function cisternMaker (i, ci, a, m, h, g, inf, out) {
   this.index = i;
   this.cisternId = ci;
@@ -19,7 +15,9 @@ function cisternMaker (i, ci, a, m, h, g, inf, out) {
   this.inflow = inf;
   this.outflow = out;
   this.salePrice = 0;
-  this.gravel = 0;
+  this.paverbase = 0;
+  this.stoneType = '';
+  this.stones = 0;
 }
 
 function Tank (props) {
@@ -30,28 +28,45 @@ function Tank (props) {
 
 cistern.getJSON = function(callback) {
   $.getJSON('/data/cisternModels.json', function(data) {
-    // for (var tank in data) {
-    //   var curTank = new Tank(data[tank]);
-    //   cistern.tankModels.push(curTank);
-    // }
     cistern.tankModels = data;
   });
+  if (!bulkMaterials) {
+    $.getJSON('/data/bulkMaterials.json', function(data) {
+      bulkMaterials = data;
+    });
+  }
   callback();
 };
 
 cistern.buildCistern = function(index) {
   var $id = $('#cistern').val();
-  var $ra = parseInt($('#roofArea').val());
+  var $ra = +($('#roofArea').val());
   var $m = $('#cisternModel').val();
-  var $bh = parseInt($('#cisternBase').val());
-  var $g = parseInt($('#gutterFt').val());
-  var $inf = parseInt($('#cisternInflow').val());
-  var $out = parseInt($('#cisternOutflow').val());
+  var $bh = +($('#cisternBase').val());
+  var $g = +($('#gutterFt').val());
+  var $inf = +($('#cisternInflow').val());
+  var $out = +($('#cisternOutflow').val());
   return new cisternMaker(index, $id, $ra, $m, $bh, $g, $inf, $out);
 }
 
-cistern.getSalePrice = function (tank) {
+cistern.tankSalePrice = function (tank) {
   return Math.ceil(tank.purchasePrice * project.markup + tank.delivery);
+}
+
+cistern.volumeCyl = function(d, h) {
+  return (Math.PI * Math.pow((d / 24), 2) * ((h / 2) + 0.33)) / 27;
+}
+
+cistern.volumeRect = function(w, d, h) {
+  return w * d * h / 5832;
+}
+
+cistern.getManorStones = function (d, h) {
+  return Math.ceil(Math.PI * d / 16) * h;
+}
+
+cistern.getCinderBlocks = function(l, h) {
+  return Math.ceil(l / 16) * 3 * h;
 }
 
 var cisternView = {};
@@ -62,8 +77,19 @@ cisternView.handleNew = function() {
     let newCistern = cistern.buildCistern(cistern.cisternIndex);
     cistern.cisterns.push(newCistern);
     let modelInfo = cistern.tankModels[newCistern.model];
-    newCistern.salePrice = cistern.getSalePrice(modelInfo);
-    newCistern.gravel = util.ceilingHalf(util.volumeCyl(modelInfo.diameter, newCistern.baseHeight));
+    console.log(modelInfo);
+    newCistern.salePrice = cistern.tankSalePrice(modelInfo);
+    if (modelInfo.slimline) {
+      console.log('slim');
+      newCistern.paverbase = util.ceilingHalf(cistern.volumeRect(modelInfo.width, modelInfo.depth, newCistern.baseHeight));
+      newCistern.stoneType = 'cinder-block';
+      newCistern.stones = cistern.getCinderBlocks(modelInfo.width, newCistern.baseHeight);
+    } else {
+      console.log('round');
+      newCistern.paverbase = util.ceilingHalf(cistern.volumeCyl(modelInfo.diameter, newCistern.baseHeight));
+      newCistern.stoneType = 'manor-stone';
+      newCistern.stones = cistern.getManorStones(modelInfo.diameter, newCistern.baseHeight);
+    }
     cistern.cisternIndex += 1;
     viewUtil.clearForm();
   })

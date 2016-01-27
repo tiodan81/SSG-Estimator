@@ -7,16 +7,7 @@ var project = {
   markup: 1.35
 };
 
-// const project = (name) => {
-//   var state = {
-//     name,
-//     owner: 'dan'
-//   }
-//   return Object.assign(
-//     {},
-//     mulch
-//   )
-// })
+var bulkMaterials = {};
 
 project.saveName = function() {
   $('#projectForm').on('submit', function(e) {
