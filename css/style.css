@@ -4,6 +4,14 @@ body {
   margin: 1em;
 }
 
+#main-nav li {
+  display: inline-block;
+}
+
+.fe {
+  margin-bottom: 0.7em;
+}
+
 .fieldname {
   float: left;
   width: 7em;
@@ -15,10 +23,6 @@ body {
   width: 9em;
 }
 
-.fe {
-  margin-bottom: 0.7em;
-}
-
 th {
   border-bottom: 2px solid #111;
 }
@@ -27,6 +31,18 @@ td {
   padding: 0.7em 1em 0.7em 1em;
 }
 
+#mulch-update {
+  display: none;
+}
+
 #totalrow {
   display: none;
+}
+
+#mulch-save {
+  display: none;
+}
+
+#cistern-update {
+  display:none;
 }

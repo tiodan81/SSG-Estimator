@@ -1,1 +1,5 @@
-jquery.js
+.eslintrc
+.gitignore
+.tern-project
+node_modules
+**/.DS_Store
