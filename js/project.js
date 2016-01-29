@@ -8,7 +8,7 @@ var project = {
   mulch: {}
 };
 
-var bulkMaterials = {};
+var materials = {};
 
 project.saveName = function() {
   $('#projectForm').on('submit', function(e) {

@@ -17,25 +17,36 @@ function cisternMaker (i, ci, a, m, h, g, inf, out) {
   this.gutter = g;
   this.inflow = inf;
   this.outflow = out;
-  this.salePrice = 0;
   this.paverbase = 0;
   this.stoneType = '';
   this.stones = 0;
+  this.inflowHardware = 0;
+  this.outflowHardware = 0;
   this.baseLaborHr = 0;
   this.inflowLaborHr = 0;
   this.outflowLaborHr = 0;
   this.baseLaborCost = 0;
   this.inflowLaborCost = 0;
   this.outflowLaborCost = 0;
+  this.salePrice = 0;
+  this.gutterCost = 0;
+  this.baseMaterialsCost = 0;
+  this.inflowMaterialsCost = 0;
+  this.outflowMaterialsCost = 0;
+  this.laborTotal = 0;
+  this.materialsTotal = 0;
+  this.subtotal = 0;
+  this.tax = 0;
+  this.total = 0;
 }
 
 cistern.getJSON = function(callback) {
   $.getJSON('/data/cisternModels.json', function(data) {
     cistern.tankModels = data;
   });
-  if (!bulkMaterials) {
-    $.getJSON('/data/bulkMaterials.json', function(data) {
-      bulkMaterials = data;
+  if (!Object.keys(materials).length) {
+    $.getJSON('/data/materials.json', function(data) {
+      materials = data;
     });
   }
   callback();
@@ -50,9 +61,13 @@ cistern.buildCistern = function(index) {
   var $inf = +($('#cisternInflow').val());
   var $out = +($('#cisternOutflow').val());
   return new cisternMaker(index, $id, $ra, $m, $bh, $g, $inf, $out);
-}
+};
 
-cistern.calculateMaterials = function (c) {
+cistern.tankSalePrice = function (tank) {
+  return Math.ceil(tank.purchasePrice * project.markup + tank.delivery);
+};
+
+cistern.calculateBaseMaterials = function (c) {
   let modelInfo = cistern.tankModels[c.model];
   c.salePrice = cistern.tankSalePrice(modelInfo);
   if (modelInfo.slimline) {
@@ -64,7 +79,8 @@ cistern.calculateMaterials = function (c) {
     c.stoneType = 'manor-stone';
     c.stones = cistern.getManorStones(modelInfo.diameter, c.baseHeight);
   }
-}
+  c.baseMaterialsCost = (c.paverbase * materials.gravel.paverbase) + (c.stones * materials.stone[c.stoneType]);
+};
 
 cistern.calculateLabor = function (c) {
   c.baseLaborHr = Math.ceil((c.paverbase + c.stones) / 3);
@@ -73,27 +89,65 @@ cistern.calculateLabor = function (c) {
   c.baseLaborCost = util.laborCost(c.baseLaborHr);
   c.inflowLaborCost = util.laborCost(c.inflowLaborHr);
   c.outflowLaborCost = util.laborCost(c.outflowLaborHr);
-}
+};
 
-cistern.tankSalePrice = function (tank) {
-  return Math.ceil(tank.purchasePrice * project.markup + tank.delivery);
-}
+cistern.calculatePlumbingMaterials = function(c) {
+  c.gutterCost = util.materialCost(c.gutter, materials.plumbing.gutter);
+
+  c.inflowHardware = cistern.calculateHardware(c.inflow);
+  c.outflowHardware = cistern.calculateHardware(c.outflow);
+
+  c.inflowMaterialsCost = util.round(
+    'round',
+    util.materialCost(c.inflow, materials.plumbing.pvc3In) + util.materialCost(c.inflowHardware, materials.plumbing.hardware),
+    0.01);
+
+  c.outflowMaterialsCost = util.round(
+    'round',
+    util.materialCost(c.outflow, materials.plumbing.pvc3In) + util.materialCost(c.outflowHardware, materials.plumbing.hardware) +
+    materials.plumbing.lowFlowKit,
+    0.01);
+};
+
+cistern.calculateHardware = function(pipe) {
+  return pipe * 0.05;
+};
+
+cistern.calculateLaborTotal = function(c) {
+  return c.baseLaborCost + c.inflowLaborCost + c.outflowLaborCost;
+};
+
+cistern.calculateMaterialsTotal = function(c) {
+  return c.salePrice + c.gutterCost + c.baseMaterialsCost + c.inflowMaterialsCost + c.outflowMaterialsCost;
+};
+
+cistern.calcSubTotal = function(c) {
+  return c.laborTotal + c.materialsTotal;
+};
+
+cistern.calculateTotals = function(c) {
+  c.laborTotal = cistern.calculateLaborTotal(c);
+  c.materialsTotal = cistern.calculateMaterialsTotal(c);
+  c.subtotal = c.laborTotal + c.materialsTotal;
+  c.tax = util.salesTax(c.subtotal);
+  c.total = c.subtotal + c.tax;
+};
 
 cistern.volumeCyl = function(d, h) {
   return (Math.PI * Math.pow((d / 24), 2) * ((h / 2) + 0.33)) / 27;
-}
+};
 
 cistern.volumeRect = function(w, d, h) {
   return w * d * h / 5832;
-}
+};
 
 cistern.getManorStones = function (d, h) {
   return Math.ceil(Math.PI * d / 16) * h;
-}
+};
 
 cistern.getCinderBlocks = function(l, h) {
   return Math.ceil(l / 16) * 3 * h;
-}
+};
 
 var cisternView = {};
 
@@ -102,12 +156,14 @@ cisternView.handleNew = function() {
     e.preventDefault();
     let newCistern = cistern.buildCistern(cistern.cisternIndex);
     cistern.allCisterns.push(newCistern);
-    cistern.calculateMaterials(newCistern);
+    cistern.calculateBaseMaterials(newCistern);
     cistern.calculateLabor(newCistern);
+    cistern.calculatePlumbingMaterials(newCistern);
+    cistern.calculateTotals(newCistern);
     cistern.cisternIndex += 1;
     viewUtil.clearForm();
-  })
-}
+  });
+};
 
 cisternView.init = function () {
   $('#cistern-content').show()

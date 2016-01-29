@@ -38,6 +38,14 @@
   * gutter regrade (ft)
   * 3" inflow pipe (ft)
   * 3" outflow pipe (ft)
+  * totals
+    * subtotal
+    * tax
+    * total
+    * allCisterns.total
+
+# Concerns
+* 0.05 factor for cistern in/outflow hardware cost
 
 # Hours
 * 1/15: 1
@@ -48,3 +56,5 @@
 * 1/24: 4
 * 1/25: 2.5
 * 1/26: 2.5
+* 1/27: 4
+* 1/28: 2

@@ -7,6 +7,11 @@
     "cinder-block": 1.79
   },
   "mulch": {
-
+  },
+  "plumbing": {
+    "pvc3In": 5.5,
+    "gutter": 7.5,
+    "lowFlowKit": 75,
+    "hardware": 20
   }
 }
