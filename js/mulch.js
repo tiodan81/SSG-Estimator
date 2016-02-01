@@ -21,8 +21,8 @@ function MulchZone (i, z, t, wf, wi, lf, li, d, p) {
   this.depth = d;
   this.dispWidth = this.widFt + "' " + this.widIn + '"';
   this.dispLength = this.lenFt + "' " + this.lenIn + '"';
-  this.volume = parseFloat((((wf * 12 + wi) * (lf * 12 + li) * d) / 46656).toFixed(2));
-  this.price = parseFloat((this.volume * p).toFixed(2));
+  this.volume = util.round('round',((wf * 12 + wi) * (lf * 12 + li) * d) / 46656, 0.01);
+  this.price = util.round('round', this.volume * p, 0.01);
 }
 
 mulch.updateTotals = function() {
@@ -130,7 +130,7 @@ mulchView.populateForm = function(zone) {
 mulchView.handleNew = function() {
   $('#mulch-add').on('click', function(e) {
     e.preventDefault();
-    var newMulchZone = mulch.buildMulch(mulch.zoneId);
+    let newMulchZone = mulch.buildMulch(mulch.zoneId);
     mulch.mulchZones.push(newMulchZone);
     mulch.zoneId += 1;
     mulch.listen();
