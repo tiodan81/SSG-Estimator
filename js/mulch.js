@@ -32,8 +32,8 @@ mulch.updateTotals = function() {
     mulch.totalVolume += e.volume;
     mulch.totalPrice += e.price;
   });
-  $('#totalVol').text(mulch.totalVolume + ' yd');
-  $('#totalPrice').text('$' + mulch.totalPrice);
+  $('#mulch-total-vol').text(mulch.totalVolume + ' yd');
+  $('#mulch-total-price').text('$' + mulch.totalPrice);
 };
 
 mulch.findReplace = function(updated) {
@@ -75,7 +75,7 @@ mulchView.init = function() {
 };
 
 mulchView.makeTable = function() {
-  $('tbody').empty();
+  $('#mulch-table-body').empty();
   mulch.mulchZones.forEach(function(zone) {
     var html = '';
     html += `
@@ -91,16 +91,16 @@ mulchView.makeTable = function() {
     <td><span id="${zone.id}" class="icon-bin2"></span></td>
     </tr>
     `;
-    $('tbody').append(html);
+    $('#mulch-table-body').append(html);
   });
 };
 
 mulchView.showTotal = function() {
   if (mulch.mulchZones.length === 0) {
-    $('#totalrow').hide();
+    $('#mulch-totalrow').hide();
     $('#save-mulch').hide();
   } else {
-    $('#totalrow').show();
+    $('#mulch-totalrow').show();
     $('#save-mulch').show();
   }
 };

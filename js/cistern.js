@@ -174,6 +174,15 @@ cistern.calcGrandTotals = function() {
 
 var cisternView = {};
 
+cisternView.init = function () {
+  $('#cistern-content').show()
+  .siblings().hide();
+  // if (cistern.allCisterns.length === 0) {
+  //   $('#cistern-display').hide();
+  // }
+  cisternView.handleNew();
+};
+
 cisternView.handleNew = function() {
   $('#cistern-add').on('click', function(e) {
     e.preventDefault();
@@ -185,12 +194,37 @@ cisternView.handleNew = function() {
     cistern.allCisterns.push(newCistern);
     cistern.calcGrandTotals();
     cistern.cisternIndex += 1;
+    cisternView.updateDisplay();
     viewUtil.clearForm();
   });
 };
 
-cisternView.init = function () {
-  $('#cistern-content').show()
-  .siblings().hide();
-  cisternView.handleNew();
+cisternView.updateDisplay = function() {
+  cisternView.populateSelector();
+};
+
+cisternView.populateSelector = function() {
+  cistern.allCisterns.forEach(function(e) {
+    let curId = e.cisternId;
+    if ($('#cistern-selector option[value="' + curId + '"]').length === 0) {
+      let option = '<option value="' + curId + '">' + curId + '</option>';
+      $('#cistern-selector').append(option);
+    }
+  });
+};
+
+cisternView.handleSelector = function() {
+
+};
+
+cisternView.makeSummary = function() {
+
+};
+
+cisternView.makeLabor = function() {
+
+};
+
+cisternView.makeMaterials = function() {
+
 };
