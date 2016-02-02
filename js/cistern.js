@@ -92,11 +92,11 @@ cistern.calculateBaseMaterials = function (c) {
   c.salePrice = cistern.tankSalePrice(modelInfo);
   if (modelInfo.slimline) {
     c.paverbase = util.round('ceil', cistern.volumeRect(modelInfo.width, modelInfo.depth, c.baseHeight), 0.5);
-    c.stoneType = 'cinder-block';
+    c.stoneType = 'cinder block';
     c.stones = cistern.calcCinderBlocks(modelInfo.width, c.baseHeight);
   } else {
     c.paverbase = util.round('ceil', cistern.volumeCyl(modelInfo.diameter, c.baseHeight), 0.5);
-    c.stoneType = 'manor-stone';
+    c.stoneType = 'manor stone';
     c.stones = cistern.calcManorStones(modelInfo.diameter, c.baseHeight);
   }
   c.baseMaterialsCost = util.round(
@@ -179,6 +179,8 @@ cisternView.init = function () {
   //   $('#cistern-display').hide();
   // }
   cisternView.handleNew();
+  cisternView.handleSelector();
+  cisternView.handleNav();
 };
 
 cisternView.handleNew = function() {
@@ -198,8 +200,6 @@ cisternView.handleNew = function() {
 
 cisternView.updateDisplay = function() {
   cisternView.populateSelector();
-  cisternView.handleSelector();
-  cisternView.handleNav();
 };
 
 cisternView.populateSelector = function() {
@@ -215,13 +215,14 @@ cisternView.populateSelector = function() {
 cisternView.handleSelector = function() {
   $('#cistern-selector').on('change', function(e) {
     e.preventDefault();
+    console.log(this);
     let curCistern = $.grep(cistern.allCisterns, function(e) {
       return e.cisternId == $('#cistern-selector').val();
     });
     if (curCistern.length === 1) {
       cisternView.makeSummary(curCistern[0]);
     } else {
-      console.log('error. cistern ID not found or duplicated.');
+      console.log('error. cistern ID duplicated or not found.');
     }
 
     //makeSummary/labor/materials for curCistern
@@ -245,13 +246,34 @@ cisternView.makeSummary = function(cur) {
   <tr><td>Tax</td><td>${cur.tax}</td></tr>
   <tr><td>Total</td><td>${cur.total}</td></tr>
   `;
-  $('#cistern-table').append(summary);
+  $('#cistern-table').html(summary);
 };
 
-cisternView.makeLabor = function() {
-
+cisternView.makeLabor = function(cur) {
+  let labor = '';
+  labor += `
+  <tr><th>Item</th><th>Hours></th><th>Cost</th></tr>
+  <tr><td>Base</td><td>${cur.baseLaborHr}</td><td>${cur.baseLaborCost}</td></tr>
+  <tr><td>Inflow</td><td>${cur.inflowLaborHr}</td><td>${cur.inflowLaborCost}</td></tr>
+  <tr><td>Outflow</td><td>${cur.outflowLaborHr}</td><td>${cur.outflowLaborCost}</td></tr>
+  <tr><td>Total</td><td>${cur.totalHr}</td><td>${cur.laborTotal}</td></tr>
+  `;
+  $('#cistern-table').html(summary);
 };
 
-cisternView.makeMaterials = function() {
-
+cisternView.makeMaterials = function(cur) {
+  let materials = '';
+  materials += `
+  <tr><th>Item</th><th>Qty></th><th>Cost</th></tr>
+  <tr><td>Tank</td><td>1</td><td>${cur.salePrice}</td></tr>
+  <tr><td>Gutter</td><td>${cur.gutter}</td><td>${cur.gutterCost}</td></tr>
+  <tr><td>Paverbase</td><td>${cur.paverbase}</td><td></td></tr>
+  <tr><td>${cur.stoneType}</td><td>${cur.stones}</td><td></td></tr>
+  <tr><td>Inflow pipe</td><td>${cur.inflow}</td><td></td></tr>
+  <tr><td>Inflow hardware</td><td>${cur.inflowHardware}</td><td></td></tr>
+  <tr><td>Outflow pipe</td><td>${cur.outflow}</td><td></td></tr>
+  <tr><td>Outflow hardware</td><td>${cur.outflowHardware}</td><td></td></tr>
+  <tr><td>Low-flow kit</td><td>1</td><td>75</td></tr>
+  <tr><td>Total</td><td></td><td>${cur.materialsTotal}</td></tr>
+  `;
 };
