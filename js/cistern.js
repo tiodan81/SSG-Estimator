@@ -1,5 +1,4 @@
 var cistern = {
-  cisternIndex: 0,
   laborHoursTotal: 0,
   laborCostTotal: 0,
   materialsCostTotal: 0,
@@ -9,8 +8,7 @@ var cistern = {
   tankModels: []
 };
 
-function cisternMaker (i, ci, a, m, h, g, inf, out) {
-  this.index = i;
+function cisternMaker (ci, a, m, h, g, inf, out) {
   this.cisternId = ci;
   this.roofArea = a;
   this.model = m;
@@ -54,7 +52,7 @@ cistern.getJSON = function(callback) {
   callback();
 };
 
-cistern.buildCistern = function(index) {
+cistern.buildCistern = function() {
   var $id = $('#cistern').val();
   var $ra = +($('#roofArea').val());
   var $m = $('#cisternModel').val();
@@ -62,7 +60,7 @@ cistern.buildCistern = function(index) {
   var $g = +($('#gutterFt').val());
   var $inf = +($('#cisternInflow').val());
   var $out = +($('#cisternOutflow').val());
-  return new cisternMaker(index, $id, $ra, $m, $bh, $g, $inf, $out);
+  return new cisternMaker($id, $ra, $m, $bh, $g, $inf, $out);
 };
 
 cistern.volumeCyl = function(d, h) {
@@ -186,14 +184,13 @@ cisternView.init = function () {
 cisternView.handleNew = function() {
   $('#cistern-add').on('click', function(e) {
     e.preventDefault();
-    let newCistern = cistern.buildCistern(cistern.cisternIndex);
+    let newCistern = cistern.buildCistern();
     cistern.calculateBaseMaterials(newCistern);
     cistern.calculateLabor(newCistern);
     cistern.calculatePlumbingMaterials(newCistern);
     cistern.calculateTotals(newCistern);
     cistern.allCisterns.push(newCistern);
     cistern.calcGrandTotals();
-    cistern.cisternIndex += 1;
     cisternView.updateDisplay();
     viewUtil.clearForm();
   });
@@ -201,6 +198,8 @@ cisternView.handleNew = function() {
 
 cisternView.updateDisplay = function() {
   cisternView.populateSelector();
+  cisternView.handleSelector();
+  cisternView.handleNav();
 };
 
 cisternView.populateSelector = function() {
@@ -214,11 +213,39 @@ cisternView.populateSelector = function() {
 };
 
 cisternView.handleSelector = function() {
+  $('#cistern-selector').on('change', function(e) {
+    e.preventDefault();
+    let curCistern = $.grep(cistern.allCisterns, function(e) {
+      return e.cisternId == $('#cistern-selector').val();
+    });
+    if (curCistern.length === 1) {
+      cisternView.makeSummary(curCistern[0]);
+    } else {
+      console.log('error. cistern ID not found or duplicated.');
+    }
+
+    //makeSummary/labor/materials for curCistern
+    //show summary, hide labor/materials
+    //clear any previous content, show cur
+  });
+};
+
+cisternView.handleNav = function() {
 
 };
 
-cisternView.makeSummary = function() {
-
+cisternView.makeSummary = function(cur) {
+  console.log(cur);
+  let summary = '';
+  summary += `
+  <tr><td>Model</td><td>${cur.model}</td></tr>
+  <tr><td>Labor Hrs</td><td>${cur.totalHr}</td></tr>
+  <tr><td>Labor Cost</td><td>${cur.laborTotal}</td></tr>
+  <tr><td>Materials Cost</td><td>${cur.materialsTotal}</td></tr>
+  <tr><td>Tax</td><td>${cur.tax}</td></tr>
+  <tr><td>Total</td><td>${cur.total}</td></tr>
+  `;
+  $('#cistern-table').append(summary);
 };
 
 cisternView.makeLabor = function() {
