@@ -170,7 +170,10 @@ cistern.calcGrandTotals = function() {
   });
 };
 
-var cisternView = {};
+var cisternView = {
+  current: {},
+  navSelected: ''
+};
 
 cisternView.init = function () {
   $('#cistern-content').show()
@@ -180,7 +183,8 @@ cisternView.init = function () {
   // }
   cisternView.handleNew();
   cisternView.handleSelector();
-  cisternView.handleNav();
+  //cisternView.handleNav();
+
 };
 
 cisternView.handleNew = function() {
@@ -193,50 +197,68 @@ cisternView.handleNew = function() {
     cistern.calculateTotals(newCistern);
     cistern.allCisterns.push(newCistern);
     cistern.calcGrandTotals();
-    cisternView.updateDisplay();
+    cisternView.updateDisplayWithNew(newCistern);
     viewUtil.clearForm();
   });
 };
 
-cisternView.updateDisplay = function() {
-  cisternView.populateSelector();
+cisternView.updateDisplayWithNew = function(cur) {
+  cisternView.current = cur;
+  cisternView.populateSelector(cur);
+  if (cistern.allCisterns.length === 1) {
+    cisternView.makeSummary(cur);
+    cisternView.navSelected = 'Summary';
+  }
 };
 
-cisternView.populateSelector = function() {
-  cistern.allCisterns.forEach(function(e) {
-    let curId = e.cisternId;
-    if ($('#cistern-selector option[value="' + curId + '"]').length === 0) {
-      let option = '<option value="' + curId + '">' + curId + '</option>';
-      $('#cistern-selector').append(option);
-    }
-  });
+cisternView.populateSelector = function(cur) {
+  let curId = cur.cisternId;
+  if ($('#cistern-selector option[value="' + curId + '"]').length === 0) {
+    let option = '<option value="' + curId + '">' + curId + '</option>';
+    $('#cistern-selector').append(option);
+  }
 };
 
 cisternView.handleSelector = function() {
   $('#cistern-selector').on('change', function(e) {
     e.preventDefault();
-    console.log(this);
-    let curCistern = $.grep(cistern.allCisterns, function(e) {
-      return e.cisternId == $('#cistern-selector').val();
-    });
+    let curCistern = cisternView.find();
     if (curCistern.length === 1) {
       cisternView.makeSummary(curCistern[0]);
+      cisternView.current = curCistern[0];
     } else {
       console.log('error. cistern ID duplicated or not found.');
     }
-
-    //makeSummary/labor/materials for curCistern
-    //show summary, hide labor/materials
-    //clear any previous content, show cur
   });
 };
 
 cisternView.handleNav = function() {
 
+  $('#cistern-summary').on('click', function() {
+    console.log('sumbang');
+    cisternView.makeSummary(cisternView.current);
+  });
+  $('#cistern-labor').on('click', function() {
+    console.log('laborbang');
+    cisternView.makeLabor(cisternView.current);
+  });
+  //$('#cistern-materials').on('click', cisternView.makeMaterials(cisternView.current));
+
+  // $('#cistern-nav > li').on('click', function() {
+  //   console.log($(this).text());
+  //   let curNav = cisternView.navSelected;
+  //   let nextNav = $(this).text();
+  //   let tank = cisternView.current;
+  //   if (curNav != nextNav) {
+  //     let funcCall = 'make' + nextNav;
+  //     cisternView.funcCall(tank);
+  //   } else {
+  //     return;
+  //   }
+  // });
 };
 
 cisternView.makeSummary = function(cur) {
-  console.log(cur);
   let summary = '';
   summary += `
   <tr><td>Model</td><td>${cur.model}</td></tr>
@@ -252,19 +274,19 @@ cisternView.makeSummary = function(cur) {
 cisternView.makeLabor = function(cur) {
   let labor = '';
   labor += `
-  <tr><th>Item</th><th>Hours></th><th>Cost</th></tr>
+  <tr><th>Item</th><th>Hours</th><th>Cost</th></tr>
   <tr><td>Base</td><td>${cur.baseLaborHr}</td><td>${cur.baseLaborCost}</td></tr>
   <tr><td>Inflow</td><td>${cur.inflowLaborHr}</td><td>${cur.inflowLaborCost}</td></tr>
   <tr><td>Outflow</td><td>${cur.outflowLaborHr}</td><td>${cur.outflowLaborCost}</td></tr>
   <tr><td>Total</td><td>${cur.totalHr}</td><td>${cur.laborTotal}</td></tr>
   `;
-  $('#cistern-table').html(summary);
+  $('#cistern-table').html(labor);
 };
 
 cisternView.makeMaterials = function(cur) {
   let materials = '';
   materials += `
-  <tr><th>Item</th><th>Qty></th><th>Cost</th></tr>
+  <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
   <tr><td>Tank</td><td>1</td><td>${cur.salePrice}</td></tr>
   <tr><td>Gutter</td><td>${cur.gutter}</td><td>${cur.gutterCost}</td></tr>
   <tr><td>Paverbase</td><td>${cur.paverbase}</td><td></td></tr>
@@ -276,4 +298,11 @@ cisternView.makeMaterials = function(cur) {
   <tr><td>Low-flow kit</td><td>1</td><td>75</td></tr>
   <tr><td>Total</td><td></td><td>${cur.materialsTotal}</td></tr>
   `;
+  $('#cistern-table').html(materials);
+};
+
+cisternView.find = function() {
+  $.grep(cistern.allCisterns, function(e) {
+    return e.cisternId == $('#cistern-selector').val();
+  });
 };
