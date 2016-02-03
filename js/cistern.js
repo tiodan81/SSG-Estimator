@@ -183,7 +183,7 @@ cisternView.init = function () {
   // }
   cisternView.handleNew();
   cisternView.handleSelector();
-  //cisternView.handleNav();
+  cisternView.handleNav();
 
 };
 
@@ -236,10 +236,14 @@ cisternView.handleNav = function() {
 
   $('#cistern-summary').on('click', function() {
     console.log('sumbang');
+    $(this).addClass('selected')
+      .siblings().removeClass('selected');
     cisternView.makeSummary(cisternView.current);
   });
   $('#cistern-labor').on('click', function() {
     console.log('laborbang');
+    $(this).addClass('selected')
+      .siblings().removeClass('selected');
     cisternView.makeLabor(cisternView.current);
   });
   //$('#cistern-materials').on('click', cisternView.makeMaterials(cisternView.current));
