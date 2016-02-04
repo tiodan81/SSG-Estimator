@@ -30,6 +30,12 @@ function cisternMaker (ci, a, m, h, g, inf, out) {
   this.outflowLaborCost = 0;
   this.salePrice = 0;
   this.gutterCost = 0;
+  this.paverbaseCost = 0;
+  this.stoneCost = 0;
+  this.inflowPipeCost = 0;
+  this.outflowPipeCost = 0;
+  this.inflowHdwCost = 0;
+  this.outflowHdwCost = 0;
   this.baseMaterialsCost = 0;
   this.inflowMaterialsCost = 0;
   this.outflowMaterialsCost = 0;
@@ -92,16 +98,18 @@ cistern.calculateBaseMaterials = function (c) {
   c.salePrice = cistern.tankSalePrice(modelInfo);
   if (modelInfo.slimline) {
     c.paverbase = util.round('ceil', cistern.volumeRect(modelInfo.width, modelInfo.depth, c.baseHeight), 0.5);
-    c.stoneType = 'cinder block';
+    c.stoneType = 'Cinder block';
     c.stones = cistern.calcCinderBlocks(modelInfo.width, c.baseHeight);
   } else {
     c.paverbase = util.round('ceil', cistern.volumeCyl(modelInfo.diameter, c.baseHeight), 0.5);
-    c.stoneType = 'manor stone';
+    c.stoneType = 'Manor stone';
     c.stones = cistern.calcManorStones(modelInfo.diameter, c.baseHeight);
   }
+  c.paverbaseCost = util.round('round', (c.paverbase * materials.gravel.paverbase), 0.01);
+  c.stoneCost = util.round('round', (c.stones * materials.stone[c.stoneType]), 0.01);
   c.baseMaterialsCost = util.round(
     'round',
-    (c.paverbase * materials.gravel.paverbase) + (c.stones * materials.stone[c.stoneType]),
+    c.paverbaseCost + c.stoneCost,
     0.01
   );
 };
@@ -118,20 +126,15 @@ cistern.calculateLabor = function (c) {
 
 cistern.calculatePlumbingMaterials = function(c) {
   c.gutterCost = util.materialCost(c.gutter, materials.plumbing.gutter);
-
+  c.inflowPipeCost = util.round('round', util.materialCost(c.inflow, materials.plumbing.pvc3In), 0.01);
+  c.outflowPipeCost = util.round('round', util.materialCost(c.outflow, materials.plumbing.pvc3In), 0.01);
   c.inflowHardware = cistern.calculateHardware(c.inflow);
   c.outflowHardware = cistern.calculateHardware(c.outflow);
+  c.inflowHdwCost = util.round('round', util.materialCost(c.inflowHardware, materials.plumbing.hardware), 0.01);
+  c.outflowHdwCost = util.round('round', util.materialCost(c.outflowHardware, materials.plumbing.hardware), 0.01);
 
-  c.inflowMaterialsCost = util.round(
-    'round',
-    util.materialCost(c.inflow, materials.plumbing.pvc3In) + util.materialCost(c.inflowHardware, materials.plumbing.hardware),
-    0.01);
-
-  c.outflowMaterialsCost = util.round(
-    'round',
-    util.materialCost(c.outflow, materials.plumbing.pvc3In) + util.materialCost(c.outflowHardware, materials.plumbing.hardware) +
-    materials.plumbing.lowFlowKit,
-    0.01);
+  c.inflowMaterialsCost = util.round('round', c.inflowPipeCost + c.inflowHdwCost, 0.01);
+  c.outflowMaterialsCost = util.round('round', c.outflowPipeCost + c.outflowHdwCost + materials.plumbing.lowFlowKit, 0.01);
 };
 
 cistern.calculateLaborTotal = function(c) {
@@ -297,12 +300,12 @@ cisternView.makeMaterials = function(cur) {
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
   <tr><td>Tank</td><td>1</td><td>$${cur.salePrice}</td></tr>
   <tr><td>Gutter</td><td>${cur.gutter}ft</td><td>$${cur.gutterCost}</td></tr>
-  <tr><td>Paverbase</td><td>${cur.paverbase}yd</td><td>$</td></tr>
-  <tr><td>${cur.stoneType}</td><td>${cur.stones}</td><td>$</td></tr>
-  <tr><td>Inflow pipe</td><td>${cur.inflow}ft</td><td>$</td></tr>
-  <tr><td>Inflow hardware</td><td>${cur.inflowHardware}</td><td>$</td></tr>
-  <tr><td>Outflow pipe</td><td>${cur.outflow}ft</td><td>$</td></tr>
-  <tr><td>Outflow hardware</td><td>${cur.outflowHardware}</td><td>$</td></tr>
+  <tr><td>Paverbase</td><td>${cur.paverbase}yd</td><td>$${cur.paverbaseCost}</td></tr>
+  <tr><td>${cur.stoneType}</td><td>${cur.stones}</td><td>$${cur.stoneCost}</td></tr>
+  <tr><td>Inflow pipe</td><td>${cur.inflow}ft</td><td>$${cur.inflowPipeCost}</td></tr>
+  <tr><td>Inflow hardware</td><td>${cur.inflowHardware}</td><td>$${cur.inflowHdwCost}</td></tr>
+  <tr><td>Outflow pipe</td><td>${cur.outflow}ft</td><td>$${cur.outflowPipeCost}</td></tr>
+  <tr><td>Outflow hardware</td><td>${cur.outflowHardware}</td><td>$${cur.outflowHdwCost}</td></tr>
   <tr><td>Low-flow kit</td><td>1</td><td>$75.00</td></tr>
   <tr><td>Total</td><td></td><td>$${cur.materialsTotal}</td></tr>
   `;
