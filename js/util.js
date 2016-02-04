@@ -14,5 +14,5 @@ util.materialCost = function(qty, rate) {
 };
 
 util.salesTax = function(price) {
-  return util.round('round', price, 0.01);
+  return util.round('round', price * 0.095, 0.01);
 };

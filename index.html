@@ -81,9 +81,9 @@
             <button id="mulch-update">Update Zone</button>
           </div>
         </form>
-        <section id="display">
+        <section id="mulch-display">
           <h3>Mulch</h3>
-          <table id="table">
+          <table id="mulch-table">
             <thead>
               <tr>
                 <th>Zone</th>
@@ -95,16 +95,16 @@
                 <th>Price</th>
               </tr>
             </thead>
-            <tbody></tbody>
+            <tbody id="mulch-table-body"></tbody>
             <tfoot>
-              <tr id="totalrow">
+              <tr id="mulch-totalrow">
                 <td>Total</td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
-                <td id="totalVol"></td>
-                <td id="totalPrice"></td>
+                <td id="mulch-total-vol"></td>
+                <td id="mulch-total-price"></td>
               </tr>
             </tfoot>
           </table>
@@ -176,6 +176,23 @@
             <button id="cistern-update">Update Tank</button>
           </div>
         </form>
+        <section id="cistern-display">
+          <h3>Cisterns</h3>
+          <div class="fe">
+            <label class="fieldname">Tank ID:</label>
+            <select id="cistern-selector"></select>
+          </div>
+          <ul id="cistern-nav">
+            <li id="cistern-nav-summary" class="selected">Summary</li>
+            <li id="cistern-nav-labor">Labor</li>
+            <li id="cistern-nav-materials">Materials</li>
+          </ul>
+          <div id="cistern-tables">
+            <table id="cistern-table-summary"></table>
+            <table id="cistern-table-labor"></table>
+            <table id="cistern-table-materials"></table>
+          </div>
+        </section>
       </section>
     </main>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>

@@ -21,8 +21,8 @@ function MulchZone (i, z, t, wf, wi, lf, li, d, p) {
   this.depth = d;
   this.dispWidth = this.widFt + "' " + this.widIn + '"';
   this.dispLength = this.lenFt + "' " + this.lenIn + '"';
-  this.volume = parseFloat((((wf * 12 + wi) * (lf * 12 + li) * d) / 46656).toFixed(2));
-  this.price = parseFloat((this.volume * p).toFixed(2));
+  this.volume = util.round('round',((wf * 12 + wi) * (lf * 12 + li) * d) / 46656, 0.01);
+  this.price = util.round('round', this.volume * p, 0.01);
 }
 
 mulch.updateTotals = function() {
@@ -32,8 +32,8 @@ mulch.updateTotals = function() {
     mulch.totalVolume += e.volume;
     mulch.totalPrice += e.price;
   });
-  $('#totalVol').text(mulch.totalVolume + ' yd');
-  $('#totalPrice').text('$' + mulch.totalPrice);
+  $('#mulch-total-vol').text(mulch.totalVolume + ' yd');
+  $('#mulch-total-price').text('$' + mulch.totalPrice);
 };
 
 mulch.findReplace = function(updated) {
@@ -75,7 +75,7 @@ mulchView.init = function() {
 };
 
 mulchView.makeTable = function() {
-  $('tbody').empty();
+  $('#mulch-table-body').empty();
   mulch.mulchZones.forEach(function(zone) {
     var html = '';
     html += `
@@ -91,16 +91,16 @@ mulchView.makeTable = function() {
     <td><span id="${zone.id}" class="icon-bin2"></span></td>
     </tr>
     `;
-    $('tbody').append(html);
+    $('#mulch-table-body').append(html);
   });
 };
 
 mulchView.showTotal = function() {
   if (mulch.mulchZones.length === 0) {
-    $('#totalrow').hide();
+    $('#mulch-totalrow').hide();
     $('#save-mulch').hide();
   } else {
-    $('#totalrow').show();
+    $('#mulch-totalrow').show();
     $('#save-mulch').show();
   }
 };
@@ -130,7 +130,7 @@ mulchView.populateForm = function(zone) {
 mulchView.handleNew = function() {
   $('#mulch-add').on('click', function(e) {
     e.preventDefault();
-    var newMulchZone = mulch.buildMulch(mulch.zoneId);
+    let newMulchZone = mulch.buildMulch(mulch.zoneId);
     mulch.mulchZones.push(newMulchZone);
     mulch.zoneId += 1;
     mulch.listen();
