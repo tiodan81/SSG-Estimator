@@ -35,6 +35,7 @@
     * on-screen
     * on paper for quote
     * shopping list
+  * editing of cisterns: just form parameters, or allow manual editing of any/all fields?
 
 
 # Concerns
@@ -54,4 +55,4 @@
 * 1/31: 1
 * 2/1: 4
 * 2/2: 3
-* 2/3: 2-
+* 2/3: 3.5
