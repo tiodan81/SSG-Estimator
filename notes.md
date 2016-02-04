@@ -29,20 +29,13 @@
 * click to edit individual items
 
 # Cistern
-* input needed
-  * tank id name
-  * roof area
-  * tank brand (bushman, premier)
-    * tank model (populate based on brand)
-  * base height (1 or 2)
-  * gutter regrade (ft)
-  * 3" inflow pipe (ft)
-  * 3" outflow pipe (ft)
-  * totals
-    * subtotal
-    * tax
-    * total
-    * allCisterns.total
+## Questions for jake
+  * on cistern select: jump to summary or stay on current nav?
+  * what granularity of materials detail?
+    * on-screen
+    * on paper for quote
+    * shopping list
+
 
 # Concerns
 * 0.05 factor for cistern in/outflow hardware cost
