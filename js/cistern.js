@@ -171,20 +171,25 @@ cistern.calcGrandTotals = function() {
 };
 
 var cisternView = {
-  current: {},
-  navSelected: ''
+  current: {}
 };
 
-cisternView.init = function () {
+cisternView.init = function() {
   $('#cistern-content').show()
   .siblings().hide();
-  // if (cistern.allCisterns.length === 0) {
-  //   $('#cistern-display').hide();
-  // }
+  //cisternView.checkDisplay();
   cisternView.handleNew();
   cisternView.handleSelector();
   cisternView.handleNav();
 
+};
+
+cisternView.checkDisplay = function() {
+  if (cistern.allCisterns.length) {
+    //populateSelector <=== requires refactoring populateSelector to handle multiple cisterns
+    cisternView.current = $('#cistern-selector');
+    $('#cistern-display').hide();
+  }
 };
 
 cisternView.handleNew = function() {
@@ -198,17 +203,24 @@ cisternView.handleNew = function() {
     cistern.allCisterns.push(newCistern);
     cistern.calcGrandTotals();
     cisternView.updateDisplayWithNew(newCistern);
+    cisternView.current = newCistern;
     viewUtil.clearForm();
   });
 };
 
 cisternView.updateDisplayWithNew = function(cur) {
-  cisternView.current = cur;
+  const $display = $('#cistern-display');
+  let $selected = $('.selected').attr('id').split('-')[2];
   cisternView.populateSelector(cur);
-  if (cistern.allCisterns.length === 1) {
-    cisternView.makeSummary(cur);
-    cisternView.navSelected = 'Summary';
+  cisternView.makeTables(cur);
+  if ($display.css('display') === 'none') {
+    $display.show();
   }
+  if ($selected != 'summary') {
+    $('#cistern-nav-summary').addClass('selected')
+      .siblings().removeClass('selected');
+  }
+  //show edit button
 };
 
 cisternView.populateSelector = function(cur) {
@@ -224,7 +236,7 @@ cisternView.handleSelector = function() {
     e.preventDefault();
     let curCistern = cisternView.find();
     if (curCistern.length === 1) {
-      cisternView.makeSummary(curCistern[0]);
+      cisternView.makeSummary(curCistern[0]); //<=====deprecated syntax?
       cisternView.current = curCistern[0];
     } else {
       console.log('error. cistern ID duplicated or not found.');
@@ -234,75 +246,82 @@ cisternView.handleSelector = function() {
 
 cisternView.handleNav = function() {
 
-  $('#cistern-summary').on('click', function() {
-    console.log('sumbang');
-    $(this).addClass('selected')
-      .siblings().removeClass('selected');
-    cisternView.makeSummary(cisternView.current);
-  });
-  $('#cistern-labor').on('click', function() {
-    console.log('laborbang');
-    $(this).addClass('selected')
-      .siblings().removeClass('selected');
-    cisternView.makeLabor(cisternView.current);
-  });
+  // $('#cistern-summary').on('click', function() {
+  //   $(this).addClass('selected')
+  //     .siblings().removeClass('selected');
+  //   cisternView.makeSummary(cisternView.current);
+  // });
+  // $('#cistern-labor').on('click', function() {
+  //   $(this).addClass('selected')
+  //     .siblings().removeClass('selected');
+  //   cisternView.makeLabor(cisternView.current);
+  // });
   //$('#cistern-materials').on('click', cisternView.makeMaterials(cisternView.current));
 
-  // $('#cistern-nav > li').on('click', function() {
-  //   console.log($(this).text());
-  //   let curNav = cisternView.navSelected;
-  //   let nextNav = $(this).text();
-  //   let tank = cisternView.current;
-  //   if (curNav != nextNav) {
-  //     let funcCall = 'make' + nextNav;
-  //     cisternView.funcCall(tank);
-  //   } else {
-  //     return;
-  //   }
-  // });
+  $('#cistern-nav > li').on('click', function() {
+    let $curNav = $('.selected').attr('id').split('-')[2];
+    let $nextNav = $(this).attr('id').split('-')[2];
+    $(this).addClass('selected')
+      .siblings().removeClass('selected');
+    //let tank = cisternView.current;
+    if ($curNav != $nextNav) {
+      let target = '#cistern-table-' + $nextNav;
+      $(target).show()
+        .siblings().hide();
+    } else {
+      return;
+    }
+  });
+};
+
+cisternView.makeTables = function(cur) {
+  $('#cistern-table-summary').html(cisternView.makeSummary(cur));
+  $('#cistern-table-labor').html(cisternView.makeLabor(cur));
+  $('#cistern-table-materials').html(cisternView.makeMaterials(cur));
 };
 
 cisternView.makeSummary = function(cur) {
   let summary = '';
   summary += `
+  <tr><th>Item</th><th>Cost</th></tr>
   <tr><td>Model</td><td>${cur.model}</td></tr>
   <tr><td>Labor Hrs</td><td>${cur.totalHr}</td></tr>
-  <tr><td>Labor Cost</td><td>${cur.laborTotal}</td></tr>
-  <tr><td>Materials Cost</td><td>${cur.materialsTotal}</td></tr>
-  <tr><td>Tax</td><td>${cur.tax}</td></tr>
-  <tr><td>Total</td><td>${cur.total}</td></tr>
+  <tr><td>Labor Cost</td><td>$${cur.laborTotal}</td></tr>
+  <tr><td>Materials Cost</td><td>$${cur.materialsTotal}</td></tr>
+  <tr><td>Tax</td><td>$${cur.tax}</td></tr>
+  <tr><td>Total</td><td>$${cur.total}</td></tr>
   `;
-  $('#cistern-table').html(summary);
+  return summary;
 };
 
 cisternView.makeLabor = function(cur) {
   let labor = '';
   labor += `
   <tr><th>Item</th><th>Hours</th><th>Cost</th></tr>
-  <tr><td>Base</td><td>${cur.baseLaborHr}</td><td>${cur.baseLaborCost}</td></tr>
-  <tr><td>Inflow</td><td>${cur.inflowLaborHr}</td><td>${cur.inflowLaborCost}</td></tr>
-  <tr><td>Outflow</td><td>${cur.outflowLaborHr}</td><td>${cur.outflowLaborCost}</td></tr>
-  <tr><td>Total</td><td>${cur.totalHr}</td><td>${cur.laborTotal}</td></tr>
+  <tr><td>Base</td><td>${cur.baseLaborHr}</td><td>$${cur.baseLaborCost}</td></tr>
+  <tr><td>Inflow</td><td>${cur.inflowLaborHr}</td><td>$${cur.inflowLaborCost}</td></tr>
+  <tr><td>Outflow</td><td>${cur.outflowLaborHr}</td><td>$${cur.outflowLaborCost}</td></tr>
+  <tr><td>Total</td><td>${cur.totalHr}</td><td>$${cur.laborTotal}</td></tr>
   `;
-  $('#cistern-table').html(labor);
+  return labor;
 };
 
 cisternView.makeMaterials = function(cur) {
   let materials = '';
   materials += `
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
-  <tr><td>Tank</td><td>1</td><td>${cur.salePrice}</td></tr>
-  <tr><td>Gutter</td><td>${cur.gutter}</td><td>${cur.gutterCost}</td></tr>
-  <tr><td>Paverbase</td><td>${cur.paverbase}</td><td></td></tr>
-  <tr><td>${cur.stoneType}</td><td>${cur.stones}</td><td></td></tr>
-  <tr><td>Inflow pipe</td><td>${cur.inflow}</td><td></td></tr>
-  <tr><td>Inflow hardware</td><td>${cur.inflowHardware}</td><td></td></tr>
-  <tr><td>Outflow pipe</td><td>${cur.outflow}</td><td></td></tr>
-  <tr><td>Outflow hardware</td><td>${cur.outflowHardware}</td><td></td></tr>
-  <tr><td>Low-flow kit</td><td>1</td><td>75</td></tr>
-  <tr><td>Total</td><td></td><td>${cur.materialsTotal}</td></tr>
+  <tr><td>Tank</td><td>1</td><td>$${cur.salePrice}</td></tr>
+  <tr><td>Gutter</td><td>${cur.gutter}</td><td>$${cur.gutterCost}</td></tr>
+  <tr><td>Paverbase</td><td>${cur.paverbase}</td><td>$</td></tr>
+  <tr><td>${cur.stoneType}</td><td>${cur.stones}</td><td>$</td></tr>
+  <tr><td>Inflow pipe</td><td>${cur.inflow}</td><td>$</td></tr>
+  <tr><td>Inflow hardware</td><td>${cur.inflowHardware}</td><td>$</td></tr>
+  <tr><td>Outflow pipe</td><td>${cur.outflow}</td><td>$</td></tr>
+  <tr><td>Outflow hardware</td><td>${cur.outflowHardware}</td><td>$</td></tr>
+  <tr><td>Low-flow kit</td><td>1</td><td>$75.00</td></tr>
+  <tr><td>Total</td><td></td><td>$${cur.materialsTotal}</td></tr>
   `;
-  $('#cistern-table').html(materials);
+  return materials;
 };
 
 cisternView.find = function() {
