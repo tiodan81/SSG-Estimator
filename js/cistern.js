@@ -173,6 +173,13 @@ cistern.calcGrandTotals = function() {
   });
 };
 
+cistern.allCalcs = function(cur) {
+  cistern.calculateBaseMaterials(cur);
+  cistern.calculateLabor(cur);
+  cistern.calculatePlumbingMaterials(cur);
+  cistern.calculateTotals(cur);
+};
+
 var cisternView = {
   current: {}
 };
@@ -184,7 +191,8 @@ cisternView.init = function() {
   cisternView.handleNew();
   cisternView.handleSelector();
   cisternView.handleNav();
-
+  cisternView.handleUpdate();
+  cisternView.handleDelete();
 };
 
 cisternView.checkDisplay = function() {
@@ -195,16 +203,13 @@ cisternView.checkDisplay = function() {
   }
 };
 
+cistern.calcGrandTotals();
 cisternView.handleNew = function() {
   $('#cistern-add').on('click', function(e) {
     e.preventDefault();
     let newCistern = cistern.buildCistern();
-    cistern.calculateBaseMaterials(newCistern);
-    cistern.calculateLabor(newCistern);
-    cistern.calculatePlumbingMaterials(newCistern);
-    cistern.calculateTotals(newCistern);
+    cistern.allCalcs(newCistern);
     cistern.allCisterns.push(newCistern);
-    cistern.calcGrandTotals();
     cisternView.updateDisplayWithNew(newCistern);
     cisternView.current = newCistern;
     viewUtil.clearForm();
@@ -213,18 +218,22 @@ cisternView.handleNew = function() {
 
 cisternView.updateDisplayWithNew = function(cur) {
   const $display = $('#cistern-display');
-  let $selected = $('.selected').attr('id').split('-')[2];
   cisternView.populateSelector(cur);
   $('#cistern-selector').val(cur.cisternId);
   cisternView.makeTables(cur);
   if ($display.css('display') === 'none') {
     $display.show();
   }
+  cisternView.showSummary();
+  cisternView.editButtons(cur);
+};
+
+cisternView.showSummary = function() {
+  let $selected = $('.selected').attr('id').split('-')[2];
   if ($selected != 'summary') {
     $('#cistern-nav-summary').addClass('selected')
-      .siblings().removeClass('selected');
+    .siblings().removeClass('selected');
   }
-  //show edit button
 };
 
 cisternView.populateSelector = function(cur) {
@@ -243,6 +252,7 @@ cisternView.handleSelector = function() {
     });
     cisternView.makeTables(curCistern[0]);
     cisternView.current = curCistern[0];
+    cisternView.showSummary();
   });
 };
 
@@ -310,4 +320,62 @@ cisternView.makeMaterials = function(cur) {
   <tr><td>Total</td><td></td><td>$${cur.materialsTotal}</td></tr>
   `;
   return materials;
+};
+
+cisternView.editButtons = function(cur) {
+  let buttons = '';
+  buttons += `
+  <span id="${cur.cisternId}" class="icon-pencil2"></span>
+  <span id="${cur.cisternId}" class="icon-bin2"></span>
+  `;
+  $('#cistern-edit-buttons').empty().html(buttons);
+  cisternView.handleEdit();
+  cisternView.handleDelete();
+};
+
+cisternView.handleEdit = function() {
+  $('#cistern-edit-buttons .icon-pencil2').on('click', function(e) {
+    e.preventDefault();
+    let cur = cisternView.current;
+    cisternView.populateForm(cur);
+    $('#cistern-add').hide();
+    $('#cistern-update').show();
+  });
+};
+
+cisternView.handleUpdate = function() {
+  $('#cistern-update').on('click', function(e) {
+    e.preventDefault();
+    let old = cisternView.current;
+    let updated = cistern.buildCistern();
+    cistern.allCalcs(updated);
+    cistern.allCisterns.forEach(function(c, i) {
+      if (updated.cisternId === old.cisternId) {
+        cistern.allCisterns[i] = updated;
+      }
+    });
+    cisternView.updateDisplayWithNew(updated);
+    cisternView.current = updated;
+    viewUtil.clearForm();
+    $('#cistern-update').hide();
+    $('#cistern-add').show();
+  });
+};
+
+cisternView.handleDelete = function() {
+  $('#cistern-edit-buttons .icon-bin2').on('click', function(e) {
+    e.preventDefault();
+
+  });
+
+};
+
+cisternView.populateForm = function(cur) {
+  $('#cistern').val(cur.cisternId);
+  $('#roofArea').val(cur.roofArea);
+  $('#cisternModel').val(cur.model);
+  $('#cisternBase').val(cur.baseHeight);
+  $('#gutterFt').val(cur.gutter);
+  $('#cisternInflow').val(cur.inflow);
+  $('#cisternOutflow').val(cur.outflow);
 };
