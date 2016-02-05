@@ -16,7 +16,7 @@
   * show existing projects (open/edit)
   * add new project
 
-#Create New Project
+# Create New Project
 * 'new project' view
   * enter project name
   * enter global preferences
@@ -30,11 +30,11 @@
 
 # Cistern
 ## Questions for jake
-  * on cistern select: jump to summary or stay on current nav?
   * what granularity of materials detail?
     * on-screen
     * on paper for quote
     * shopping list
+  * editing of cisterns: just form parameters, or allow manual editing of any/all fields?
 
 
 # Concerns
@@ -54,4 +54,6 @@
 * 1/31: 1
 * 2/1: 4
 * 2/2: 3
-* 2/3: 2-
+* 2/3: 3.5
+* 2/4: 3
+* 2/5: 2 + 

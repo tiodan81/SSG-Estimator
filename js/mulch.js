@@ -106,7 +106,7 @@ mulchView.showTotal = function() {
 };
 
 mulchView.editZone = function() {
-  $('.icon-pencil2').on('click', function() {
+  $('#mulch-table-body .icon-pencil2').on('click', function() {
     var curId = $(this).attr('id');
     mulch.mulchZones.forEach(function(zone) {
       if (zone.id === parseInt(curId)) {
@@ -152,7 +152,7 @@ mulchView.handleUpdate = function() {
 };
 
 mulchView.deleteZone = function() {
-  $('.icon-bin2').on('click', function(e) {
+  $('#mulch-table-body .icon-bin2').on('click', function(e) {
     e.preventDefault();
     var curId = parseInt($(this).attr('id'));
     mulch.mulchZones.forEach(function(zone, i) {

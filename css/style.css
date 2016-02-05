@@ -10,6 +10,8 @@ body {
 
 .fe {
   margin-bottom: 0.7em;
+  display: flex;
+  flex-direction: row;
 }
 
 .fieldname {
@@ -49,6 +51,10 @@ td {
 
 #cistern-display {
   display: none;
+}
+
+#cistern-edit-buttons span {
+  margin-left: 1em;
 }
 
 #cistern-nav {
