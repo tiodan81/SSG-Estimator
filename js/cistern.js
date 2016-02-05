@@ -107,11 +107,7 @@ cistern.calculateBaseMaterials = function (c) {
   }
   c.paverbaseCost = util.round('round', (c.paverbase * materials.gravel.paverbase), 0.01);
   c.stoneCost = util.round('round', (c.stones * materials.stone[c.stoneType]), 0.01);
-  c.baseMaterialsCost = util.round(
-    'round',
-    c.paverbaseCost + c.stoneCost,
-    0.01
-  );
+  c.baseMaterialsCost = util.round('round', c.paverbaseCost + c.stoneCost, 0.01);
 };
 
 cistern.calculateLabor = function (c) {
@@ -230,9 +226,12 @@ cisternView.updateDisplayWithNew = function(cur) {
 
 cisternView.showSummary = function() {
   let $selected = $('.selected').attr('id').split('-')[2];
+  console.log($selected);
   if ($selected != 'summary') {
     $('#cistern-nav-summary').addClass('selected')
-    .siblings().removeClass('selected');
+      .siblings().removeClass('selected');
+    $('#cistern-table-summary').show()
+      .siblings().hide();
   }
 };
 
