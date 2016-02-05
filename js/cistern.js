@@ -350,7 +350,7 @@ cisternView.handleUpdate = function() {
     let updated = cistern.buildCistern();
     cistern.allCalcs(updated);
     cistern.allCisterns.forEach(function(c, i) {
-      if (updated.cisternId === old.cisternId) {
+      if (updated.cisternId === c.cisternId) {
         cistern.allCisterns[i] = updated;
       }
     });
@@ -365,7 +365,25 @@ cisternView.handleUpdate = function() {
 cisternView.handleDelete = function() {
   $('#cistern-edit-buttons .icon-bin2').on('click', function(e) {
     e.preventDefault();
-
+    let old = cisternView.current;
+    let all = cistern.allCisterns;
+    all.forEach(function(e, i) {
+      if (e.cisternId === old.cisternId) {
+        all.splice(i, 1);
+      }
+    });
+    $('#cistern-selector > option[value="' + old.cisternId + '"]').remove();
+    if (all.length) {
+      cisternView.current = all[0];
+      cur = cisternView.current;
+      $('#cistern-selector').val(cur.cisternId);
+      cisternView.makeTables(cur);
+      cisternView.showSummary();
+      cisternView.editButtons(cur);
+    } else {
+      cisternView.current = {};
+      $('#cistern-display').hide();
+    };
   });
 
 };
