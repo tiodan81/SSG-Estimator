@@ -19,6 +19,7 @@ function cisternMaker (ci, a, m, h, g, inf, out) {
   this.paverbase = 0;
   this.stoneType = '';
   this.stones = 0;
+  this.slimlineRestraints;
   this.inflowHardware = 0;
   this.outflowHardware = 0;
   this.baseLaborHr = 0;
@@ -93,6 +94,16 @@ cistern.calculateHardware = function(pipe) {
   return Math.ceil(pipe * 0.05);
 };
 
+cistern.calcBaseLabor = function(c) {
+  let labor;
+  if (c.baseHeight === 0) {
+    labor = 4 + Math.ceil((c.paverbase + c.stones) / 3);
+  } else {
+    labor = 10 + Math.ceil((c.paverbase + c.stones) / 3);
+  }
+  return labor;
+};
+
 cistern.calculateBaseMaterials = function (c) {
   let modelInfo = cistern.tankModels[c.model];
   c.salePrice = cistern.tankSalePrice(modelInfo);
@@ -100,18 +111,20 @@ cistern.calculateBaseMaterials = function (c) {
     c.paverbase = util.round('ceil', cistern.volumeRect(modelInfo.width, modelInfo.depth, c.baseHeight), 0.5);
     c.stoneType = 'Cinder block';
     c.stones = cistern.calcCinderBlocks(modelInfo.width, c.baseHeight);
+    c.slimlineRestraints = 117;
   } else {
     c.paverbase = util.round('ceil', cistern.volumeCyl(modelInfo.diameter, c.baseHeight), 0.5);
     c.stoneType = 'Manor stone';
     c.stones = cistern.calcManorStones(modelInfo.diameter, c.baseHeight);
+    c.slimlineRestraints = null;
   }
   c.paverbaseCost = util.round('round', (c.paverbase * materials.gravel.paverbase), 0.01);
   c.stoneCost = util.round('round', (c.stones * materials.stone[c.stoneType]), 0.01);
-  c.baseMaterialsCost = util.round('round', c.paverbaseCost + c.stoneCost, 0.01);
+  c.baseMaterialsCost = util.round('round', c.paverbaseCost + c.stoneCost + c.slimlineRestraints, 0.01);
 };
 
 cistern.calculateLabor = function (c) {
-  c.baseLaborHr = Math.ceil((c.paverbase + c.stones) / 3);
+  c.baseLaborHr = cistern.calcBaseLabor(c);
   c.inflowLaborHr = util.round('ceil', (c.inflow / 2), 0.5);
   c.outflowLaborHr = util.round('ceil', (c.outflow / 4), 0.5);
   c.totalHr = c.baseLaborHr + c.inflowLaborHr + c.outflowLaborHr;
@@ -315,6 +328,11 @@ cisternView.makeMaterials = function(cur) {
   <tr><td>Inflow hardware</td><td>${cur.inflowHardware}</td><td>$${cur.inflowHdwCost}</td></tr>
   <tr><td>Outflow pipe</td><td>${cur.outflow}ft</td><td>$${cur.outflowPipeCost}</td></tr>
   <tr><td>Outflow hardware</td><td>${cur.outflowHardware}</td><td>$${cur.outflowHdwCost}</td></tr>
+  `;
+  if (cur.slimlineRestraints) {
+    materials += `<tr><td>Slimeline restraints</td><td>1</td><td>$${cur.slimlineRestraints}</td></tr>`;
+  }
+  materials += `
   <tr><td>Low-flow kit</td><td>1</td><td>$75.00</td></tr>
   <tr><td>Total</td><td></td><td>$${cur.materialsTotal}</td></tr>
   `;
