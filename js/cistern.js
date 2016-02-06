@@ -8,14 +8,15 @@ var cistern = {
   tankModels: []
 };
 
-function cisternMaker (ci, a, m, h, g, inf, out) {
+function cisternMaker (ci, ra, m, h, g, inf, out, al) {
   this.cisternId = ci;
-  this.roofArea = a;
+  this.roofArea = ra;
   this.model = m;
   this.baseHeight = h;
   this.gutter = g;
   this.inflow = inf;
   this.outflow = out;
+  this.additionalLaborHr = al || 0;
   this.paverbase = 0;
   this.stoneType = '';
   this.stones = 0;
@@ -30,6 +31,7 @@ function cisternMaker (ci, a, m, h, g, inf, out) {
   this.baseLaborCost = 0;
   this.inflowLaborCost = 0;
   this.outflowLaborCost = 0;
+  this.additionalLaborCost = 0;
   this.salePrice = 0;
   this.gutterCost = 0;
   this.paverbaseCost = 0;
@@ -68,7 +70,8 @@ cistern.buildCistern = function() {
   var $g = +($('#gutterFt').val());
   var $inf = +($('#cisternInflow').val());
   var $out = +($('#cisternOutflow').val());
-  return new cisternMaker($id, $ra, $m, $bh, $g, $inf, $out);
+  var $al = +($('#cisternAddLabor').val()) || 0;
+  return new cisternMaker($id, $ra, $m, $bh, $g, $inf, $out, $al);
 };
 
 cistern.volumeCyl = function(d, h) {
@@ -136,10 +139,11 @@ cistern.calculateLabor = function (c) {
   c.baseLaborHr = cistern.calcBaseLabor(c);
   c.inflowLaborHr = util.round('ceil', (c.inflow / 2), 0.5);
   c.outflowLaborHr = util.round('ceil', (c.outflow / 4), 0.5);
-  c.totalHr = c.baseLaborHr + c.inflowLaborHr + c.outflowLaborHr;
+  c.totalHr = c.baseLaborHr + c.inflowLaborHr + c.outflowLaborHr + c.additionalLaborHr;
   c.baseLaborCost = util.laborCost(c.baseLaborHr);
   c.inflowLaborCost = util.laborCost(c.inflowLaborHr);
   c.outflowLaborCost = util.laborCost(c.outflowLaborHr);
+  c.additionalLaborCost = util.laborCost(c.additionalLaborHr);
 };
 
 cistern.calculatePlumbingMaterials = function(c) {
@@ -156,7 +160,7 @@ cistern.calculatePlumbingMaterials = function(c) {
 };
 
 cistern.calculateLaborTotal = function(c) {
-  return c.baseLaborCost + c.inflowLaborCost + c.outflowLaborCost;
+  return c.baseLaborCost + c.inflowLaborCost + c.outflowLaborCost + c.additionalLaborCost;
 };
 
 cistern.calculateMaterialsTotal = function(c) {
@@ -196,6 +200,7 @@ cistern.allCalcs = function(cur) {
   cistern.calculateLabor(cur);
   cistern.calculatePlumbingMaterials(cur);
   cistern.calculateTotals(cur);
+  cistern.calcGrandTotals();
 };
 
 var cisternView = {
@@ -221,7 +226,6 @@ cisternView.checkDisplay = function() {
   }
 };
 
-cistern.calcGrandTotals();
 cisternView.handleNew = function() {
   $('#cistern-add').on('click', function(e) {
     e.preventDefault();
@@ -248,7 +252,6 @@ cisternView.updateDisplayWithNew = function(cur) {
 
 cisternView.showSummary = function() {
   let $selected = $('.selected').attr('id').split('-')[2];
-  console.log($selected);
   if ($selected != 'summary') {
     $('#cistern-nav-summary').addClass('selected')
       .siblings().removeClass('selected');
@@ -321,8 +324,11 @@ cisternView.makeLabor = function(cur) {
   <tr><td>Base</td><td>${cur.baseLaborHr}</td><td>$${cur.baseLaborCost}</td></tr>
   <tr><td>Inflow</td><td>${cur.inflowLaborHr}</td><td>$${cur.inflowLaborCost}</td></tr>
   <tr><td>Outflow</td><td>${cur.outflowLaborHr}</td><td>$${cur.outflowLaborCost}</td></tr>
-  <tr><td>Total</td><td>${cur.totalHr}</td><td>$${cur.laborTotal}</td></tr>
   `;
+  if (cur.additionalLaborHr) {
+    labor += `<tr><td>Additional</td><td>${cur.additionalLaborHr}</td><td>$${cur.additionalLaborCost}</td></tr>`;
+  }
+  labor += `<tr><td>Total</td><td>${cur.totalHr}</td><td>$${cur.laborTotal}</td></tr>`;
   return labor;
 };
 
@@ -426,4 +432,5 @@ cisternView.populateForm = function(cur) {
   $('#gutterFt').val(cur.gutter);
   $('#cisternInflow').val(cur.inflow);
   $('#cisternOutflow').val(cur.outflow);
+  $('#cisternAddLabor').val(cur.additionalLaborHr);
 };
