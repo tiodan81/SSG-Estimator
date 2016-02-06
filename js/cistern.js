@@ -78,8 +78,12 @@ cistern.volumeRect = function(w, d, h) {
   return w * d * h / 5832;
 };
 
-cistern.tankSalePrice = function (tank) {
-  return Math.ceil(tank.purchasePrice * project.markup + tank.delivery);
+cistern.tankSalePrice = function (model, info) {
+  if (model === 'b420' || model === 'b265' || model === 'b530') {
+    return Math.ceil(info.purchasePrice + info.delivery);
+  } else {
+    return Math.ceil(info.purchasePrice * project.markup + info.delivery);
+  }
 };
 
 cistern.calcManorStones = function (d, h) {
@@ -101,12 +105,15 @@ cistern.calcBaseLabor = function(c) {
   } else {
     labor = 10 + Math.ceil((c.paverbase + c.stones) / 3);
   }
+  if (c.model === 'b420' || c.model === 'b265' || c.model === 'b530') {
+    labor += 2;
+  }
   return labor;
 };
 
 cistern.calculateBaseMaterials = function (c) {
   let modelInfo = cistern.tankModels[c.model];
-  c.salePrice = cistern.tankSalePrice(modelInfo);
+  c.salePrice = cistern.tankSalePrice(c.model, modelInfo);
   if (modelInfo.slimline) {
     c.paverbase = util.round('ceil', cistern.volumeRect(modelInfo.width, modelInfo.depth, c.baseHeight), 0.5);
     c.stoneType = 'Cinder block';
