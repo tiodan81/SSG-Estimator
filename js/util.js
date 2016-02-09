@@ -9,6 +9,7 @@ util.laborCost = function(hr) {
   return hr * project.laborRate;
 };
 
+//ADD THE MARKUP TO THIS FUNCTION!
 util.materialCost = function(qty, rate) {
   return qty * rate;
 };

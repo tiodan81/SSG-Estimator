@@ -9,7 +9,7 @@ var cistern = {
 };
 
 function cisternMaker (ci, ra, m, h, g, inf, out, al) {
-  this.cisternId = ci || 'UBER';
+  this.cisternId = ci || '';
   this.roofArea = ra || 0;
   this.model = m || '';
   this.baseHeight = h || 0;
@@ -19,7 +19,8 @@ function cisternMaker (ci, ra, m, h, g, inf, out, al) {
   this.additionalLaborHr = al || 0;
   this.paverbase = 0;
   this.stoneType = '';
-  this.stones = 0;
+  this.manorStones = 0;
+  this.cinderBlocks = 0;
   this.slimlineRestraints = 0;
   this.bulkheadKit = 0;
   // this.pump;
@@ -38,7 +39,8 @@ function cisternMaker (ci, ra, m, h, g, inf, out, al) {
   this.salePrice = 0;
   this.gutterCost = 0;
   this.paverbaseCost = 0;
-  this.stoneCost = 0;
+  this.manorStoneCost = 0;
+  this.cinderBlockCost = 0;
   this.inflowPipeCost = 0;
   this.outflowPipeCost = 0;
   this.inflowHdwCost = 0;
@@ -108,9 +110,9 @@ cistern.calculateHardware = function(pipe) {
 cistern.calcBaseLabor = function(c) {
   let labor;
   if (c.baseHeight === 0) {
-    labor = 4 + Math.ceil((c.paverbase + c.stones) / 3);
+    labor = 4 + Math.ceil((c.paverbase + c.manorStones + c.cinderBlocks) / 3);
   } else {
-    labor = 10 + Math.ceil((c.paverbase + c.stones) / 3);
+    labor = 10 + Math.ceil((c.paverbase + c.manorStones + c.cinderBlocks) / 3);
   }
   if (c.model === 'b420' || c.model === 'b265' || c.model === 'b530') {
     labor += 2;
@@ -124,18 +126,19 @@ cistern.calculateBaseMaterials = function (c) {
   if (modelInfo.slimline) {
     c.paverbase = util.round('ceil', cistern.volumeRect(modelInfo.width, modelInfo.depth, c.baseHeight), 0.5);
     c.stoneType = 'Cinder block';
-    c.stones = cistern.calcCinderBlocks(modelInfo.width, c.baseHeight);
+    c.cinderBlocks = cistern.calcCinderBlocks(modelInfo.width, c.baseHeight);
+    c.cinderBlockCost = util.round('round', (c.cinderBlocks * materials.stone[c.stoneType]), 0.01);
     c.slimlineRestraints = materials.plumbing.slimlineRestraints;
   } else {
     c.paverbase = util.round('ceil', cistern.volumeCyl(modelInfo.diameter, c.baseHeight), 0.5);
     c.stoneType = 'Manor stone';
-    c.stones = cistern.calcManorStones(modelInfo.diameter, c.baseHeight);
+    c.manorStones = cistern.calcManorStones(modelInfo.diameter, c.baseHeight);
+    c.manorStoneCost = util.round('round', (c.manorStones * materials.stone[c.stoneType]), 0.01);
     c.slimlineRestraints = 0;
   }
   c.bulkheadKit = c.model.charAt(0) === 'p' ? materials.plumbing.bulkheadKit : 0;
   c.paverbaseCost = util.round('round', (c.paverbase * materials.gravel.paverbase), 0.01);
-  c.stoneCost = util.round('round', (c.stones * materials.stone[c.stoneType]), 0.01);
-  c.baseMaterialsCost = util.round('round', c.paverbaseCost + c.stoneCost + c.slimlineRestraints + c.bulkheadKit, 0.01);
+  c.baseMaterialsCost = util.round('round', c.paverbaseCost + c.cinderBlockCost + c.manorStoneCost + c.slimlineRestraints + c.bulkheadKit, 0.01);
 };
 
 cistern.calculateLabor = function (c) {
@@ -369,7 +372,14 @@ cisternView.makeMaterials = function(cur) {
   <tr><td>Tank</td><td>1</td><td>$${cur.salePrice}</td></tr>
   <tr><td>Gutter</td><td>${cur.gutter}ft</td><td>$${cur.gutterCost}</td></tr>
   <tr><td>Paverbase</td><td>${cur.paverbase}yd</td><td>$${cur.paverbaseCost}</td></tr>
-  <tr><td>${cur.stoneType}</td><td>${cur.stones}</td><td>$${cur.stoneCost}</td></tr>
+  `;
+  if (cur.manorStones != 0) {
+    materials += `<tr><td>${cur.stoneType}</td><td>${cur.manorStones}</td><td>$${cur.manorStoneCost}</td></tr>`;
+  }
+  if (cur.cinderBlocks != 0) {
+    materials += `<tr><td>${cur.stoneType}</td><td>${cur.cinderBlocks}</td><td>$${cur.cinderBlockCost}</td></tr>`;
+  }
+  materials += `
   <tr><td>Inflow pipe</td><td>${cur.inflow}ft</td><td>$${cur.inflowPipeCost}</td></tr>
   <tr><td>Inflow hardware</td><td>${cur.inflowHardware}</td><td>$${cur.inflowHdwCost}</td></tr>
   <tr><td>Outflow pipe</td><td>${cur.outflow}ft</td><td>$${cur.outflowPipeCost}</td></tr>
@@ -470,8 +480,6 @@ cistern.makeUberTank = function(arr) {
   console.log(obj);
   arr.forEach(function(e) {
     Object.keys(e).forEach(function(prop) {
-      console.log('obj[prop]: '+ obj[prop]);
-      console.log('e[prop]: ' + e[prop]);
       obj[prop] += e[prop];
     }, obj);
   });
