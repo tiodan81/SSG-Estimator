@@ -209,6 +209,21 @@ cistern.allCalcs = function(cur) {
   cistern.calcGrandTotals();
 };
 
+cistern.makeUberTank = function(arr) {
+  let obj = new cisternMaker();
+  arr.forEach(function(e) {
+    Object.keys(e).forEach(function(prop) {
+      if (typeof(e[prop]) === 'number') {
+        obj[prop] += e[prop];
+      } else if (typeof(e[prop]) === 'string') {
+        obj[prop] += e[prop] + ' ';
+      }
+    }, obj);
+  });
+  obj.cisternId = 'All tanks';
+  return obj;
+};
+
 var cisternView = {
   current: {}
 };
@@ -262,11 +277,12 @@ cisternView.handleNew = function() {
     let newCistern = cistern.buildCistern();
     cistern.allCalcs(newCistern);
     cistern.allCisterns.push(newCistern);
-    if (cistern.allCisterns.length > 1) {
-      //make ubertank
-      //add to selector - don't make current!
-    }
     cisternView.updateDisplayWithNew(newCistern);
+    if (cistern.allCisterns.length > 1) {
+      let uber = cistern.makeUberTank(cistern.allCisterns);
+      cisternView.populateSelector(uber);
+      cistern.allCisterns.push(uber);
+    }
     cisternView.current = newCistern;
     viewUtil.clearForm();
   });
@@ -374,10 +390,10 @@ cisternView.makeMaterials = function(cur) {
   <tr><td>Paverbase</td><td>${cur.paverbase}yd</td><td>$${cur.paverbaseCost}</td></tr>
   `;
   if (cur.manorStones != 0) {
-    materials += `<tr><td>${cur.stoneType}</td><td>${cur.manorStones}</td><td>$${cur.manorStoneCost}</td></tr>`;
+    materials += `<tr><td>Manor stones</td><td>${cur.manorStones}</td><td>$${cur.manorStoneCost}</td></tr>`;
   }
   if (cur.cinderBlocks != 0) {
-    materials += `<tr><td>${cur.stoneType}</td><td>${cur.cinderBlocks}</td><td>$${cur.cinderBlockCost}</td></tr>`;
+    materials += `<tr><td>Cinder blocks</td><td>${cur.cinderBlocks}</td><td>$${cur.cinderBlockCost}</td></tr>`;
   }
   materials += `
   <tr><td>Inflow pipe</td><td>${cur.inflow}ft</td><td>$${cur.inflowPipeCost}</td></tr>
@@ -399,6 +415,7 @@ cisternView.makeMaterials = function(cur) {
 };
 
 cisternView.editButtons = function(cur) {
+  //DON'T SHOW IF CUR == UBER
   let buttons = '';
   buttons += `
   <span id="${cur.cisternId}" class="icon-pencil2"></span>
@@ -461,7 +478,6 @@ cisternView.handleDelete = function() {
       $('#cistern-display').hide();
     };
   });
-
 };
 
 cisternView.populateForm = function(cur) {
@@ -473,15 +489,4 @@ cisternView.populateForm = function(cur) {
   $('#cisternInflow').val(cur.inflow);
   $('#cisternOutflow').val(cur.outflow);
   $('#cisternAddLabor').val(cur.additionalLaborHr);
-};
-
-cistern.makeUberTank = function(arr) {
-  let obj = new cisternMaker();
-  console.log(obj);
-  arr.forEach(function(e) {
-    Object.keys(e).forEach(function(prop) {
-      obj[prop] += e[prop];
-    }, obj);
-  });
-  return obj;
 };
