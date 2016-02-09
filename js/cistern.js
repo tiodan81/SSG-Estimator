@@ -9,19 +9,22 @@ var cistern = {
 };
 
 function cisternMaker (ci, ra, m, h, g, inf, out, al) {
-  this.cisternId = ci;
-  this.roofArea = ra;
-  this.model = m;
-  this.baseHeight = h;
-  this.gutter = g;
-  this.inflow = inf;
-  this.outflow = out;
+  this.cisternId = ci || 'UBER';
+  this.roofArea = ra || 0;
+  this.model = m || '';
+  this.baseHeight = h || 0;
+  this.gutter = g || 0;
+  this.inflow = inf || 0;
+  this.outflow = out || 0;
   this.additionalLaborHr = al || 0;
   this.paverbase = 0;
   this.stoneType = '';
   this.stones = 0;
-  this.slimlineRestraints;
-  this.bulkheadKit;
+  this.slimlineRestraints = 0;
+  this.bulkheadKit = 0;
+  // this.pump;
+  // this.diverter;
+  // this.gauge;
   this.inflowHardware = 0;
   this.outflowHardware = 0;
   this.baseLaborHr = 0;
@@ -79,7 +82,7 @@ cistern.volumeCyl = function(d, h) {
 };
 
 cistern.volumeRect = function(w, d, h) {
-  return w * d * h / 5832;
+  return ((w * d / 144) * ((1/3) + ((2/3) * (3/5) * h))) / 27;
 };
 
 cistern.tankSalePrice = function (model, info) {
@@ -127,9 +130,9 @@ cistern.calculateBaseMaterials = function (c) {
     c.paverbase = util.round('ceil', cistern.volumeCyl(modelInfo.diameter, c.baseHeight), 0.5);
     c.stoneType = 'Manor stone';
     c.stones = cistern.calcManorStones(modelInfo.diameter, c.baseHeight);
-    c.slimlineRestraints = null;
+    c.slimlineRestraints = 0;
   }
-  c.bulkheadKit = c.model.charAt(0) === 'p' ? materials.plumbing.bulkheadKit : null;
+  c.bulkheadKit = c.model.charAt(0) === 'p' ? materials.plumbing.bulkheadKit : 0;
   c.paverbaseCost = util.round('round', (c.paverbase * materials.gravel.paverbase), 0.01);
   c.stoneCost = util.round('round', (c.stones * materials.stone[c.stoneType]), 0.01);
   c.baseMaterialsCost = util.round('round', c.paverbaseCost + c.stoneCost + c.slimlineRestraints + c.bulkheadKit, 0.01);
@@ -212,6 +215,7 @@ cisternView.init = function() {
   .siblings().hide();
   //cisternView.checkDisplay();
   cisternView.handleNew();
+  //cisternView.handleAddOns();
   cisternView.handleSelector();
   cisternView.handleNav();
   cisternView.handleUpdate();
@@ -221,9 +225,32 @@ cisternView.init = function() {
 cisternView.checkDisplay = function() {
   if (cistern.allCisterns.length && $('#cistern-display').css('display') === 'none') {
     //populateSelector <=== requires refactoring populateSelector to handle multiple cisterns
-    cisternView.current = $('#cistern-selector');
+    //cisternView.current = $('#cistern-selector'); <==== this ain't right
     $('#cistern-display').hide();
   }
+};
+
+cisternView.handleAddOns = function() {
+  $('#cisternAddOns').on('change', function() {
+    let addOn = $(this).val();
+    let count = $("'#" + addOn + "'").data('count');
+    count = count != 0 ? count : 1;
+    //let count = $("'#" + addOn + "'").length ? cisternView.getAddOnCount(addOn) + 1 : 1;
+    $(this).parent().after(cisternView.makeAddOn(addOn, count));
+  });
+};
+
+cisternView.getAddOnCount = function(a) {
+  return $("'#" + a + "'").data('count');
+};
+
+cisternView.makeAddOn = function(addOn, count) {
+  let html = '';
+  html += `<div class="fe">
+  <label id="${addOn}" data-count="${count} class="fieldname">${count} -</label>
+  <p>${addOn}</p>
+  `;
+  return html;
 };
 
 cisternView.handleNew = function() {
@@ -232,6 +259,10 @@ cisternView.handleNew = function() {
     let newCistern = cistern.buildCistern();
     cistern.allCalcs(newCistern);
     cistern.allCisterns.push(newCistern);
+    if (cistern.allCisterns.length > 1) {
+      //make ubertank
+      //add to selector - don't make current!
+    }
     cisternView.updateDisplayWithNew(newCistern);
     cisternView.current = newCistern;
     viewUtil.clearForm();
@@ -269,8 +300,7 @@ cisternView.populateSelector = function(cur) {
 };
 
 cisternView.handleSelector = function() {
-  $('#cistern-selector').on('change', function(e) {
-    e.preventDefault();
+  $('#cistern-selector').on('change', function() {
     let curCistern = $.grep(cistern.allCisterns, function(e) {
       return e.cisternId == $('#cistern-selector').val();
     });
@@ -433,4 +463,17 @@ cisternView.populateForm = function(cur) {
   $('#cisternInflow').val(cur.inflow);
   $('#cisternOutflow').val(cur.outflow);
   $('#cisternAddLabor').val(cur.additionalLaborHr);
+};
+
+cistern.makeUberTank = function(arr) {
+  let obj = new cisternMaker();
+  console.log(obj);
+  arr.forEach(function(e) {
+    Object.keys(e).forEach(function(prop) {
+      console.log('obj[prop]: '+ obj[prop]);
+      console.log('e[prop]: ' + e[prop]);
+      obj[prop] += e[prop];
+    }, obj);
+  });
+  return obj;
 };

@@ -14,6 +14,9 @@
     "lowFlowKit": 75,
     "hardware": 20,
     "slimlineRestraints": 117,
-    "bulkheadKit": 120
+    "bulkheadKit": 120,
+    "cisternPump": 350,
+    "firstFlushDiverter": 100,
+    "cisternGauge": 50
   }
 }
