@@ -256,18 +256,22 @@ cisternView.handleNew = function() {
     let newCistern = cistern.buildCistern();
     cistern.allCalcs(newCistern);
     cistern.allCisterns.push(newCistern);
-    cisternView.updateDisplayWithNew(newCistern);
-    if (cistern.allCisterns.length > 1) {
-      let uber = cistern.makeUberTank(cistern.allCisterns);
-      cisternView.populateSelector(uber);
-      cistern.allCisterns.push(uber);
-    }
+    cisternView.renderNew(newCistern);
+    cistern.updateUberTank();
     cisternView.current = newCistern;
     viewUtil.clearForm();
   });
 };
 
-cisternView.updateDisplayWithNew = function(cur) {
+cistern.updateUberTank = function() {
+  let uber = cistern.makeUberTank(cistern.allCisterns);
+  cistern.uberTank = uber;
+  if (cistern.allCisterns.length > 1) {
+    cisternView.populateSelector(uber);
+  }
+};
+
+cisternView.renderNew = function(cur) {
   const $display = $('#cistern-display');
   cisternView.populateSelector(cur);
   $('#cistern-selector').val(cur.cisternId);
@@ -277,6 +281,14 @@ cisternView.updateDisplayWithNew = function(cur) {
   }
   cisternView.showSummary();
   cisternView.editButtons(cur);
+};
+
+cisternView.populateSelector = function(cur) {
+  let curId = cur.cisternId;
+  if ($('#cistern-selector option[value="' + curId + '"]').length === 0) {
+    let option = '<option value="' + curId + '">' + curId + '</option>';
+    $('#cistern-selector').append(option);
+  }
 };
 
 cisternView.showSummary = function() {
@@ -289,20 +301,16 @@ cisternView.showSummary = function() {
   }
 };
 
-cisternView.populateSelector = function(cur) {
-  let curId = cur.cisternId;
-  if ($('#cistern-selector option[value="' + curId + '"]').length === 0) {
-    let option = '<option value="' + curId + '">' + curId + '</option>';
-    $('#cistern-selector').append(option);
-  }
-};
-
 cisternView.handleSelector = function() {
   $('#cistern-selector').on('change', function() {
     let id = $('#cistern-selector').val();
-    let curCistern = util.findObjInArray(id, cistern.allCisterns);
-    cisternView.makeTables(curCistern[0]);
-    cisternView.current = curCistern[0];
+    if (id === 'All tanks') {
+      cisternView.makeTables(cistern.uberTank);
+    } else {
+      let curCistern = util.findObjInArray(id, cistern.allCisterns);
+      cisternView.makeTables(curCistern[0]);
+      cisternView.current = curCistern[0];
+    }
     cisternView.showSummary();
   });
 };
@@ -425,7 +433,8 @@ cisternView.handleUpdate = function() {
         cistern.allCisterns[i] = updated;
       }
     });
-    cisternView.updateDisplayWithNew(updated);
+    cistern.updateUberTank();
+    cisternView.renderNew(updated);
     cisternView.current = updated;
     viewUtil.clearForm();
     $('#cistern-update').hide();
@@ -444,9 +453,10 @@ cisternView.handleDelete = function() {
       }
     });
     $('#cistern-selector > option[value="' + old.cisternId + '"]').remove();
+    cistern.updateUberTank();
     if (all.length) {
       cisternView.current = all[0];
-      cur = cisternView.current;
+      let cur = cisternView.current;
       $('#cistern-selector').val(cur.cisternId);
       cisternView.makeTables(cur);
       cisternView.showSummary();
