@@ -203,6 +203,14 @@ cistern.makeUberTank = function(arr) {
   return obj;
 };
 
+cistern.updateUberTank = function() {
+  let uber = cistern.makeUberTank(cistern.allCisterns);
+  cistern.uberTank = uber;
+  if (cistern.allCisterns.length > 1) {
+    cisternView.populateSelector(uber);
+  }
+};
+
 var cisternView = {
   current: {}
 };
@@ -263,14 +271,6 @@ cisternView.handleNew = function() {
   });
 };
 
-cistern.updateUberTank = function() {
-  let uber = cistern.makeUberTank(cistern.allCisterns);
-  cistern.uberTank = uber;
-  if (cistern.allCisterns.length > 1) {
-    cisternView.populateSelector(uber);
-  }
-};
-
 cisternView.renderNew = function(cur) {
   const $display = $('#cistern-display');
   cisternView.populateSelector(cur);
@@ -280,7 +280,7 @@ cisternView.renderNew = function(cur) {
     $display.show();
   }
   cisternView.showSummary();
-  cisternView.editButtons(cur);
+  cisternView.editButtons();
 };
 
 cisternView.populateSelector = function(cur) {
@@ -306,10 +306,12 @@ cisternView.handleSelector = function() {
     let id = $('#cistern-selector').val();
     if (id === 'All tanks') {
       cisternView.makeTables(cistern.uberTank);
+      $('#cistern-edit-buttons').hide();
     } else {
       let curCistern = util.findObjInArray(id, cistern.allCisterns);
       cisternView.makeTables(curCistern[0]);
       cisternView.current = curCistern[0];
+      $('#cistern-edit-buttons').show();
     }
     cisternView.showSummary();
   });
@@ -400,12 +402,12 @@ cisternView.makeMaterials = function(cur) {
   return materials;
 };
 
-cisternView.editButtons = function(cur) {
+cisternView.editButtons = function() {
   //DON'T SHOW IF CUR == UBER
   let buttons = '';
   buttons += `
-  <span id="${cur.cisternId}" class="icon-pencil2"></span>
-  <span id="${cur.cisternId}" class="icon-bin2"></span>
+  <span class="icon-pencil2"></span>
+  <span class="icon-bin2"></span>
   `;
   $('#cistern-edit-buttons').empty().html(buttons);
   cisternView.handleEdit();
@@ -460,7 +462,7 @@ cisternView.handleDelete = function() {
       $('#cistern-selector').val(cur.cisternId);
       cisternView.makeTables(cur);
       cisternView.showSummary();
-      cisternView.editButtons(cur);
+      cisternView.editButtons();
     } else {
       cisternView.current = {};
       $('#cistern-display').hide();
