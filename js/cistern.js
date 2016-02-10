@@ -1,9 +1,5 @@
 var cistern = {
-  laborHoursTotal: 0,
-  laborCostTotal: 0,
-  materialsCostTotal: 0,
-  taxTotal: 0,
-  grandTotal: 0,
+  uberTank: {},
   allCisterns: [],
   tankModels: []
 };
@@ -185,28 +181,11 @@ cistern.calculateTotals = function(c) {
   c.total = util.round('round', c.subtotal + c.tax, 0.01);
 };
 
-cistern.calcGrandTotals = function() {
-  cistern.laborHoursTotal = 0;
-  cistern.laborCostTotal = 0;
-  cistern.materialsCostTotal = 0;
-  cistern.taxTotal = 0;
-  cistern.grandTotal = 0;
-
-  cistern.allCisterns.forEach(function(e) {
-    cistern.laborHoursTotal += e.totalHr;
-    cistern.laborCostTotal += e.laborTotal;
-    cistern.materialsCostTotal += e.materialsTotal;
-    cistern.taxTotal += e.tax;
-    cistern.grandTotal += e.total;
-  });
-};
-
 cistern.allCalcs = function(cur) {
   cistern.calculateBaseMaterials(cur);
   cistern.calculateLabor(cur);
   cistern.calculatePlumbingMaterials(cur);
   cistern.calculateTotals(cur);
-  cistern.calcGrandTotals();
 };
 
 cistern.makeUberTank = function(arr) {
@@ -320,9 +299,8 @@ cisternView.populateSelector = function(cur) {
 
 cisternView.handleSelector = function() {
   $('#cistern-selector').on('change', function() {
-    let curCistern = $.grep(cistern.allCisterns, function(e) {
-      return e.cisternId == $('#cistern-selector').val();
-    });
+    let id = $('#cistern-selector').val();
+    let curCistern = util.findObjInArray(id, cistern.allCisterns);
     cisternView.makeTables(curCistern[0]);
     cisternView.current = curCistern[0];
     cisternView.showSummary();
