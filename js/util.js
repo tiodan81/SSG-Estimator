@@ -9,10 +9,17 @@ util.laborCost = function(hr) {
   return hr * project.laborRate;
 };
 
+//ADD THE MARKUP TO THIS FUNCTION!
 util.materialCost = function(qty, rate) {
   return qty * rate;
 };
 
 util.salesTax = function(price) {
   return util.round('round', price * 0.095, 0.01);
+};
+
+util.findObjInArray = function(id, arr) {
+  return $.grep(arr, function(e) {
+    return e.cisternId == id;
+  });
 };

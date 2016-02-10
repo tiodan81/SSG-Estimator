@@ -12,6 +12,11 @@
     "pvc3In": 5.5,
     "gutter": 7.5,
     "lowFlowKit": 75,
-    "hardware": 20
+    "hardware": 20,
+    "slimlineRestraints": 117,
+    "bulkheadKit": 120,
+    "cisternPump": 350,
+    "firstFlushDiverter": 100,
+    "cisternGauge": 50
   }
 }
