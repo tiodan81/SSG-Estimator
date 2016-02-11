@@ -1,24 +1,44 @@
 var loginView = {};
 
-loginView.handleLogin = function(event) {
-  event.preventDefault();
-  user.email = $('#username').val();
-  let pwd = $('#password').val();
-  user.authenticate(pwd);
+loginView.init = function() {
+  $('#login-content').show()
+    .siblings().hide();
+  loginView.handleCreate();
+  loginView.handleLogin();
+};
+
+loginView.handleCreate = function() {
+  $('#new-user-form').on('submit', function(e) {
+    e.preventDefault();
+    user.email = $('#new-user').val();
+    let pwd = $('#new-password').val();
+    user.create(pwd);
+  });
+};
+
+loginView.handleLogin = function() {
+  $('#login-form').on('submit', function(e) {
+    e.preventDefault();
+    user.email = $('#username').val();
+    let pwd = $('#password').val();
+    user.authenticate(pwd);
+  });
 };
 
 var indexView = {};
 
 indexView.init = function () {
+  //if logged in - stay here, show indexView
+  //if not logged in - route to loginView
   $('#home-content').show()
-  .siblings().hide();
+    .siblings().hide();
 };
 
 var mulchView = {};
 
 mulchView.init = function() {
   $('#mulch-content').show()
-  .siblings().hide();
+    .siblings().hide();
   mulchView.handleNew();
   mulchView.handleUpdate();
   mulchView.showTotal();

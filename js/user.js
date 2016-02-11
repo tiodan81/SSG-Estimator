@@ -39,20 +39,17 @@ var user = {
 //   console.log('Epic fail: ' + errorObject.code);
 // });
 
-user.create = function(event) {
-  event.preventDefault();
-  user.email = $('#new-user').val();
-  let userPassword = $('#new-password').val();
+user.create = function(pwd) {
   firebase.createUser({
     email     : user.email,
-    password  : userPassword
+    password  : pwd
   }, function(error, userData) {
     if (error) {
       alert(error);
       console.log('error creating user: ', error);
     } else {
       console.log('Successfully created user account with uid: ', userData.uid);
-      user.authenticate(userPassword);
+      user.authenticate(pwd);
       $('#new-user, #new-password').val('');
     }
   });
@@ -72,6 +69,10 @@ user.authenticate = function(pwd) {
       user.loadProjects();
     }
   });
+};
+
+user.isLoggedIn = function() {
+
 };
 
 user.loadProjects = function() {

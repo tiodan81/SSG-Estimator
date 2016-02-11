@@ -1,7 +1,12 @@
 var controller = {};
 
-controller.indexInit = function() {
-  indexView.init();
+controller.checkLogin = function() {
+  let authData = firebase.getAuth();
+  if (authData) {
+    indexView.init();
+  } else {
+    loginView.init();
+  }
 };
 
 controller.mulchInit = function() {
