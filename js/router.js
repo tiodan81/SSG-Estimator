@@ -4,6 +4,11 @@ page(
 );
 
 page(
+  '/login',
+  controller.loginInit
+);
+
+page(
   '/mulch',
   controller.mulchInit
 );

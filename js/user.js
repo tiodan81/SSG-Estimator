@@ -27,7 +27,8 @@ const fbProjects = firebase.child('projects');
 const fbUsers = firebase.child('users');
 
 var user = {
-  email: ''
+  email: '',
+  uid: ''
 };
 
 
@@ -39,18 +40,19 @@ var user = {
 //   console.log('Epic fail: ' + errorObject.code);
 // });
 
-user.create = function(pwd) {
+user.create = function(email, pwd) {
   firebase.createUser({
-    email     : user.email,
+    email     : email,
     password  : pwd
   }, function(error, userData) {
     if (error) {
       alert(error);
       console.log('error creating user: ', error);
     } else {
+      console.log(userData);
       console.log('Successfully created user account with uid: ', userData.uid);
+      user.email = email;
       user.authenticate(pwd);
-      $('#new-user, #new-password').val('');
     }
   });
 };
@@ -66,15 +68,16 @@ user.authenticate = function(pwd) {
     } else {
       console.log('Authenticated successfully with payload: ', authData);
       user.uid = authData.uid;
-      user.loadProjects();
+      user.loadProjects(user.email);
     }
   });
 };
 
-user.isLoggedIn = function() {
-
+user.isLoggedIn = function(callback) {
+  let authData = firebase.getAuth();
+  callback();
 };
 
-user.loadProjects = function() {
-
+user.loadProjects = function(id) {
+  console.log('loading projects for user ' + id);
 };

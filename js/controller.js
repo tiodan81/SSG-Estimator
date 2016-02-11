@@ -1,12 +1,16 @@
 var controller = {};
 
 controller.checkLogin = function() {
-  let authData = firebase.getAuth();
-  if (authData) {
+  if (user.uid) {
+    //load user projects
     indexView.init();
   } else {
     loginView.init();
   }
+};
+
+controller.loginInit = function() {
+  user.isLoggedIn(loginView.init);
 };
 
 controller.mulchInit = function() {

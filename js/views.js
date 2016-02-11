@@ -10,9 +10,10 @@ loginView.init = function() {
 loginView.handleCreate = function() {
   $('#new-user-form').on('submit', function(e) {
     e.preventDefault();
-    user.email = $('#new-user').val();
+    let email = $('#new-user').val();
     let pwd = $('#new-password').val();
-    user.create(pwd);
+    user.create(email, pwd);
+    $('#new-user, #new-password').val('');
   });
 };
 
@@ -22,16 +23,16 @@ loginView.handleLogin = function() {
     user.email = $('#username').val();
     let pwd = $('#password').val();
     user.authenticate(pwd);
+    $('#new-user, #new-password').val('');
   });
 };
 
 var indexView = {};
 
 indexView.init = function () {
-  //if logged in - stay here, show indexView
-  //if not logged in - route to loginView
   $('#home-content').show()
     .siblings().hide();
+  //populate user project list
 };
 
 var mulchView = {};
