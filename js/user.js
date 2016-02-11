@@ -22,11 +22,13 @@
 //   }
 // }
 
-var firebase = new Firebase('https://ssgestimator.firebaseio.com/');
-var fbProjects = firebase.child('projects');
-var fbUsers = firebase.child('users');
+const firebase = new Firebase('https://ssgestimator.firebaseio.com/');
+const fbProjects = firebase.child('projects');
+const fbUsers = firebase.child('users');
 
-var user = {};
+var user = {
+  email: ''
+};
 
 
 //firebase.update(); //update some keys at node
@@ -40,7 +42,7 @@ var user = {};
 user.create = function(event) {
   event.preventDefault();
   user.email = $('#new-user').val();
-  var userPassword = $('#new-password').val();
+  let userPassword = $('#new-password').val();
   firebase.createUser({
     email     : user.email,
     password  : userPassword
@@ -54,13 +56,6 @@ user.create = function(event) {
       $('#new-user, #new-password').val('');
     }
   });
-};
-
-user.authLogin = function(event) {
-  event.preventDefault();
-  user.email = $('#username').val();
-  var pwd = $('#password').val();
-  user.authenticate(pwd);
 };
 
 user.authenticate = function(pwd) {

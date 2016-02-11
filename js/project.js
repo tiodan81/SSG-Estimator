@@ -33,10 +33,3 @@ project.save = function() {
     }
   );
 };
-
-var indexView = {};
-
-indexView.init = function () {
-  $('#home-content').show()
-  .siblings().hide();
-};
