@@ -32,7 +32,27 @@ var indexView = {};
 indexView.init = function () {
   $('#home-content').show()
     .siblings().hide();
+  //show 'create project' button
   //populate user project list
+  //if project selected, show summary
+  indexView.handleCreateButton();
+  project.saveName();
+};
+
+indexView.handleCreateButton = function() {
+  $('#project-create-button').on('click', function(e) {
+    e.preventDefault();
+    $(this).hide();
+    $('#projectForm').show();
+    indexView.handleProjectForm();
+  });
+};
+
+indexView.handleProjectForm = function() {
+  $('#projectForm').on('submit', function(e) {
+    e.preventDefault();
+
+  });
 };
 
 var mulchView = {};

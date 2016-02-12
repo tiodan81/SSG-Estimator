@@ -71,6 +71,7 @@ user.authenticate = function(pwd) {
       user.loadProjects(user.email);
     }
   });
+  indexView.init();
 };
 
 user.isLoggedIn = function(callback) {

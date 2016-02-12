@@ -33,19 +33,50 @@
       </section>
       <section id="home-content">
         <h1>Stone Soup Project Planner</h1>
+        <div id="project-select-container" class="fe">
+          <label class="fieldname">Project:</label>
+          <select id="project-selector">
+            <option>Project name</option>
+          </select>
+        </div>
+        <button id="project-create-button" type="button">Create new project</button>
         <form id="projectForm">
-          <label class="fieldname">Project Name</label>
-          <input id="projectName" type="text"></input>
-          <input type="submit" value="Submit" />
+          <div class="fe">
+            <label class="fieldname">Project Name:</label>
+            <input id="projectName" type="text"></input>
+          </div>
+          <div class="fe">
+            <label class="fieldname">City:</label>
+            <select id="project-city">
+              <option value="Seattle">Seattle</option>
+              <option value="Renton">Renton</option>
+            </select>
+          </div>
+          <div class="fe">
+            <label class="fieldname">Labor Rate:</label>
+            <select id="project-labor-rate">
+              <option value="45">$45/hr</option>
+              <option value="40">$40/hr</option>
+            </select>
+          </div>
+          <div class="fe">
+            <label class="fieldname">Markup:</label>
+            <select id="project-markup-rate">
+              <option value="35">35%</option>
+            </select>
+          </div>
+          <div class="submit">
+            <input type="submit" value="Create project" />
+          </div>
         </form>
-        <ul>
+        <!-- <ul>
           <li><a href="/mulch">Mulch Calculator</a></li>
           <li>Rain Gardens</li>
           <li><a href="/cisterns">Cisterns</a></li>
           <li>Fences</li>
           <li>Patios</li>
           <li>Paths</li>
-        </ul>
+        </ul> -->
       </section>
       <section id="mulch-content">
         <h1>Mulch Calculator</h1>

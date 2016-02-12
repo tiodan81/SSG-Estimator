@@ -63,7 +63,3 @@ mulch.listen = function() {
   mulchView.editZone();
   mulchView.deleteZone();
 };
-
-$(function() {
-  project.saveName();
-});

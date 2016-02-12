@@ -25,6 +25,10 @@ body {
   width: 9em;
 }
 
+#projectForm {
+  display: none;
+}
+
 th {
   border-bottom: 2px solid #111;
 }

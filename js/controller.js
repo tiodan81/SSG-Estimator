@@ -1,7 +1,8 @@
 var controller = {};
 
 controller.checkLogin = function() {
-  if (user.uid) {
+  let auth = firebase.getAuth();
+  if (auth) {
     //load user projects
     indexView.init();
   } else {

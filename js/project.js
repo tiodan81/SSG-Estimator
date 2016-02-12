@@ -1,11 +1,13 @@
 var project = {
   name: '',
-  markup: 1.35,
+  city: '',
   laborRate: 45,
+  markup: 1.35,
   owners: {
     //uid: t/f
   },
-  mulch: {}
+  mulch: {},
+  cisterns: {}
 };
 
 var materials = {};
@@ -32,4 +34,8 @@ project.save = function() {
       }
     }
   );
+};
+
+project.addOwner = function() {
+  //if curUser is owner, allow to add other users as owners/viewers
 };
