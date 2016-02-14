@@ -28,7 +28,8 @@ const fbUsers = firebase.child('users');
 
 var user = {
   email: '',
-  uid: ''
+  uid: '',
+  projects: []
 };
 
 
@@ -74,11 +75,11 @@ user.authenticate = function(pwd) {
   indexView.init();
 };
 
-user.isLoggedIn = function(callback) {
-  let authData = firebase.getAuth();
-  callback();
+user.isLoggedIn = function() {
+  return firebase.getAuth();
 };
 
 user.loadProjects = function(id) {
   console.log('loading projects for user ' + id);
+  //user.projects =
 };

@@ -1,16 +1,30 @@
 var project = {
-  name: '',
-  city: '',
-  laborRate: 45,
-  markup: 1.35,
-  owners: {
-    //uid: t/f
-  },
-  mulch: {},
-  cisterns: {}
+  allProjects = []
+};
+
+project.maker = function(client, city, labor, mkup, owner) {
+  this.client = client;
+  this.city = city;
+  this.laborRate = labor;
+  this.markup = mkup;
+  this.owner = owner;
+  // {
+  //   uid: t/f
+  // },
+  // mulch: {},
+  // cisterns: {}
 };
 
 var materials = {};
+
+project.build = function() {
+  let client = $('#project-client').val();
+  let city = $('#project-city').val();
+  let labor = +($('#project-labor-rate').val());
+  let markup = +('1.' + $('#project-markup-rate').val());
+  let owner = user.uid;
+  return new project.maker(client, city, labor, markup, owner);
+};
 
 project.saveName = function() {
   $('#projectForm').on('submit', function(e) {

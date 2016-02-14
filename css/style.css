@@ -29,6 +29,10 @@ body {
   display: none;
 }
 
+#project-summary {
+  display: none;
+}
+
 th {
   border-bottom: 2px solid #111;
 }

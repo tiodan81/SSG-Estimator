@@ -43,6 +43,7 @@ indexView.handleCreateButton = function() {
   $('#project-create-button').on('click', function(e) {
     e.preventDefault();
     $(this).hide();
+    $('#project-select-container').hide();
     $('#projectForm').show();
     indexView.handleProjectForm();
   });
@@ -51,8 +52,22 @@ indexView.handleCreateButton = function() {
 indexView.handleProjectForm = function() {
   $('#projectForm').on('submit', function(e) {
     e.preventDefault();
-
+    let project = project.build();
+    project.allProjects.push(project);
   });
+};
+
+indexView.makeTable = function() {
+  let html = '';
+  html += `
+  <h2></h2>
+  <table id="project-table">
+  <tr><th>Item</th><th>Labor Hours</th><th>Labor Cost</th><th>Materials Cost</th><th>Subtotal</th><th>Tax</th><th>Total</th></tr>
+  <tr><td>Cisterns</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td>Mulch</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td>Total</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </table>
+  `;
 };
 
 var mulchView = {};
