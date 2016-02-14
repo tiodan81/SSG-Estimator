@@ -210,3 +210,14 @@ cistern.updateUberTank = function() {
     cisternView.populateSelector(uber);
   }
 };
+
+cistern.saveToProject = function(uber) {
+  if(user.uid && project.current.client) {
+    project.current.cisterns = {
+      uberTank: cistern.uberTank,
+      allCisterns: cistern.allCisterns
+    }
+  } else {
+    console.log('error!');
+  }
+};

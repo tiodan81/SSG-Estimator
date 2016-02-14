@@ -5,10 +5,11 @@ loginView.init = function() {
     .siblings().hide();
   loginView.handleCreate();
   loginView.handleLogin();
+  //loginView.handleLogout();
 };
 
 loginView.handleCreate = function() {
-  $('#new-user-form').on('submit', function(e) {
+  $('#new-user-form').off('submit').on('submit', function(e) {
     e.preventDefault();
     let email = $('#new-user').val();
     let pwd = $('#new-password').val();
@@ -18,7 +19,7 @@ loginView.handleCreate = function() {
 };
 
 loginView.handleLogin = function() {
-  $('#login-form').on('submit', function(e) {
+  $('#login-form').off('submit').on('submit', function(e) {
     e.preventDefault();
     user.email = $('#username').val();
     let pwd = $('#password').val();
@@ -27,7 +28,16 @@ loginView.handleLogin = function() {
   });
 };
 
-var indexView = {};
+loginView.handleLogout = function() {
+  $('#logout').off('click').on('click', function(e) {
+    e.preventDefault();
+    firebase.unauth();
+  });
+};
+
+var indexView = {
+  current: {}
+};
 
 indexView.init = function () {
   $('#home-content').show()
@@ -36,11 +46,11 @@ indexView.init = function () {
   //populate user project list
   //if project selected, show summary
   indexView.handleCreateButton();
-  project.saveName();
+  //project.saveName();
 };
 
 indexView.handleCreateButton = function() {
-  $('#project-create-button').on('click', function(e) {
+  $('#project-create-button').off('click').on('click', function(e) {
     e.preventDefault();
     $(this).hide();
     $('#project-select-container').hide();
@@ -50,17 +60,35 @@ indexView.handleCreateButton = function() {
 };
 
 indexView.handleProjectForm = function() {
-  $('#projectForm').on('submit', function(e) {
+  $('#projectForm').off('submit').on('submit', function(e) {
     e.preventDefault();
-    let project = project.build();
-    project.allProjects.push(project);
+    let newProject = project.build();
+    project.allProjects.push(newProject);
+    project.current = newProject;
+    indexView.renderNew(newProject);
+    viewUtil.clearForm();
   });
 };
 
-indexView.makeTable = function() {
+indexView.renderNew = function(project) {
+  const $display = $('#project-summary');
+  indexView.populateSelector(project);
+  $('#project-selector').val(project.client);
+  indexView.makeTable(project);
+};
+
+indexView.populateSelector = function(project) {
+  let client = project.client;
+  if($('#project-selector option[value="' + client + '"]').length === 0) {
+    let option = '<option value="' + client + '">' + client + '</option>';
+    $('#project-selector').append(option);
+  }
+};
+
+indexView.makeTable = function(cur) {
   let html = '';
   html += `
-  <h2></h2>
+  <h2>${cur.client}</h2>
   <table id="project-table">
   <tr><th>Item</th><th>Labor Hours</th><th>Labor Cost</th><th>Materials Cost</th><th>Subtotal</th><th>Tax</th><th>Total</th></tr>
   <tr><td>Cisterns</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
@@ -112,7 +140,7 @@ mulchView.showTotal = function() {
 };
 
 mulchView.editZone = function() {
-  $('#mulch-table-body .icon-pencil2').on('click', function() {
+  $('#mulch-table-body .icon-pencil2').off('click').on('click', function() {
     var curId = $(this).attr('id');
     mulch.mulchZones.forEach(function(zone) {
       if (zone.id === parseInt(curId)) {
@@ -134,7 +162,7 @@ mulchView.populateForm = function(zone) {
 };
 
 mulchView.handleNew = function() {
-  $('#mulch-add').on('click', function(e) {
+  $('#mulch-add').off('click').on('click', function(e) {
     e.preventDefault();
     let newMulchZone = mulch.buildMulch(mulch.zoneId);
     mulch.mulchZones.push(newMulchZone);
@@ -145,7 +173,7 @@ mulchView.handleNew = function() {
 };
 
 mulchView.handleUpdate = function() {
-  $('#mulch-update').on('click', function(e) {
+  $('#mulch-update').off('click').on('click', function(e) {
     e.preventDefault();
     var curId = parseInt($(this).data('id'));
     var updated = mulch.buildMulch(curId);
@@ -158,7 +186,7 @@ mulchView.handleUpdate = function() {
 };
 
 mulchView.deleteZone = function() {
-  $('#mulch-table-body .icon-bin2').on('click', function(e) {
+  $('#mulch-table-body .icon-bin2').off('click').on('click', function(e) {
     e.preventDefault();
     var curId = parseInt($(this).attr('id'));
     mulch.mulchZones.forEach(function(zone, i) {
@@ -218,13 +246,14 @@ cisternView.makeAddOn = function(addOn, count) {
 };
 
 cisternView.handleNew = function() {
-  $('#cistern-add').on('click', function(e) {
+  $('#cistern-add').off('click').on('click', function(e) {
     e.preventDefault();
     let newCistern = cistern.buildCistern();
     cistern.allCalcs(newCistern);
     cistern.allCisterns.push(newCistern);
     cisternView.renderNew(newCistern);
     cistern.updateUberTank();
+    cistern.saveToProject(cistern.uberTank);
     cisternView.current = newCistern;
     viewUtil.clearForm();
   });
@@ -261,13 +290,13 @@ cisternView.showSummary = function() {
 };
 
 cisternView.handleSelector = function() {
-  $('#cistern-selector').on('change', function() {
+  $('#cistern-selector')..off('change').on('change', function() {
     let id = $('#cistern-selector').val();
     if (id === 'All tanks') {
       cisternView.makeTables(cistern.uberTank);
       $('#cistern-edit-buttons').hide();
     } else {
-      let curCistern = util.findObjInArray(id, cistern.allCisterns);
+      let curCistern = util.findObjInArray(id, cistern.allCisterns, 'cisternId');
       cisternView.makeTables(curCistern[0]);
       cisternView.current = curCistern[0];
       $('#cistern-edit-buttons').show();
@@ -277,7 +306,7 @@ cisternView.handleSelector = function() {
 };
 
 cisternView.handleNav = function() {
-  $('#cistern-nav > li').on('click', function() {
+  $('#cistern-nav > li').off('click').on('click', function() {
     let $curNav = $('.selected').attr('id').split('-')[2];
     let $nextNav = $(this).attr('id').split('-')[2];
     $(this).addClass('selected')
@@ -374,7 +403,7 @@ cisternView.editButtons = function() {
 };
 
 cisternView.handleEdit = function() {
-  $('#cistern-edit-buttons .icon-pencil2').on('click', function(e) {
+  $('#cistern-edit-buttons .icon-pencil2').off('click').on('click', function(e) {
     e.preventDefault();
     let cur = cisternView.current;
     cisternView.populateForm(cur);
@@ -384,7 +413,7 @@ cisternView.handleEdit = function() {
 };
 
 cisternView.handleUpdate = function() {
-  $('#cistern-update').on('click', function(e) {
+  $('#cistern-update').off('click').on('click', function(e) {
     e.preventDefault();
     let old = cisternView.current;
     let updated = cistern.buildCistern();
@@ -404,7 +433,7 @@ cisternView.handleUpdate = function() {
 };
 
 cisternView.handleDelete = function() {
-  $('#cistern-edit-buttons .icon-bin2').on('click', function(e) {
+  $('#cistern-edit-buttons .icon-bin2').off('click').on('click', function(e) {
     e.preventDefault();
     let old = cisternView.current;
     let all = cistern.allCisterns;
@@ -439,3 +468,13 @@ cisternView.populateForm = function(cur) {
   $('#cisternOutflow').val(cur.outflow);
   $('#cisternAddLabor').val(cur.additionalLaborHr);
 };
+
+var viewUtil = {};
+
+viewUtil.clearForm = function() {
+  $('.fe input').val('');
+};
+
+$(function() {
+  loginView.handleLogout();
+});

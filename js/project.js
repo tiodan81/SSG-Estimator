@@ -1,5 +1,6 @@
 var project = {
-  allProjects = []
+  allProjects: [],
+  current: {}
 };
 
 project.maker = function(client, city, labor, mkup, owner) {
@@ -12,7 +13,10 @@ project.maker = function(client, city, labor, mkup, owner) {
   //   uid: t/f
   // },
   // mulch: {},
-  // cisterns: {}
+  // cisterns: {
+  //   uberTank: {},
+  //   allCisterns: []
+  // }
 };
 
 var materials = {};
