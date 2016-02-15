@@ -64,6 +64,7 @@ indexView.handleProjectForm = function() {
     let newProject = project.build();
     project.allProjects.push(newProject);
     project.current = newProject;
+    project.create(newProject);
     viewUtil.clearForm();
     indexView.renderNew(newProject);
   });
@@ -98,6 +99,10 @@ indexView.makeTable = function(cur) {
   </table>
   `;
   return html;
+};
+
+indexView.updateProjectSummary = function() {
+
 };
 
 var mulchView = {};

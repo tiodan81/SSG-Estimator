@@ -3,8 +3,8 @@
 //     'one': {
 //       'name': 'p1',
 //       'owners': {
-//         'user1': true,
-//         'user2': true
+//         'uid1': true,
+//         'uid2': true
 //       },
 //       'mulches': {
 //         'mulchZones': [{}, {}],
@@ -14,12 +14,18 @@
 //     }
 //   },
 //   'users': {
-//     'uid': 'user1',
-//     'projects': {
-//       'p1': true,
-//       'p2': true
-//     }
-//   }
+//     'uid1': {
+//      'projects': {
+//        'p1': true,
+//        'p2': true
+//       }
+//     },
+//    'uid2': {
+//       'projects': {
+//       'p3': true
+//      }
+//    }
+//  }
 // }
 
 const firebase = new Firebase('https://ssgestimator.firebaseio.com/');
@@ -77,6 +83,18 @@ user.authenticate = function(pwd) {
 
 user.isLoggedIn = function() {
   return firebase.getAuth();
+};
+
+user.setProjectOwner = function(newProject) {
+  let userRef = fbUsers.child(user.uid);
+  let obj = {};
+  obj[newProject.client] = true;
+  let userString = JSON.stringify(obj);
+  if (userRef) {
+    userRef.child('projects').update(obj);
+  } else {
+    userRef.child('projects').set(obj);
+  }
 };
 
 user.loadProjects = function(id) {

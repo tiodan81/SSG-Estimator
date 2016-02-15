@@ -30,28 +30,25 @@ project.build = function() {
   return new project.maker(client, city, labor, markup, owner);
 };
 
-project.saveName = function() {
-  $('#projectForm').on('submit', function(e) {
-    e.preventDefault();
-    project.name = $('#projectName').val();
-    //if (user.uid)                         //only allow save if user is a project owner
-    project.mulch = mulch;
-    project.save();
-  });
+project.create = function(newProject) {
+  project.saveNew(newProject);
+  user.setProjectOwner(newProject);
 };
 
-project.save = function() {
-  let projectString = JSON.stringify(project);
+project.saveNew = function(newProject) {
+  //don't allow set if fbProjects/client already exists!
+  let obj = {};
+  obj[newProject.client] = newProject;
+  let projectString = JSON.stringify(obj);
   fbProjects.set(
-    projectString,
-    function(error) {
-      if (error) {
-        console.log('Project failed to save.');
-      } else {
-        console.log('Project saved.');
-      }
+    obj,
+  function(error) {
+    if (error) {
+      console.log('Project failed to save.');
+    } else {
+      console.log('Saved new project ' + newProject.client);
     }
-  );
+  });
 };
 
 project.addOwner = function() {
