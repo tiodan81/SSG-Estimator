@@ -211,7 +211,7 @@ cistern.updateUberTank = function() {
   }
 };
 
-cistern.saveToProject = function(uber) {
+cistern.saveToProject = function() {
   if(user.uid && project.current.client) {
     project.current.cisterns = {
       uberTank: cistern.uberTank,

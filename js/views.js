@@ -42,7 +42,6 @@ var indexView = {
 indexView.init = function () {
   $('#home-content').show()
     .siblings().hide();
-  //show 'create project' button
   //populate user project list
   //if project selected, show summary
   indexView.handleCreateButton();
@@ -65,16 +64,18 @@ indexView.handleProjectForm = function() {
     let newProject = project.build();
     project.allProjects.push(newProject);
     project.current = newProject;
-    indexView.renderNew(newProject);
     viewUtil.clearForm();
+    indexView.renderNew(newProject);
   });
 };
 
 indexView.renderNew = function(project) {
   const $display = $('#project-summary');
+  $('#projectForm').hide()
+    .siblings().show();
   indexView.populateSelector(project);
   $('#project-selector').val(project.client);
-  indexView.makeTable(project);
+  $display.append(indexView.makeTable(project));
 };
 
 indexView.populateSelector = function(project) {
@@ -96,6 +97,7 @@ indexView.makeTable = function(cur) {
   <tr><td>Total</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
   </table>
   `;
+  return html;
 };
 
 var mulchView = {};
@@ -253,7 +255,7 @@ cisternView.handleNew = function() {
     cistern.allCisterns.push(newCistern);
     cisternView.renderNew(newCistern);
     cistern.updateUberTank();
-    cistern.saveToProject(cistern.uberTank);
+    cistern.saveToProject();
     cisternView.current = newCistern;
     viewUtil.clearForm();
   });
@@ -290,7 +292,7 @@ cisternView.showSummary = function() {
 };
 
 cisternView.handleSelector = function() {
-  $('#cistern-selector')..off('change').on('change', function() {
+  $('#cistern-selector').off('change').on('change', function() {
     let id = $('#cistern-selector').val();
     if (id === 'All tanks') {
       cisternView.makeTables(cistern.uberTank);
@@ -426,6 +428,7 @@ cisternView.handleUpdate = function() {
     cistern.updateUberTank();
     cisternView.renderNew(updated);
     cisternView.current = updated;
+    cistern.saveToProject();
     viewUtil.clearForm();
     $('#cistern-update').hide();
     $('#cistern-add').show();
@@ -444,6 +447,7 @@ cisternView.handleDelete = function() {
     });
     $('#cistern-selector > option[value="' + old.cisternId + '"]').remove();
     cistern.updateUberTank();
+    cistern.saveToProject();
     if (all.length) {
       cisternView.current = all[0];
       let cur = cisternView.current;
@@ -476,5 +480,6 @@ viewUtil.clearForm = function() {
 };
 
 $(function() {
+  controller.checkLogin();
   loginView.handleLogout();
 });
