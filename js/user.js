@@ -1,33 +1,3 @@
-// {
-//   'projects': {
-//     'one': {
-//       'name': 'p1',
-//       'owners': {
-//         'uid1': true,
-//         'uid2': true
-//       },
-//       'mulches': {
-//         'mulchZones': [{}, {}],
-//         'volume': 10,
-//         'price': 20
-//       }
-//     }
-//   },
-//   'users': {
-//     'uid1': {
-//      'projects': {
-//        'p1': true,
-//        'p2': true
-//       }
-//     },
-//    'uid2': {
-//       'projects': {
-//       'p3': true
-//      }
-//    }
-//  }
-// }
-
 const firebase = new Firebase('https://ssgestimator.firebaseio.com/');
 const fbProjects = firebase.child('projects');
 const fbUsers = firebase.child('users');

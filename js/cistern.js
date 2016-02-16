@@ -216,8 +216,9 @@ cistern.saveToProject = function() {
     project.current.cisterns = {
       uberTank: cistern.uberTank,
       allCisterns: cistern.allCisterns
-    }
+    };
+    project.updateComponent(project.current, 'cisterns');
   } else {
-    console.log('error!');
+    console.log('Either you\'re not signed in or haven\'t initiated a project!');
   }
 };

@@ -9,14 +9,6 @@ project.maker = function(client, city, labor, mkup, owner) {
   this.laborRate = labor;
   this.markup = mkup;
   this.owner = owner;
-  // {
-  //   uid: t/f
-  // },
-  // mulch: {},
-  // cisterns: {
-  //   uberTank: {},
-  //   allCisterns: []
-  // }
 };
 
 var materials = {};
@@ -44,9 +36,24 @@ project.saveNew = function(newProject) {
     obj,
   function(error) {
     if (error) {
-      console.log('Project failed to save.');
+      console.log('Project failed to save.' + error);
     } else {
       console.log('Saved new project ' + newProject.client);
+    }
+  });
+};
+
+project.updateComponent = function(cur, key) {
+  let node = fbProjects.child(cur.client);
+  let obj = {};
+  obj[key] = cur[key];
+  node.update(
+    obj,
+  function(error) {
+    if(error) {
+      console.log('Component failed to save.' + error);
+    } else {
+      console.log('Saved component' + key);
     }
   });
 };
