@@ -30,10 +30,7 @@
 
 # Cistern
 ## Questions for jake
-  * what granularity of materials detail?
-    * on-screen
-    * on paper for quote
-    * shopping list
+  * what cities, markup rates to include in project selector?
 
 
 # Concerns
@@ -59,3 +56,8 @@
 * 2/6: 1.5
 * 2/8: 4.5
 * 2/9: 1.75
+* 2/10: 3.5
+* 2/11: 2?
+* 2/13: 1.75
+* 2/14: 4
+* 2/15: 2.5

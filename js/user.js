@@ -1,32 +1,12 @@
-// {
-//   'projects': {
-//     'one': {
-//       'name': 'p1',
-//       'owners': {
-//         'user1': true,
-//         'user2': true
-//       },
-//       'mulches': {
-//         'mulchZones': [{}, {}],
-//         'volume': 10,
-//         'price': 20
-//       }
-//     }
-//   },
-//   'users': {
-//     'uid': 'user1',
-//     'projects': {
-//       'p1': true,
-//       'p2': true
-//     }
-//   }
-// }
+const firebase = new Firebase('https://ssgestimator.firebaseio.com/');
+const fbProjects = firebase.child('projects');
+const fbUsers = firebase.child('users');
 
-var firebase = new Firebase('https://ssgestimator.firebaseio.com/');
-var fbProjects = firebase.child('projects');
-var fbUsers = firebase.child('users');
-
-var user = {};
+var user = {
+  email: '',
+  uid: '',
+  projects: []
+};
 
 
 //firebase.update(); //update some keys at node
@@ -37,30 +17,21 @@ var user = {};
 //   console.log('Epic fail: ' + errorObject.code);
 // });
 
-user.create = function(event) {
-  event.preventDefault();
-  user.email = $('#new-user').val();
-  var userPassword = $('#new-password').val();
+user.create = function(email, pwd) {
   firebase.createUser({
-    email     : user.email,
-    password  : userPassword
+    email     : email,
+    password  : pwd
   }, function(error, userData) {
     if (error) {
       alert(error);
       console.log('error creating user: ', error);
     } else {
+      console.log(userData);
       console.log('Successfully created user account with uid: ', userData.uid);
-      user.authenticate(userPassword);
-      $('#new-user, #new-password').val('');
+      user.email = email;
+      user.authenticate(pwd);
     }
   });
-};
-
-user.authLogin = function(event) {
-  event.preventDefault();
-  user.email = $('#username').val();
-  var pwd = $('#password').val();
-  user.authenticate(pwd);
 };
 
 user.authenticate = function(pwd) {
@@ -74,11 +45,29 @@ user.authenticate = function(pwd) {
     } else {
       console.log('Authenticated successfully with payload: ', authData);
       user.uid = authData.uid;
-      user.loadProjects();
+      user.loadProjects(user.email);
     }
   });
+  indexView.init();
 };
 
-user.loadProjects = function() {
+user.isLoggedIn = function() {
+  return firebase.getAuth();
+};
 
+user.setProjectOwner = function(newProject) {
+  let userRef = fbUsers.child(user.uid);
+  let obj = {};
+  obj[newProject.client] = true;
+  let userString = JSON.stringify(obj);
+  if (userRef) {
+    userRef.child('projects').update(obj);
+  } else {
+    userRef.child('projects').set(obj);
+  }
+};
+
+user.loadProjects = function(id) {
+  console.log('loading projects for user ' + id);
+  //user.projects =
 };

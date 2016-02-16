@@ -13,37 +13,64 @@
         <li><a href="/">Home</a></li>
         <li><a href="/mulch">Mulch</a></li>
         <li><a href="/cisterns">Cisterns</a></li>
+        <li><a href="/login">Login</a></li>
+        <li id="logout"><a href="#">Logout</a></li>
       </ul>
     </nav>
     <main>
+      <section id="login-content">
+        <h2>Create an Account</h2>
+        <form id="new-user-form">
+          <input id="new-user" type="email" placeholder="user@email.com" />
+          <input id="new-password" type="password" placeholder="password" />
+          <input id="new-user-submit" type="submit" value="Submit">
+        </form>
+        <h2>Login</h2>
+        <form id="login-form">
+          <input id="username" type="email" placeholder="user@email.com" />
+          <input id="password" type="password" placeholder="password" />
+          <input id="login-submit" type="submit" value="Login">
+        </form>
+      </section>
       <section id="home-content">
         <h1>Stone Soup Project Planner</h1>
+        <div id="project-select-container" class="fe">
+          <label class="fieldname">Project:</label>
+          <select id="project-selector">
+          </select>
+        </div>
+        <button id="project-create-button" type="button">Make a new project</button>
         <form id="projectForm">
-          <label class="fieldname">Project Name</label>
-          <input id="projectName" type="text"></input>
-          <input type="submit" value="Submit" />
+          <div class="fe">
+            <label class="fieldname">Client:</label>
+            <input id="project-client" type="text" required="required"></input>
+          </div>
+          <div class="fe">
+            <label class="fieldname">City:</label>
+            <select id="project-city">
+              <option value="Seattle">Seattle</option>
+              <option value="Renton">Renton</option>
+            </select>
+          </div>
+          <div class="fe">
+            <label class="fieldname">Labor Rate:</label>
+            <select id="project-labor-rate">
+              <option value="45">$45/hr</option>
+              <option value="40">$40/hr</option>
+            </select>
+          </div>
+          <div class="fe">
+            <label class="fieldname">Markup:</label>
+            <select id="project-markup-rate">
+              <option value="35">35%</option>
+            </select>
+          </div>
+          <div class="submit">
+            <input type="submit" value="Create project" />
+          </div>
         </form>
-        <ul>
-          <li><a href="/mulch">Mulch Calculator</a></li>
-          <li>Rain Gardens</li>
-          <li><a href="/cisterns">Cisterns</a></li>
-          <li>Fences</li>
-          <li>Patios</li>
-          <li>Paths</li>
-        </ul>
-        <section>
-          <h2>Create an Account</h2>
-          <form id="new-user-form">
-            <input id="new-user" type="email" placeholder="user@email.com" />
-            <input id="new-password" type="password" placeholder="password" />
-            <input id="new-user-submit" type="submit" value="Submit">
-          </form>
-          <h2>Login</h2>
-          <form id="login-form">
-            <input id="username" type="email" placeholder="user@email.com" />
-            <input id="password" type="password" placeholder="password" />
-            <input id="login-submit" type="submit" value="Login">
-          </form>
+        <section id="project-summary">
+
         </section>
       </section>
       <section id="mulch-content">
@@ -213,12 +240,12 @@
     <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>
     <script type="text/javascript" src="/js/vendor/page.js"></script>
     <script type="text/javascript" src="/js/controller.js"></script>
-    <script type="text/javascript" src="/js/viewUtil.js"></script>
     <script type="text/javascript" src="/js/util.js"></script>
     <script type="text/javascript" src="/js/project.js"></script>
     <script type="text/javascript" src="/js/mulch.js"></script>
     <script type="text/javascript" src="/js/cistern.js"></script>
     <script type="text/javascript" src="/js/user.js"></script>
+    <script type="text/javascript" src="/js/views.js"></script>
     <script type="text/javascript" src="/js/router.js"></script>
   </body>
 </html>

@@ -6,7 +6,7 @@ util.round = function(op, num, inc) {
 };
 
 util.laborCost = function(hr) {
-  return hr * project.laborRate;
+  return hr * project.current.laborRate;
 };
 
 //ADD THE MARKUP TO THIS FUNCTION!
@@ -18,8 +18,8 @@ util.salesTax = function(price) {
   return util.round('round', price * 0.095, 0.01);
 };
 
-util.findObjInArray = function(id, arr) {
+util.findObjInArray = function(id, arr, selector) {
   return $.grep(arr, function(e) {
-    return e.cisternId == id;
+    return e[selector] == id;
   });
 };

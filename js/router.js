@@ -1,6 +1,11 @@
 page(
   '/',
-  controller.indexInit
+  controller.checkLogin
+);
+
+page(
+  '/login',
+  controller.loginInit
 );
 
 page(
