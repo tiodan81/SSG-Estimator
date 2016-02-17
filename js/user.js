@@ -23,8 +23,17 @@ user.create = function(email, pwd) {
     password  : pwd
   }, function(error, userData) {
     if (error) {
-      alert(error);
-      console.log('error creating user: ', error);
+      switch (error.code) {
+        case "EMAIL_TAKEN":
+          console.log('Cannot create user. Email ' + email + ' is already in use.');
+          break;
+        case "INVALID_EMAIL":
+          console.log('Invalid email.');
+          break;
+        default:
+          alert(error);
+          console.log('error creating user: ', error);
+      }
     } else {
       console.log(userData);
       console.log('Successfully created user account with uid: ', userData.uid);

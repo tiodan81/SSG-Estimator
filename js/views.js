@@ -44,8 +44,11 @@ indexView.init = function () {
     .siblings().hide();
   //populate user project list
   //if project selected, show summary
+  if (project.current.client) {
+    console.log('bang');
+    indexView.renderNew(project.current);
+  }
   indexView.handleCreateButton();
-  //project.saveName();
 };
 
 indexView.handleCreateButton = function() {
@@ -76,7 +79,7 @@ indexView.renderNew = function(project) {
     .siblings().show();
   indexView.populateSelector(project);
   $('#project-selector').val(project.client);
-  $display.append(indexView.makeTable(project));
+  $display.html(indexView.makeTable(project));
 };
 
 indexView.populateSelector = function(project) {
@@ -88,12 +91,18 @@ indexView.populateSelector = function(project) {
 };
 
 indexView.makeTable = function(cur) {
+  let cisterns = cur.cisterns.uberTank;
+  console.log(cisterns);
   let html = '';
   html += `
   <h2>${cur.client}</h2>
   <table id="project-table">
   <tr><th>Item</th><th>Labor Hours</th><th>Labor Cost</th><th>Materials Cost</th><th>Subtotal</th><th>Tax</th><th>Total</th></tr>
-  <tr><td>Cisterns</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  `;
+  if (cisterns) {
+    html += `<tr><td>Cisterns</td><td>${cisterns.totalHr}</td><td>${cisterns.laborTotal}</td><td>${cisterns.materialsTotal}</td><td>${cisterns.subtotal}</td><td>${cisterns.tax}</td><td>${cisterns.total}</td></tr>`;
+  }
+  html +=`
   <tr><td>Mulch</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
   <tr><td>Total</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
   </table>
