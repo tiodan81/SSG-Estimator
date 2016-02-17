@@ -43,9 +43,7 @@ indexView.init = function () {
   $('#home-content').show()
     .siblings().hide();
   //populate user project list
-  //if project selected, show summary
   if (project.current.client) {
-    console.log('bang');
     indexView.renderNew(project.current);
   }
   indexView.handleCreateButton();
@@ -65,11 +63,7 @@ indexView.handleProjectForm = function() {
   $('#projectForm').off('submit').on('submit', function(e) {
     e.preventDefault();
     let newProject = project.build();
-    project.allProjects.push(newProject);
-    project.current = newProject;
-    project.create(newProject);
-    viewUtil.clearForm();
-    indexView.renderNew(newProject);
+    project.exists(newProject);
   });
 };
 
@@ -88,6 +82,15 @@ indexView.populateSelector = function(project) {
     let option = '<option value="' + client + '">' + client + '</option>';
     $('#project-selector').append(option);
   }
+};
+
+indexView.handleSelector = function() {
+  $('#project-selector').off('change').on('change', function() {
+    let id = $(this).val();
+    let curProject = util.findObjInArray(id, project.allProjects, 'client');
+    indexView.renderNew(curProject[0]);
+    project.current = curProject[0];
+  });
 };
 
 indexView.makeTable = function(cur) {

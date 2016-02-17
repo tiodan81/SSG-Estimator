@@ -22,23 +22,33 @@ project.build = function() {
   return new project.maker(client, city, labor, markup, owner);
 };
 
+project.exists = function(newProject) {
+  let projectNode = fbProjects.child(newProject.client);
+  projectNode.once('value', function(snapshot) {
+    let exists = snapshot.exists();
+    if (exists) {
+      alert('Cannot save. Project with name ' + newProject.client + ' already exists.');
+      return false;
+    } else {
+      project.create(newProject);
+    }
+  });
+};
+
 project.create = function(newProject) {
-  //let projectNode = fbProjects.child(newProject.client);
-  // if (projectNode) {
-  //   alert('Cannot save. Project with name ' + newProject.client + ' already exists.');
-  //   return false;
-  // } else {
   project.saveNew(newProject);
   user.setProjectOwner(newProject);
-//  }
+  project.allProjects.push(newProject);
+  project.current = newProject;
+  viewUtil.clearForm();
+  indexView.renderNew(newProject);
 };
 
 project.saveNew = function(newProject) {
   let obj = {};
   obj[newProject.client] = newProject;
   let projectString = JSON.stringify(obj);
-  //DON'T OVERWRITE ALL OF FBPROJECTS EVERY TIME YOU CREATE!!
-  fbProjects.set(
+  fbProjects.update(
     obj,
   function(error) {
     if (error) {
