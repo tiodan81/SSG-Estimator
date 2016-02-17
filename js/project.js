@@ -22,21 +22,37 @@ project.build = function() {
   return new project.maker(client, city, labor, markup, owner);
 };
 
+project.exists = function(newProject) {
+  let projectNode = fbProjects.child(newProject.client);
+  projectNode.once('value', function(snapshot) {
+    let exists = snapshot.exists();
+    if (exists) {
+      alert('Cannot save. Project with name ' + newProject.client + ' already exists.');
+      return false;
+    } else {
+      project.create(newProject);
+    }
+  });
+};
+
 project.create = function(newProject) {
   project.saveNew(newProject);
   user.setProjectOwner(newProject);
+  project.allProjects.push(newProject);
+  project.current = newProject;
+  viewUtil.clearForm();
+  indexView.renderNew(newProject);
 };
 
 project.saveNew = function(newProject) {
-  //don't allow set if fbProjects/client already exists!
   let obj = {};
   obj[newProject.client] = newProject;
   let projectString = JSON.stringify(obj);
-  fbProjects.set(
+  fbProjects.update(
     obj,
   function(error) {
     if (error) {
-      console.log('Project failed to save.' + error);
+      console.log('Project failed to save. ' + error);
     } else {
       console.log('Saved new project ' + newProject.client);
     }
@@ -51,9 +67,9 @@ project.updateComponent = function(cur, key) {
     obj,
   function(error) {
     if(error) {
-      console.log('Component failed to save.' + error);
+      console.log('Component failed to save. ' + error);
     } else {
-      console.log('Saved component' + key);
+      console.log('Saved component ' + key);
     }
   });
 };

@@ -43,9 +43,10 @@ indexView.init = function () {
   $('#home-content').show()
     .siblings().hide();
   //populate user project list
-  //if project selected, show summary
+  if (project.current.client) {
+    indexView.renderNew(project.current);
+  }
   indexView.handleCreateButton();
-  //project.saveName();
 };
 
 indexView.handleCreateButton = function() {
@@ -62,11 +63,7 @@ indexView.handleProjectForm = function() {
   $('#projectForm').off('submit').on('submit', function(e) {
     e.preventDefault();
     let newProject = project.build();
-    project.allProjects.push(newProject);
-    project.current = newProject;
-    project.create(newProject);
-    viewUtil.clearForm();
-    indexView.renderNew(newProject);
+    project.exists(newProject);
   });
 };
 
@@ -76,7 +73,7 @@ indexView.renderNew = function(project) {
     .siblings().show();
   indexView.populateSelector(project);
   $('#project-selector').val(project.client);
-  $display.append(indexView.makeTable(project));
+  $display.html(indexView.makeTable(project));
 };
 
 indexView.populateSelector = function(project) {
@@ -87,13 +84,28 @@ indexView.populateSelector = function(project) {
   }
 };
 
+indexView.handleSelector = function() {
+  $('#project-selector').off('change').on('change', function() {
+    let id = $(this).val();
+    let curProject = util.findObjInArray(id, project.allProjects, 'client');
+    indexView.renderNew(curProject[0]);
+    project.current = curProject[0];
+  });
+};
+
 indexView.makeTable = function(cur) {
+  let cisterns = cur.cisterns.uberTank;
+  console.log(cisterns);
   let html = '';
   html += `
   <h2>${cur.client}</h2>
   <table id="project-table">
   <tr><th>Item</th><th>Labor Hours</th><th>Labor Cost</th><th>Materials Cost</th><th>Subtotal</th><th>Tax</th><th>Total</th></tr>
-  <tr><td>Cisterns</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  `;
+  if (cisterns) {
+    html += `<tr><td>Cisterns</td><td>${cisterns.totalHr}</td><td>${cisterns.laborTotal}</td><td>${cisterns.materialsTotal}</td><td>${cisterns.subtotal}</td><td>${cisterns.tax}</td><td>${cisterns.total}</td></tr>`;
+  }
+  html +=`
   <tr><td>Mulch</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
   <tr><td>Total</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
   </table>
@@ -485,6 +497,7 @@ viewUtil.clearForm = function() {
 };
 
 $(function() {
+  "user strict";
   controller.checkLogin();
   loginView.handleLogout();
 });
