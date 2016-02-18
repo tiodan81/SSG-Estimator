@@ -35,16 +35,17 @@ loginView.handleLogout = function() {
   });
 };
 
-var indexView = {
-  current: {}
-};
+var indexView = {};
 
 indexView.init = function () {
   $('#home-content').show()
     .siblings().hide();
-  if (project.current.client) {
-    indexView.renderNew(project.current);
+  console.log('viewinit');
+  if (!Object.keys(project.current).length) {
+    console.log('no project selected');
+    project.current = project.allProjects[0];
   }
+  indexView.renderNew(project.current);
   indexView.handleCreateButton();
 };
 
@@ -496,6 +497,6 @@ viewUtil.clearForm = function() {
 };
 
 $(function() {
-  //controller.checkLogin();
+  controller.checkLogin();
   loginView.handleLogout();
 });

@@ -1,7 +1,7 @@
-page(
-  '/',
-  controller.checkLogin
-);
+// page(
+//   '/',
+//   //controller.checkLogin
+// );
 
 page(
   '/login',
