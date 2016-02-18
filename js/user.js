@@ -45,7 +45,7 @@ user.authenticate = function(pwd) {
     } else {
       console.log('Authenticated successfully with payload: ', authData);
       user.uid = authData.uid;
-      user.loadProjects(user.email);
+      user.getProjectList(user.email);
     }
   });
   indexView.init();
@@ -67,12 +67,17 @@ user.setProjectOwner = function(newProject) {
   }
 };
 
-user.loadProjects = function(id) {
+user.loadProject = function(projName) {
+  fbProjects.child(projName).once('value', function(snapshot) {
+    project.allProjects.push(snapshot.val());
+  });
+};
+
+user.getProjectList = function(id) {
   console.log('loading projects for user ' + id);
-  let userProjects = [];
   fbUsers.child(id).child('projects').once('value', function(snapshot) {
     snapshot.forEach(function(proj) {
-      project.allProjects.push(proj.key());
+      user.loadProject(proj.key());
     });
   });
 };
