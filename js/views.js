@@ -497,7 +497,6 @@ viewUtil.clearForm = function() {
 };
 
 $(function() {
-  "user strict";
-  controller.checkLogin();
+  //controller.checkLogin();
   loginView.handleLogout();
 });

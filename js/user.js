@@ -8,15 +8,6 @@ var user = {
   projects: []
 };
 
-
-//firebase.update(); //update some keys at node
-
-// firebase.child('key').on('value', function(snapshot) {    //read. 'value' event fires once for initial state of data, also every time data changes
-//   console.log(snapshot.val());                            //gets a snapshot including all child data
-// }, function (errorObject) {
-//   console.log('Epic fail: ' + errorObject.code);
-// });
-
 user.create = function(email, pwd) {
   firebase.createUser({
     email     : email,
@@ -24,15 +15,15 @@ user.create = function(email, pwd) {
   }, function(error, userData) {
     if (error) {
       switch (error.code) {
-        case "EMAIL_TAKEN":
-          console.log('Cannot create user. Email ' + email + ' is already in use.');
-          break;
-        case "INVALID_EMAIL":
-          console.log('Invalid email.');
-          break;
-        default:
-          alert(error);
-          console.log('error creating user: ', error);
+      case "EMAIL_TAKEN":
+        console.log('Cannot create user. Email ' + email + ' is already in use.');
+        break;
+      case "INVALID_EMAIL":
+        console.log('Invalid email.');
+        break;
+      default:
+        alert(error);
+        console.log('error creating user: ', error);
       }
     } else {
       console.log(userData);
@@ -78,5 +69,10 @@ user.setProjectOwner = function(newProject) {
 
 user.loadProjects = function(id) {
   console.log('loading projects for user ' + id);
-  //user.projects =
+  let userProjects = [];
+  fbUsers.child(id).child('projects').once('value', function(snapshot) {
+    snapshot.forEach(function(proj) {
+      project.allProjects.push(proj.key());
+    });
+  });
 };
