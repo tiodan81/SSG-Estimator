@@ -42,7 +42,6 @@ var indexView = {
 indexView.init = function () {
   $('#home-content').show()
     .siblings().hide();
-  //populate user project list
   if (project.current.client) {
     indexView.renderNew(project.current);
   }

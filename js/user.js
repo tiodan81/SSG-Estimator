@@ -70,6 +70,7 @@ user.setProjectOwner = function(newProject) {
 user.loadProject = function(projName) {
   fbProjects.child(projName).once('value', function(snapshot) {
     project.allProjects.push(snapshot.val());
+    indexView.populateSelector(snapshot.val());
   });
 };
 
