@@ -41,6 +41,7 @@ indexView.init = function () {
   $('#home-content').show()
     .siblings().hide();
   console.log('viewinit');
+  console.log(project.current);
   if (!Object.keys(project.current).length) {
     console.log('no project selected');
     project.current = project.allProjects[0];

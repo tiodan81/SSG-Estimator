@@ -45,7 +45,7 @@ user.authenticate = function(pwd) {
     } else {
       console.log('Authenticated successfully with payload: ', authData);
       user.uid = authData.uid;
-      user.getProjectList(indexView.init);
+      user.getProjectList();
     }
   });
 };
@@ -66,20 +66,23 @@ user.setProjectOwner = function(newProject) {
   }
 };
 
-user.loadProject = function(projName) {
-  fbProjects.child(projName).once('value', function(snapshot) {
-    project.allProjects.push(snapshot.val());
-    indexView.populateSelector(snapshot.val());
-    console.log('proje.all is now ' + project.allProjects);
-  });
-};
-
-user.getProjectList = function(callback) {
+user.getProjectList = function() {
   console.log('loading projects for user ' + user.uid);
-  fbUsers.child(user.uid).child('projects').once('value', function(snapshot) {
+  fbUsers.child(user.uid).child('projects').once('value').then(function(snapshot) {
+    var loadingProjects = [];
+
     snapshot.forEach(function(proj) {
-      user.loadProject(proj.key());
+      let curProj = proj.key();
+      let loadProjPromise = fbProjects.child(curProj).once('value').then(function(snap) {
+        project.allProjects.push(snap.val());
+        indexView.populateSelector(snap.val());
+      });
+      loadingProjects.push(loadProjPromise);
     });
+
+    return Promise.all(loadingProjects);
+  }).then(function() {
+    project.current = project.allProjects[0];
+    indexView.init();
   });
-  callback();
 };
