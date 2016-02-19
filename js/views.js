@@ -48,6 +48,7 @@ indexView.init = function () {
   }
   indexView.renderNew(project.current);
   indexView.handleCreateButton();
+  indexView.handleSelector();
 };
 
 indexView.handleCreateButton = function() {
@@ -89,21 +90,21 @@ indexView.handleSelector = function() {
   $('#project-selector').off('change').on('change', function() {
     let id = $(this).val();
     let curProject = util.findObjInArray(id, project.allProjects, 'client');
+    console.log(curProject[0]);
     indexView.renderNew(curProject[0]);
     project.current = curProject[0];
   });
 };
 
 indexView.makeTable = function(cur) {
-  let cisterns = cur.cisterns.uberTank;
-  console.log(cisterns);
   let html = '';
   html += `
   <h2>${cur.client}</h2>
   <table id="project-table">
   <tr><th>Item</th><th>Labor Hours</th><th>Labor Cost</th><th>Materials Cost</th><th>Subtotal</th><th>Tax</th><th>Total</th></tr>
   `;
-  if (cisterns) {
+  if (cur.cisterns) {
+    let cisterns = cur.cisterns.uberTank;
     html += `<tr><td>Cisterns</td><td>${cisterns.totalHr}</td><td>${cisterns.laborTotal}</td><td>${cisterns.materialsTotal}</td><td>${cisterns.subtotal}</td><td>${cisterns.tax}</td><td>${cisterns.total}</td></tr>`;
   }
   html +=`

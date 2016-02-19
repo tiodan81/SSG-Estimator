@@ -1,7 +1,7 @@
-// page(
-//   '/',
-//   //controller.checkLogin
-// );
+page(
+  '/',
+  indexView.init
+);
 
 page(
   '/login',

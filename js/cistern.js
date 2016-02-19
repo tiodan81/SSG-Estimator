@@ -87,7 +87,7 @@ cistern.tankSalePrice = function (model, info) {
   if (model === 'b420' || model === 'b265' || model === 'b530') {
     return Math.ceil(info.purchasePrice + info.delivery);
   } else {
-    return Math.ceil(info.purchasePrice * project.markup + info.delivery);
+    return Math.ceil(info.purchasePrice * project.current.markup + info.delivery);
   }
 };
 
