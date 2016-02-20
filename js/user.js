@@ -83,6 +83,7 @@ user.getProjectList = function() {
     return Promise.all(loadingProjects);
   }).then(function() {
     project.current = project.allProjects[0];
+    project.populate(project.current);
     indexView.init();
   });
 };

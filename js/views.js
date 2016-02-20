@@ -40,8 +40,6 @@ var indexView = {};
 indexView.init = function () {
   $('#home-content').show()
     .siblings().hide();
-  console.log('viewinit');
-  console.log(project.current);
   if (!Object.keys(project.current).length) {
     console.log('no project selected');
     project.current = project.allProjects[0];
@@ -90,7 +88,6 @@ indexView.handleSelector = function() {
   $('#project-selector').off('change').on('change', function() {
     let id = $(this).val();
     let curProject = util.findObjInArray(id, project.allProjects, 'client');
-    console.log(curProject[0]);
     indexView.renderNew(curProject[0]);
     project.current = curProject[0];
   });
@@ -225,8 +222,8 @@ var cisternView = {
 
 cisternView.init = function() {
   $('#cistern-content').show()
-  .siblings().hide();
-  //cisternView.checkDisplay();
+    .siblings().hide();
+  cisternView.displayExisting();
   cisternView.handleNew();
   //cisternView.handleAddOns();
   cisternView.handleSelector();
@@ -235,11 +232,15 @@ cisternView.init = function() {
   cisternView.handleDelete();
 };
 
-cisternView.checkDisplay = function() {
-  if (cistern.allCisterns.length && $('#cistern-display').css('display') === 'none') {
-    //populateSelector <=== requires refactoring populateSelector to handle multiple cisterns
-    //cisternView.current = $('#cistern-selector'); <==== this ain't right
-    $('#cistern-display').hide();
+cisternView.displayExisting = function() {
+  let $display = $('#cistern-display');
+  if (cistern.allCisterns.length && $display.css('display') === 'none') {
+    cistern.allCisterns.forEach(function(e) {
+      cisternView.populateSelector(e);
+    });
+    cisternView.renderNew(cisternView.current);
+  } else {
+    return; 
   }
 };
 
