@@ -41,7 +41,8 @@ project.create = function(newProject) {
   project.allProjects.push(newProject);
   project.current = newProject;
   viewUtil.clearForm();
-  indexView.renderNew(newProject);
+  indexView.populateSelector(newProject);
+  indexView.render(newProject);
 };
 
 project.saveNew = function(newProject) {

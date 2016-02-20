@@ -40,11 +40,9 @@ var indexView = {};
 indexView.init = function () {
   $('#home-content').show()
     .siblings().hide();
-  if (!Object.keys(project.current).length) {
-    console.log('no project selected');
-    project.current = project.allProjects[0];
+  if (Object.keys(project.current).length) {
+    indexView.render(project.current);
   }
-  indexView.renderNew(project.current);
   indexView.handleCreateButton();
   indexView.handleSelector();
 };
@@ -67,13 +65,11 @@ indexView.handleProjectForm = function() {
   });
 };
 
-indexView.renderNew = function(project) {
-  const $display = $('#project-summary');
+indexView.render = function(project) {
   $('#projectForm').hide()
     .siblings().show();
-  indexView.populateSelector(project);
   $('#project-selector').val(project.client);
-  $display.html(indexView.makeTable(project));
+  $('#project-summary').html(indexView.makeTable(project));
 };
 
 indexView.populateSelector = function(project) {
@@ -88,8 +84,9 @@ indexView.handleSelector = function() {
   $('#project-selector').off('change').on('change', function() {
     let id = $(this).val();
     let curProject = util.findObjInArray(id, project.allProjects, 'client');
-    indexView.renderNew(curProject[0]);
     project.current = curProject[0];
+    project.populate(project.current);
+    indexView.render(project.current);
   });
 };
 
@@ -234,13 +231,15 @@ cisternView.init = function() {
 
 cisternView.displayExisting = function() {
   let $display = $('#cistern-display');
-  if (cistern.allCisterns.length && $display.css('display') === 'none') {
+  if (cistern.allCisterns.length) {
+    $('#cistern-selector').empty();
     cistern.allCisterns.forEach(function(e) {
       cisternView.populateSelector(e);
     });
+    cisternView.populateSelector(cistern.uberTank);
     cisternView.renderNew(cisternView.current);
   } else {
-    return; 
+    return;
   }
 };
 
