@@ -82,5 +82,5 @@ project.addOwner = function() {
 project.populate = function(cur) {
   cistern.allCisterns = cur.cisterns.allCisterns;
   cistern.uberTank = cur.cisterns.uberTank;
-  cisternView.current = cistern.allCisterns[0];
+  cistern.current = cistern.allCisterns[0];
 };
