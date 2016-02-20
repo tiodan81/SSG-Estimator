@@ -237,7 +237,7 @@ cisternView.displayExisting = function() {
       cisternView.populateSelector(e);
     });
     cisternView.populateSelector(cistern.uberTank);
-    cisternView.renderNew(cisternView.current);
+    cisternView.renderNew(cistern.current);
   } else {
     return;
   }
@@ -275,7 +275,7 @@ cisternView.handleNew = function() {
     cisternView.renderNew(newCistern);
     cistern.updateUberTank();
     cistern.saveToProject();
-    cisternView.current = newCistern;
+    cistern.current = newCistern;
     viewUtil.clearForm();
   });
 };
@@ -319,7 +319,7 @@ cisternView.handleSelector = function() {
     } else {
       let curCistern = util.findObjInArray(id, cistern.allCisterns, 'cisternId');
       cisternView.makeTables(curCistern[0]);
-      cisternView.current = curCistern[0];
+      cistern.current = curCistern[0];
       $('#cistern-edit-buttons').show();
     }
     cisternView.showSummary();
@@ -426,7 +426,7 @@ cisternView.editButtons = function() {
 cisternView.handleEdit = function() {
   $('#cistern-edit-buttons .icon-pencil2').off('click').on('click', function(e) {
     e.preventDefault();
-    let cur = cisternView.current;
+    let cur = cistern.current;
     cisternView.populateForm(cur);
     $('#cistern-add').hide();
     $('#cistern-update').show();
@@ -436,7 +436,7 @@ cisternView.handleEdit = function() {
 cisternView.handleUpdate = function() {
   $('#cistern-update').off('click').on('click', function(e) {
     e.preventDefault();
-    let old = cisternView.current;
+    let old = cistern.current;
     let updated = cistern.buildCistern();
     cistern.allCalcs(updated);
     cistern.allCisterns.forEach(function(c, i) {
@@ -446,7 +446,7 @@ cisternView.handleUpdate = function() {
     });
     cistern.updateUberTank();
     cisternView.renderNew(updated);
-    cisternView.current = updated;
+    cistern.current = updated;
     cistern.saveToProject();
     viewUtil.clearForm();
     $('#cistern-update').hide();
@@ -457,7 +457,7 @@ cisternView.handleUpdate = function() {
 cisternView.handleDelete = function() {
   $('#cistern-edit-buttons .icon-bin2').off('click').on('click', function(e) {
     e.preventDefault();
-    let old = cisternView.current;
+    let old = cistern.current;
     let all = cistern.allCisterns;
     all.forEach(function(e, i) {
       if (e.cisternId === old.cisternId) {
@@ -468,14 +468,14 @@ cisternView.handleDelete = function() {
     cistern.updateUberTank();
     cistern.saveToProject();
     if (all.length) {
-      cisternView.current = all[0];
-      let cur = cisternView.current;
+      cistern.current = all[0];
+      let cur = cistern.current;
       $('#cistern-selector').val(cur.cisternId);
       cisternView.makeTables(cur);
       cisternView.showSummary();
       cisternView.editButtons();
     } else {
-      cisternView.current = {};
+      cistern.current = {};
       $('#cistern-display').hide();
     };
   });
