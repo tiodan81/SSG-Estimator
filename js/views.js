@@ -35,18 +35,16 @@ loginView.handleLogout = function() {
   });
 };
 
-var indexView = {
-  current: {}
-};
+var indexView = {};
 
 indexView.init = function () {
   $('#home-content').show()
     .siblings().hide();
-  //populate user project list
-  if (project.current.client) {
-    indexView.renderNew(project.current);
+  if (Object.keys(project.current).length) {
+    indexView.render(project.current);
   }
   indexView.handleCreateButton();
+  indexView.handleSelector();
 };
 
 indexView.handleCreateButton = function() {
@@ -67,13 +65,11 @@ indexView.handleProjectForm = function() {
   });
 };
 
-indexView.renderNew = function(project) {
-  const $display = $('#project-summary');
+indexView.render = function(project) {
   $('#projectForm').hide()
     .siblings().show();
-  indexView.populateSelector(project);
   $('#project-selector').val(project.client);
-  $display.html(indexView.makeTable(project));
+  $('#project-summary').html(indexView.makeTable(project));
 };
 
 indexView.populateSelector = function(project) {
@@ -88,21 +84,21 @@ indexView.handleSelector = function() {
   $('#project-selector').off('change').on('change', function() {
     let id = $(this).val();
     let curProject = util.findObjInArray(id, project.allProjects, 'client');
-    indexView.renderNew(curProject[0]);
     project.current = curProject[0];
+    project.populate(project.current);
+    indexView.render(project.current);
   });
 };
 
 indexView.makeTable = function(cur) {
-  let cisterns = cur.cisterns.uberTank;
-  console.log(cisterns);
   let html = '';
   html += `
   <h2>${cur.client}</h2>
   <table id="project-table">
   <tr><th>Item</th><th>Labor Hours</th><th>Labor Cost</th><th>Materials Cost</th><th>Subtotal</th><th>Tax</th><th>Total</th></tr>
   `;
-  if (cisterns) {
+  if (cur.cisterns) {
+    let cisterns = cur.cisterns.uberTank;
     html += `<tr><td>Cisterns</td><td>${cisterns.totalHr}</td><td>${cisterns.laborTotal}</td><td>${cisterns.materialsTotal}</td><td>${cisterns.subtotal}</td><td>${cisterns.tax}</td><td>${cisterns.total}</td></tr>`;
   }
   html +=`
@@ -223,8 +219,8 @@ var cisternView = {
 
 cisternView.init = function() {
   $('#cistern-content').show()
-  .siblings().hide();
-  //cisternView.checkDisplay();
+    .siblings().hide();
+  cisternView.displayExisting();
   cisternView.handleNew();
   //cisternView.handleAddOns();
   cisternView.handleSelector();
@@ -233,11 +229,17 @@ cisternView.init = function() {
   cisternView.handleDelete();
 };
 
-cisternView.checkDisplay = function() {
-  if (cistern.allCisterns.length && $('#cistern-display').css('display') === 'none') {
-    //populateSelector <=== requires refactoring populateSelector to handle multiple cisterns
-    //cisternView.current = $('#cistern-selector'); <==== this ain't right
-    $('#cistern-display').hide();
+cisternView.displayExisting = function() {
+  let $display = $('#cistern-display');
+  if (cistern.allCisterns.length) {
+    $('#cistern-selector').empty();
+    cistern.allCisterns.forEach(function(e) {
+      cisternView.populateSelector(e);
+    });
+    cisternView.populateSelector(cistern.uberTank);
+    cisternView.renderNew(cisternView.current);
+  } else {
+    return;
   }
 };
 
@@ -497,7 +499,6 @@ viewUtil.clearForm = function() {
 };
 
 $(function() {
-  "user strict";
   controller.checkLogin();
   loginView.handleLogout();
 });

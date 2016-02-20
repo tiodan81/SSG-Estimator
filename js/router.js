@@ -1,6 +1,6 @@
 page(
   '/',
-  controller.checkLogin
+  indexView.init
 );
 
 page(

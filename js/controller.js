@@ -4,9 +4,7 @@ controller.checkLogin = function() {
   let auth = user.isLoggedIn();
   if (auth) {
     user.uid = auth.uid;
-    //get user email from FB -> user.email=
-    //load user projects
-    indexView.init();
+    user.getProjectList();
   } else {
     loginView.init();
   }

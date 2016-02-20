@@ -8,15 +8,6 @@ var user = {
   projects: []
 };
 
-
-//firebase.update(); //update some keys at node
-
-// firebase.child('key').on('value', function(snapshot) {    //read. 'value' event fires once for initial state of data, also every time data changes
-//   console.log(snapshot.val());                            //gets a snapshot including all child data
-// }, function (errorObject) {
-//   console.log('Epic fail: ' + errorObject.code);
-// });
-
 user.create = function(email, pwd) {
   firebase.createUser({
     email     : email,
@@ -24,15 +15,15 @@ user.create = function(email, pwd) {
   }, function(error, userData) {
     if (error) {
       switch (error.code) {
-        case "EMAIL_TAKEN":
-          console.log('Cannot create user. Email ' + email + ' is already in use.');
-          break;
-        case "INVALID_EMAIL":
-          console.log('Invalid email.');
-          break;
-        default:
-          alert(error);
-          console.log('error creating user: ', error);
+      case "EMAIL_TAKEN":
+        console.log('Cannot create user. Email ' + email + ' is already in use.');
+        break;
+      case "INVALID_EMAIL":
+        console.log('Invalid email.');
+        break;
+      default:
+        alert(error);
+        console.log('error creating user: ', error);
       }
     } else {
       console.log(userData);
@@ -54,10 +45,9 @@ user.authenticate = function(pwd) {
     } else {
       console.log('Authenticated successfully with payload: ', authData);
       user.uid = authData.uid;
-      user.loadProjects(user.email);
+      user.getProjectList();
     }
   });
-  indexView.init();
 };
 
 user.isLoggedIn = function() {
@@ -76,7 +66,24 @@ user.setProjectOwner = function(newProject) {
   }
 };
 
-user.loadProjects = function(id) {
-  console.log('loading projects for user ' + id);
-  //user.projects =
+user.getProjectList = function() {
+  console.log('loading projects for user ' + user.uid);
+  fbUsers.child(user.uid).child('projects').once('value').then(function(snapshot) {
+    var loadingProjects = [];
+
+    snapshot.forEach(function(proj) {
+      let curProj = proj.key();
+      let loadProjPromise = fbProjects.child(curProj).once('value').then(function(snap) {
+        project.allProjects.push(snap.val());
+        indexView.populateSelector(snap.val());
+      });
+      loadingProjects.push(loadProjPromise);
+    });
+
+    return Promise.all(loadingProjects);
+  }).then(function() {
+    project.current = project.allProjects[0];
+    project.populate(project.current);
+    indexView.init();
+  });
 };

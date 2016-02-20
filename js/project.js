@@ -41,7 +41,8 @@ project.create = function(newProject) {
   project.allProjects.push(newProject);
   project.current = newProject;
   viewUtil.clearForm();
-  indexView.renderNew(newProject);
+  indexView.populateSelector(newProject);
+  indexView.render(newProject);
 };
 
 project.saveNew = function(newProject) {
@@ -76,4 +77,10 @@ project.updateComponent = function(cur, key) {
 
 project.addOwner = function() {
   //if curUser is owner, allow to add other users as owners/viewers
+};
+
+project.populate = function(cur) {
+  cistern.allCisterns = cur.cisterns.allCisterns;
+  cistern.uberTank = cur.cisterns.uberTank;
+  cisternView.current = cistern.allCisterns[0];
 };

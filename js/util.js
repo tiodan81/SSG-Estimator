@@ -23,14 +23,3 @@ util.findObjInArray = function(id, arr, selector) {
     return e[selector] == id;
   });
 };
-
-util.dataExists = function(branch, node) {
-  let exists,
-    curNode = branch.child(node);
-  console.log(curNode);
-  curNode.once('value', function(snapshot) {
-    exists = snapshot.exists();
-  });
-  console.log(exists);
-  return exists;
-};
