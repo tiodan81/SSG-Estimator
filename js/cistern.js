@@ -1,7 +1,8 @@
 var cistern = {
   uberTank: {},
   allCisterns: [],
-  tankModels: []
+  tankModels: [],
+  current: {}
 };
 
 function cisternMaker (ci, ra, m, h, g, inf, out, al) {

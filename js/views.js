@@ -213,9 +213,7 @@ mulchView.deleteZone = function() {
   });
 };
 
-var cisternView = {
-  current: {}
-};
+var cisternView = {};
 
 cisternView.init = function() {
   $('#cistern-content').show()
