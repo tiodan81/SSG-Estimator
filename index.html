@@ -16,10 +16,10 @@
         <li><a href="/mulch">Mulch</a></li>
         <li><a href="/cisterns">Cisterns</a></li>
         <li><a href="/login">Login</a></li>
-        <li id="logout"><a href="#">Logout</a></li>
+        <li><a href="/logout">Logout</a></li>
       </ul>
     </nav>
-    <main>
+    <main class="container">
       <section id="login-content">
         <h2>Create an Account</h2>
         <form id="new-user-form">
@@ -36,12 +36,17 @@
       </section>
       <section id="home-content">
         <h1>Stone Soup Project Planner</h1>
-        <div id="project-select-container" class="fe">
-          <label class="fieldname">Project:</label>
-          <select id="project-selector">
-          </select>
+        <div id="project-select-container" class="row">
+          <div class="six columns">
+            <!-- <label class="fieldname">Project:</label> -->
+            <select id="project-selector">
+              <option value="default">Select a Project</option>
+            </select>
+          </div>
+          <div class="six columns">
+            <button id="project-create-button" type="button">Create a new project</button>
+          </div>
         </div>
-        <button id="project-create-button" type="button">Make a new project</button>
         <form id="projectForm">
           <div class="fe">
             <label class="fieldname">Client:</label>
@@ -226,9 +231,9 @@
             <div id="cistern-edit-buttons"></div>
           </div>
           <ul id="cistern-nav">
-            <li id="cistern-nav-summary" class="selected">Summary</li>
-            <li id="cistern-nav-labor">Labor</li>
-            <li id="cistern-nav-materials">Materials</li>
+            <button id="cistern-nav-summary" class="button-primary">Summary</button>
+            <button id="cistern-nav-labor">Labor</button>
+            <button id="cistern-nav-materials">Materials</button>
           </ul>
           <div id="cistern-tables">
             <table id="cistern-table-summary"></table>

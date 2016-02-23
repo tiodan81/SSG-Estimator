@@ -11,7 +11,11 @@ controller.checkLogin = function() {
 };
 
 controller.loginInit = function() {
-  user.isLoggedIn(loginView.init);
+  loginView.init();
+};
+
+controller.logoutInit = function() {
+  firebase.unauth(loginView.init);
 };
 
 controller.mulchInit = function() {

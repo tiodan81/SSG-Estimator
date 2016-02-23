@@ -28,21 +28,14 @@ loginView.handleLogin = function() {
   });
 };
 
-loginView.handleLogout = function() {
-  $('#logout').off('click').on('click', function(e) {
-    e.preventDefault();
-    firebase.unauth();
-  });
-};
-
 var indexView = {};
 
 indexView.init = function () {
   $('#home-content').show()
     .siblings().hide();
-  if (Object.keys(project.current).length) {
-    indexView.render(project.current);
-  }
+  // if (Object.keys(project.current).length) {
+  //   indexView.render(project.current);
+  // }
   indexView.handleCreateButton();
   indexView.handleSelector();
 };
@@ -50,7 +43,6 @@ indexView.init = function () {
 indexView.handleCreateButton = function() {
   $('#project-create-button').off('click').on('click', function(e) {
     e.preventDefault();
-    $(this).hide();
     $('#project-select-container').hide();
     $('#projectForm').show();
     indexView.handleProjectForm();
@@ -83,10 +75,14 @@ indexView.populateSelector = function(project) {
 indexView.handleSelector = function() {
   $('#project-selector').off('change').on('change', function() {
     let id = $(this).val();
-    let curProject = util.findObjInArray(id, project.allProjects, 'client');
-    project.current = curProject[0];
-    project.populate(project.current);
-    indexView.render(project.current);
+    if (id === 'default') {
+      return;
+    } else {
+      let curProject = util.findObjInArray(id, project.allProjects, 'client');
+      project.current = curProject[0];
+      project.populate(project.current);
+      indexView.render(project.current);
+    }
   });
 };
 
@@ -299,10 +295,10 @@ cisternView.populateSelector = function(cur) {
 };
 
 cisternView.showSummary = function() {
-  let $selected = $('.selected').attr('id').split('-')[2];
+  let $selected = $('.button-primary').attr('id').split('-')[2];
   if ($selected != 'summary') {
-    $('#cistern-nav-summary').addClass('selected')
-      .siblings().removeClass('selected');
+    $('#cistern-nav-summary').addClass('button-primary')
+      .siblings().removeClass('button-primary');
     $('#cistern-table-summary').show()
       .siblings().hide();
   }
@@ -325,11 +321,11 @@ cisternView.handleSelector = function() {
 };
 
 cisternView.handleNav = function() {
-  $('#cistern-nav > li').off('click').on('click', function() {
-    let $curNav = $('.selected').attr('id').split('-')[2];
+  $('#cistern-nav > button').off('click').on('click', function() {
+    let $curNav = $('.button-primary').attr('id').split('-')[2];
     let $nextNav = $(this).attr('id').split('-')[2];
-    $(this).addClass('selected')
-      .siblings().removeClass('selected');
+    $(this).addClass('button-primary')
+      .siblings().removeClass('button-primary');
     if ($curNav != $nextNav) {
       let target = '#cistern-table-' + $nextNav;
       $(target).show()
@@ -498,5 +494,4 @@ viewUtil.clearForm = function() {
 
 $(function() {
   controller.checkLogin();
-  loginView.handleLogout();
 });

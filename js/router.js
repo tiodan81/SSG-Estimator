@@ -9,6 +9,11 @@ page(
 );
 
 page(
+  '/logout',
+  controller.logoutInit
+);
+
+page(
   '/mulch',
   controller.mulchInit
 );
