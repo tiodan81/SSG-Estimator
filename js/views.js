@@ -28,6 +28,10 @@ loginView.handleLogin = function() {
   });
 };
 
+loginView.handleLogout = function() {
+
+};
+
 var indexView = {};
 
 indexView.init = function () {
@@ -487,6 +491,16 @@ cisternView.populateForm = function(cur) {
 };
 
 var viewUtil = {};
+
+viewUtil.clear = function(callback) {
+  $('#project-selector').html('<option value="default">Select a Project</option>');
+  $('#project-summary').html('');
+  //clear mulch table
+  $('#cistern-selector').html('');
+  $('#cistern-display').hide();
+  viewUtil.clearForm();
+  callback();
+};
 
 viewUtil.clearForm = function() {
   $('.fe input').val('');

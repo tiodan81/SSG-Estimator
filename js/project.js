@@ -86,3 +86,11 @@ project.populate = function(cur) {
     cistern.current = cistern.allCisterns[0];
   }
 };
+
+project.clear = function() {
+  firebase.unauth();
+  project.allProjects = [];
+  project.current = {};
+  cistern.allCisterns = [];
+  cistern.current = {};
+};

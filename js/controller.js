@@ -15,7 +15,8 @@ controller.loginInit = function() {
 };
 
 controller.logoutInit = function() {
-  firebase.unauth(loginView.init);
+  project.clear();
+  viewUtil.clear(loginView.init);
 };
 
 controller.mulchInit = function() {
