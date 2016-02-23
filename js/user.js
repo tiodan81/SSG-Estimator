@@ -54,6 +54,10 @@ user.isLoggedIn = function() {
   return firebase.getAuth();
 };
 
+user.logout = function() {
+  return firebase.unauth();
+};
+
 user.setProjectOwner = function(newProject) {
   let userRef = fbUsers.child(user.uid);
   let obj = {};
@@ -85,5 +89,6 @@ user.getProjectList = function() {
     project.current = project.allProjects[0];
     project.populate(project.current);
     indexView.init();
+    loginView.showLogoutNav();
   });
 };

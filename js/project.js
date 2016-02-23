@@ -88,7 +88,6 @@ project.populate = function(cur) {
 };
 
 project.clear = function() {
-  firebase.unauth();
   project.allProjects = [];
   project.current = {};
   cistern.allCisterns = [];

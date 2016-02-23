@@ -3,9 +3,9 @@ var loginView = {};
 loginView.init = function() {
   $('#login-content').show()
     .siblings().hide();
+  loginView.showLoginNav();
   loginView.handleCreate();
   loginView.handleLogin();
-  //loginView.handleLogout();
 };
 
 loginView.handleCreate = function() {
@@ -24,12 +24,19 @@ loginView.handleLogin = function() {
     user.email = $('#username').val();
     let pwd = $('#password').val();
     user.authenticate(pwd);
-    $('#new-user, #new-password').val('');
+    loginView.showLogoutNav();
+    $('#username, #password').val('');
   });
 };
 
-loginView.handleLogout = function() {
+loginView.showLoginNav = function() {
+  $('#login-nav').text('Login').removeClass('logout').addClass('login');
+  $('.login').on('click', loginView.init);
+};
 
+loginView.showLogoutNav = function() {
+  $('#login-nav').text('Logout').removeClass('login').addClass('logout');
+  $('.logout').on('click', controller.logout);
 };
 
 var indexView = {};
@@ -493,6 +500,8 @@ cisternView.populateForm = function(cur) {
 var viewUtil = {};
 
 viewUtil.clear = function(callback) {
+  $('#logout').hide();
+  $('#login').show();
   $('#project-selector').html('<option value="default">Select a Project</option>');
   $('#project-summary').html('');
   //clear mulch table

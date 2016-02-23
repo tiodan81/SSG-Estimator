@@ -14,7 +14,8 @@ controller.loginInit = function() {
   loginView.init();
 };
 
-controller.logoutInit = function() {
+controller.logout = function() {
+  user.logout();
   project.clear();
   viewUtil.clear(loginView.init);
 };
