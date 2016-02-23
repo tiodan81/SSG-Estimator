@@ -80,7 +80,17 @@ project.addOwner = function() {
 };
 
 project.populate = function(cur) {
-  cistern.allCisterns = cur.cisterns.allCisterns;
-  cistern.uberTank = cur.cisterns.uberTank;
-  cistern.current = cistern.allCisterns[0];
+  if (typeof(cur.cisterns) != 'undefined') {
+    cistern.allCisterns = cur.cisterns.allCisterns;
+    cistern.uberTank = cur.cisterns.uberTank;
+    cistern.current = cistern.allCisterns[0];
+  }
+};
+
+project.clear = function() {
+  firebase.unauth();
+  project.allProjects = [];
+  project.current = {};
+  cistern.allCisterns = [];
+  cistern.current = {};
 };

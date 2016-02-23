@@ -1,14 +1,23 @@
-body {
-  font-family: Arial;
-  width: 90%;
-  margin: 1em;
+nav {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+	margin-top: 1.5rem;
+	margin-right: 1.5rem;
 }
 
 #main-nav li {
   display: inline-block;
+	text-transform: uppercase;
+	margin-left: 1rem;
 }
 
-.fe {
+#main-nav li a {
+	text-decoration: none;
+	font-size: 1.5em;
+}
+
+/*.fe {
   margin-bottom: 0.7em;
   display: flex;
   flex-direction: row;
@@ -19,7 +28,7 @@ body {
   width: 7em;
   text-align: right;
   padding-right: 1em;
-}
+}*/
 
 .dimension {
   width: 9em;
@@ -31,14 +40,6 @@ body {
 
 #project-summary {
   display: none;
-}
-
-th {
-  border-bottom: 2px solid #111;
-}
-
-td {
-  padding: 0.7em 1em 0.7em 1em;
 }
 
 #mulch-update {
@@ -65,31 +66,10 @@ td {
   margin-left: 1em;
 }
 
-#cistern-nav {
-  margin-left: 0;
-  -webkit-margin-before: 0;
-  -webkit-padding-start: 0;
-}
-
-#cistern-nav li {
-  display: inline-block;
-  width: 90px;
-  height: 30px;
-  margin: 1em;
-  padding-top: 0.8em;
-  border-radius: 4px;
-  text-align: center;
-}
-
 #cistern-table-labor {
   display: none;
 }
 
 #cistern-table-materials {
   display: none;
-}
-
-.selected {
-  background-color: #1F47FF;
-  color: white;
 }

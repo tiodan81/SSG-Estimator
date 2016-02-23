@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <title>Stone Soup Planner</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="/css/skeleton.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <link rel="stylesheet" href="/css/icons.css">
   </head>
@@ -14,10 +16,10 @@
         <li><a href="/mulch">Mulch</a></li>
         <li><a href="/cisterns">Cisterns</a></li>
         <li><a href="/login">Login</a></li>
-        <li id="logout"><a href="#">Logout</a></li>
+        <li><a href="/logout">Logout</a></li>
       </ul>
     </nav>
-    <main>
+    <main class="container">
       <section id="login-content">
         <h2>Create an Account</h2>
         <form id="new-user-form">
@@ -34,12 +36,17 @@
       </section>
       <section id="home-content">
         <h1>Stone Soup Project Planner</h1>
-        <div id="project-select-container" class="fe">
-          <label class="fieldname">Project:</label>
-          <select id="project-selector">
-          </select>
+        <div id="project-select-container" class="row">
+          <div class="six columns">
+            <!-- <label class="fieldname">Project:</label> -->
+            <select id="project-selector">
+              <option value="default">Select a Project</option>
+            </select>
+          </div>
+          <div class="six columns">
+            <button id="project-create-button" type="button">Create a new project</button>
+          </div>
         </div>
-        <button id="project-create-button" type="button">Make a new project</button>
         <form id="projectForm">
           <div class="fe">
             <label class="fieldname">Client:</label>
@@ -182,9 +189,9 @@
           <div class="fe">
             <label class="fieldname">Base height:</label>
             <select id="cisternBase">
-              <option value="0">0</option>
-              <option value="1" selected="selected">1</option>
-              <option value="2">2</option>
+              <option value="0">0 tiers</option>
+              <option value="1" selected="selected">1 tier</option>
+              <option value="2">2 tiers</option>
             </select>
           </div>
           <div class="fe">
@@ -224,9 +231,9 @@
             <div id="cistern-edit-buttons"></div>
           </div>
           <ul id="cistern-nav">
-            <li id="cistern-nav-summary" class="selected">Summary</li>
-            <li id="cistern-nav-labor">Labor</li>
-            <li id="cistern-nav-materials">Materials</li>
+            <button id="cistern-nav-summary" class="button-primary">Summary</button>
+            <button id="cistern-nav-labor">Labor</button>
+            <button id="cistern-nav-materials">Materials</button>
           </ul>
           <div id="cistern-tables">
             <table id="cistern-table-summary"></table>
