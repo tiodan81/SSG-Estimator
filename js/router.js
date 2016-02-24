@@ -14,6 +14,11 @@ page(
 );
 
 page(
+  '/rain-gardens',
+  controller.rgInit
+);
+
+page(
   '/mulch',
   controller.mulchInit
 );

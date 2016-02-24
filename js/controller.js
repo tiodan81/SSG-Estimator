@@ -24,6 +24,10 @@ controller.rainwiseInit = function() {
   rainwiseView.init();
 };
 
+controller.rgInit = function() {
+  rgView.init();
+};
+
 controller.mulchInit = function() {
   mulchView.init();
 };

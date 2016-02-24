@@ -13,7 +13,7 @@ loginView.handleCreate = function() {
     e.preventDefault();
     let email = $('#new-user').val();
     let pwd = $('#new-password').val();
-    user.create(email, pwd);
+    user.create(userEmail, pwd);
     $('#new-user, #new-password').val('');
   });
 };
@@ -30,12 +30,16 @@ loginView.handleLogin = function() {
 };
 
 loginView.showLoginNav = function() {
-  $('#login-nav').text('Login').removeClass('logout').addClass('login');
+  $('#login-nav').text('Login')
+    .removeClass('logout').addClass('login');
+  $('#main-nav li:last').siblings().hide();
   $('.login').on('click', loginView.init);
 };
 
 loginView.showLogoutNav = function() {
-  $('#login-nav').text('Logout').removeClass('login').addClass('logout');
+  $('#login-nav').text('Logout')
+    .removeClass('login').addClass('logout');
+  $('#main-nav li').show();
   $('.logout').on('click', controller.logout);
 };
 
@@ -125,12 +129,22 @@ var rainwiseView = {};
 rainwiseView.init = function() {
   $('#rainwise-content').show()
     .siblings().hide();
-
+  rainwiseView.handleSave();
 };
 
-// rainwiseView.handleSave = function() {
-//   $('#rainwise-update').on('click')
-// };
+rainwiseView.handleSave = function() {
+  $('#rainwiseForm').off('submit').on('submit', function(e) {
+    e.preventDefault();
+
+  });
+};
+
+var rgView = {};
+
+rgView.init = function() {
+  $('#rg-content').show()
+    .siblings().hide();
+};
 
 var mulchView = {};
 
