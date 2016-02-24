@@ -20,6 +20,10 @@ controller.logout = function() {
   viewUtil.clear(loginView.init);
 };
 
+controller.rainwiseInit = function() {
+  rainwiseView.init();
+};
+
 controller.mulchInit = function() {
   mulchView.init();
 };

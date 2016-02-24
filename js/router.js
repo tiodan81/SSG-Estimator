@@ -9,6 +9,11 @@ page(
 );
 
 page(
+  '/rainwise',
+  controller.rainwiseInit
+);
+
+page(
   '/mulch',
   controller.mulchInit
 );

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/css/icons.css">
   </head>
   <body>
+
     <nav>
       <ul id="main-nav">
         <li><a href="/">Home</a></li>
@@ -20,14 +21,18 @@
         <li><a href="/login" id="login-nav">Login</a></li>
       </ul>
     </nav>
+
     <main class="container">
+
       <section id="login-content">
+
         <h2>Create an Account</h2>
         <form id="new-user-form">
           <input id="new-user" type="email" placeholder="user@email.com" />
           <input id="new-password" type="password" placeholder="password" />
           <input id="new-user-submit" type="submit" value="Submit">
         </form>
+
         <h2>Login</h2>
         <form id="login-form">
           <input id="username" type="email" placeholder="user@email.com" />
@@ -35,6 +40,7 @@
           <input id="login-submit" type="submit" value="Login">
         </form>
       </section>
+
       <section id="home-content">
         <h1>Stone Soup Project Planner</h1>
         <div id="project-select-container" class="row">
@@ -81,13 +87,30 @@
 
         </section>
       </section>
+
+      <section id="rainwise-content">
+        <h3>Rainwise elements</h3>
+        <form id="rainwiseForm">
+          <label class="fieldname">Roof area:</label>
+          <input type="number" id="roofArea" placeholder="ft²" required="required" />
+          <label class="fieldname">Gutter regrade:</label>
+          <input type="number" id="gutterFt" placeholder="ft" required="required" />
+          <label class="fieldname">
+            <input type="checkbox">
+            <span class="label-body">Pre/post inspections</span>
+          </label>
+          <button id="rainwise-add">Save</button>
+          <button id="rainwise-update">Update</button>
+        </form>
+      </section>
+
       <section id="mulch-content">
         <h1>Mulch Calculator</h1>
         <h3>Add a mulch zone</h3>
-        <form id="mulchForm" action="#">
+        <form id="mulchForm">
           <div class="fe">
             <label class="fieldname">Zone:</label>
-            <input type="text" id="zone" placeholder="area name" required="required" />
+            <input type="text" id="zone" placeholder="area name" required>
           </div>
           <div class="fe">
             <label class="fieldname">Material Type:</label>
@@ -99,23 +122,24 @@
           </div>
           <div class="fe">
             <label class="fieldname">Width:</label>
-            <input type="number" id="width-ft" class="dimension" placeholder="feet" required="required" />
-            <input type="number" id="width-in" class="dimension" min="0" max="11" placeholder="inches (optional)" />
+            <input type="number" id="width-ft" class="dimension" placeholder="feet" required>
+            <input type="number" id="width-in" class="dimension" min="0" max="11" placeholder="inches (optional)">
           </div>
           <div class="fe">
             <label class="fieldname">Length:</label>
-            <input type="number" id="length-ft" class="dimension" placeholder="feet" required="required" />
-            <input type="number" id="length-in" class="dimension" min="0" max="11" placeholder="inches (optional)" />
+            <input type="number" id="length-ft" class="dimension" placeholder="feet" required>
+            <input type="number" id="length-in" class="dimension" min="0" max="11" placeholder="inches (optional)">
           </div>
           <div class="fe">
             <label class="fieldname">Depth:</label>
-            <input type="number" id="depth" class="dimension" placeholder="inches" required="required" />
+            <input type="number" id="depth" class="dimension" placeholder="inches" required>
           </div>
           <div class="submit">
-            <button id="mulch-add">Add Zone</button>
-            <button id="mulch-update">Update Zone</button>
+            <input id="mulch-save" type="submit" value="save">
+            <!-- <button id="mulch-update">Update Zone</button> -->
           </div>
         </form>
+
         <section id="mulch-display">
           <h3>Mulch</h3>
           <table id="mulch-table">
@@ -144,22 +168,19 @@
             </tfoot>
           </table>
         </section>
-        <div id="mulch-save">
-          <input type="submit" value="Save" />
-        </div>
       </section>
+
       <section id="cistern-content">
-        <h1>Cisterns</h1>
         <h3>Add a cistern</h3>
-        <form id="cisternForm" action="#">
+        <form id="cisternForm">
           <div class="fe">
             <label class="fieldname">ID:</label>
             <input type="text" id="cistern" placeholder="tank ID" required="required" />
           </div>
-          <div class="fe">
+          <!-- <div class="fe">
             <label class="fieldname">Roof area:</label>
             <input type="number" id="roofArea" placeholder="ft²" required="required" />
-          </div>
+          </div> -->
           <div class="fe">
             <label class="fieldname">Model:</label>
             <select id="cisternModel">
@@ -195,10 +216,10 @@
               <option value="2">2 tiers</option>
             </select>
           </div>
-          <div class="fe">
+          <!-- <div class="fe">
             <label class="fieldname">Gutter regrade:</label>
             <input type="number" id="gutterFt" placeholder="ft" required="required" />
-          </div>
+          </div> -->
           <div class="fe">
             <label class="fieldname">3" inflow pipe:</label>
             <input type="number" id="cisternInflow" placeholder="ft" required="required" />
@@ -220,7 +241,8 @@
             </select>
           </div>
           <div class="submit">
-            <button id="cistern-add">Add Tank</button>
+            <input id="cistern-add" class="button" type="submit" value="Submit">
+            <!-- <button id="cistern-add">Add Tank</button> -->
             <button id="cistern-update">Update Tank</button>
           </div>
         </form>
@@ -243,7 +265,9 @@
           </div>
         </section>
       </section>
+
     </main>
+
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
     <script type="text/javascript" src="/js/vendor/page.js"></script>

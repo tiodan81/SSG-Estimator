@@ -42,15 +42,15 @@ nav {
   display: none;
 }
 
+#rainwise-update {
+	display: none;
+}
+
 #mulch-update {
   display: none;
 }
 
 #mulch-totalrow {
-  display: none;
-}
-
-#mulch-save {
   display: none;
 }
 
