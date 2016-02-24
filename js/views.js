@@ -396,7 +396,6 @@ cisternView.makeSummary = function(cur) {
   summary += `
   <tr><th>Item</th><th>Cost</th></tr>
   <tr><td>Model</td><td>${cur.model}</td></tr>
-  <tr><td>Roof area</td><td>${cur.roofArea} ft²</td></tr>
   <tr><td>Labor hours</td><td>${cur.totalHr}</td></tr>
   <tr><td>Labor cost</td><td>$${cur.laborTotal}</td></tr>
   <tr><td>Materials cost</td><td>$${cur.materialsTotal}</td></tr>
@@ -525,7 +524,6 @@ cisternView.handleDelete = function() {
 
 cisternView.populateForm = function(cur) {
   $('#cistern').val(cur.cisternId);
-  $('#roofArea').val(cur.roofArea);
   $('#cisternModel').val(cur.model);
   $('#cisternBase').val(cur.baseHeight);
   $('#gutterFt').val(cur.gutter);
