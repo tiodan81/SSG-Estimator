@@ -91,8 +91,6 @@
       <section id="rainwise-content">
         <h3>Rainwise elements</h3>
         <form id="rainwiseForm">
-          <label class="fieldname">Roof area:</label>
-          <input type="number" id="roofArea" placeholder="ft²" required>
           <label class="fieldname">Gutter regrade:</label>
           <input type="number" id="gutterFt" placeholder="ft" required>
           <label class="fieldname">
@@ -105,7 +103,70 @@
       </section>
 
       <section id="rg-content">
+        <h3>Add a rain garden</h3>
+        <form id="rgForm">
+          <label class="fieldname">Roof area:</label>
+          <input type="number" id="roofArea" placeholder="ft²" required>
 
+          <label class="fieldname">
+            <input id="infiltKnown" type="checkbox">
+            <span class="label-body">Infiltration rate known</span>
+          </label>
+
+          <div id="rgInfiltContainer">
+            <label class="fieldname">Infiltration rate:</label>
+            <input type="number" id="rgInfiltRate" placeholder="in/hr">
+          </div>
+
+          <label class="fieldname">Plant budget:</label>
+          <input type="number" id="rgPlantBudget" placeholder="$$$" required>
+
+          <label class="label-body">Inflow
+            <input type="radio" name="rgInflow" value="inC">
+            <span class="label-body">channel</span>
+            <input type="radio" name="rgInflow" value="inP">
+            <span class="label-body">pipe</span>
+          </label>
+
+          <label id="rgVegInfContainer">
+            <input id="rgVegInflow" type="checkbox">
+            <span class="label-body">Vegetated inflow</span>
+          </label>
+
+          <label class="fieldname">Inflow length:</label>
+          <input type="number" id="rgInfLength" placeholder="ft" required>
+
+          <label class="label-body">Outflow
+            <input type="radio" name="rgOutflow" value="outC">
+            <span class="label-body">channel</span>
+            <input type="radio" name="rgOutflow" value="outP">
+            <span class="label-body">pipe</span>
+          </label>
+
+          <label id="rgVegOutContainer">
+            <input id="rgVegOutflow" type="checkbox">
+            <span class="label-body">Vegetated outflow</span>
+          </label>
+
+          <label class="fieldname">Outflow length:</label>
+          <input type="number" id="rgOutLength" placeholder="ft" required>
+
+          <label class="fieldname">
+            <input id="fedByCistern" type="checkbox">
+            <span class="label-body">Fed by cistern</span>
+          </label>
+
+          <label class="fieldname">
+            <input id="rgSodCutter" type="checkbox">
+            <span class="label-body">Sod cutter</span>
+          </label>
+
+          <label class="fieldname">
+            <input id="rgDumpTruck" type="checkbox">
+            <span class="label-body">Dump truck</span>
+          </label>
+
+        </form>
       </section>
 
       <section id="mulch-content">

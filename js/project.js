@@ -1,4 +1,4 @@
-const materials = {};
+let materials = {};
 
 var project = {
   allProjects: [],
