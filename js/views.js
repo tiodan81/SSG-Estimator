@@ -144,6 +144,41 @@ var rgView = {};
 rgView.init = function() {
   $('#rg-content').show()
     .siblings().hide();
+  rgView.infiltDisplay();
+  rgView.vegInfDisplay();
+  rgView.vegOutDisplay();
+};
+
+rgView.infiltDisplay = function() {
+  $('#infiltKnown').off('click').on('click', function() {
+    if (this.checked) {
+      $('#rgInfiltContainer').show();
+    } else {
+      $('#rgInfiltContainer').hide();
+    }
+  });
+};
+
+rgView.vegInfDisplay = function () {
+  $('input[name=rgInflow]').on('click', function() {
+    let val = $('input[name=rgInflow]:checked').val();
+    if (val ==='inC') {
+      $('#rgVegInfContainer').show();
+    } else {
+      $('#rgVegInfContainer').hide();
+    }
+  });
+};
+
+rgView.vegOutDisplay = function () {
+  $('input[name=rgOutflow]').on('click', function() {
+    let val = $('input[name=rgOutflow]:checked').val();
+    if (val ==='outC') {
+      $('#rgVegOutContainer').show();
+    } else {
+      $('#rgVegOutContainer').hide();
+    }
+  });
 };
 
 var mulchView = {};
