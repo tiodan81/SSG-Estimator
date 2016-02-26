@@ -107,6 +107,10 @@
         <h3>Add a rain garden</h3>
 
         <form id="rgForm">
+
+          <label class="fieldname">ID:</label>
+          <input type="text" id="rgID" placeholder="rain garden name" required>
+
           <label class="fieldname">Roof area:</label>
           <input type="number" id="roofArea" placeholder="ft²" required>
 
@@ -124,9 +128,9 @@
           <input type="number" id="rgPlantBudget" placeholder="$$$" required>
 
           <label class="label-body">Inflow
-            <input type="radio" name="rgInflow" value="inC">
+            <input type="radio" name="rgInflow" value="channel">
             <span class="label-body">channel</span>
-            <input type="radio" name="rgInflow" value="inP">
+            <input type="radio" name="rgInflow" value="pipe">
             <span class="label-body">pipe</span>
           </label>
 
@@ -139,9 +143,9 @@
           <input type="number" id="rgInfLength" placeholder="ft" required>
 
           <label class="label-body">Outflow
-            <input type="radio" name="rgOutflow" value="outC">
+            <input type="radio" name="rgOutflow" value="channel">
             <span class="label-body">channel</span>
-            <input type="radio" name="rgOutflow" value="outP">
+            <input type="radio" name="rgOutflow" value="pipe">
             <span class="label-body">pipe</span>
           </label>
 
@@ -167,6 +171,8 @@
             <input id="rgDumpTruck" type="checkbox">
             <span class="label-body">Dump truck</span>
           </label>
+
+          <input id="rg-save" type="submit" value="save">
 
         </form>
       </section>
@@ -336,6 +342,7 @@
     <script type="text/javascript" src="/js/vendor/page.js"></script>
     <script type="text/javascript" src="/js/util.js"></script>
     <script type="text/javascript" src="/js/project.js"></script>
+    <script type="text/javascript" src="/js/rg.js"></script>
     <script type="text/javascript" src="/js/mulch.js"></script>
     <script type="text/javascript" src="/js/cistern.js"></script>
     <script type="text/javascript" src="/js/user.js"></script>

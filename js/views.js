@@ -147,6 +147,7 @@ rgView.init = function() {
   rgView.infiltDisplay();
   rgView.vegInfDisplay();
   rgView.vegOutDisplay();
+  rgView.handleSave();
 };
 
 rgView.infiltDisplay = function() {
@@ -160,9 +161,9 @@ rgView.infiltDisplay = function() {
 };
 
 rgView.vegInfDisplay = function () {
-  $('input[name=rgInflow]').on('click', function() {
+  $('input[name=rgInflow]').off('click').on('click', function() {
     let val = $('input[name=rgInflow]:checked').val();
-    if (val ==='inC') {
+    if (val ==='channel') {
       $('#rgVegInfContainer').show();
     } else {
       $('#rgVegInfContainer').hide();
@@ -171,12 +172,23 @@ rgView.vegInfDisplay = function () {
 };
 
 rgView.vegOutDisplay = function () {
-  $('input[name=rgOutflow]').on('click', function() {
+  $('input[name=rgOutflow]').off('click').on('click', function() {
     let val = $('input[name=rgOutflow]:checked').val();
-    if (val ==='outC') {
+    if (val ==='channel') {
       $('#rgVegOutContainer').show();
     } else {
       $('#rgVegOutContainer').hide();
+    }
+  });
+};
+
+rgView.handleSave = function() {
+  $('#rgForm').off('submit').on('submit', function(e) {
+    e.preventDefault();
+    let $val = $('#rg-save').val();
+    if ($val === 'save') {
+      let newRG = rg.buildRG();
+      rg.allRGs.push(newRG);
     }
   });
 };
@@ -186,7 +198,7 @@ var mulchView = {};
 mulchView.init = function() {
   $('#mulch-content').show()
     .siblings().hide();
-  mulchView.handleNew();
+  mulchView.handleSave();
   //mulchView.handleUpdate();
   mulchView.showTotal();
 };
@@ -244,7 +256,7 @@ mulchView.populateForm = function(zone) {
   $('#depth').val(zone.depth);
 };
 
-mulchView.handleNew = function() {
+mulchView.handleSave = function() {
   $('#mulchForm').off('submit').on('submit', function(e) {
     e.preventDefault();
     let $val = $('#mulch-save').val();
