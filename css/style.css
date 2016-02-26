@@ -42,15 +42,27 @@ nav {
   display: none;
 }
 
+#rainwise-update {
+	display: none;
+}
+
+#rgInfiltContainer {
+	display: none;
+}
+
+#rgVegInfContainer {
+	display: none;
+}
+
+#rgVegOutContainer {
+	display: none;
+}
+
 #mulch-update {
   display: none;
 }
 
 #mulch-totalrow {
-  display: none;
-}
-
-#mulch-save {
   display: none;
 }
 

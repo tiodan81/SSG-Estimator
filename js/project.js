@@ -1,3 +1,5 @@
+let materials = {};
+
 var project = {
   allProjects: [],
   current: {}
@@ -11,7 +13,6 @@ project.maker = function(client, city, labor, mkup, owner) {
   this.owner = owner;
 };
 
-var materials = {};
 
 project.build = function() {
   let client = $('#project-client').val();
@@ -88,7 +89,6 @@ project.populate = function(cur) {
 };
 
 project.clear = function() {
-  firebase.unauth();
   project.allProjects = [];
   project.current = {};
   cistern.allCisterns = [];

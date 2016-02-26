@@ -5,9 +5,8 @@ var cistern = {
   current: {}
 };
 
-function cisternMaker (ci, ra, m, h, g, inf, out, al) {
+function cisternMaker (ci, m, h, g, inf, out, al) {
   this.cisternId = ci || '';
-  this.roofArea = ra || 0;
   this.model = m || '';
   this.baseHeight = h || 0;
   this.gutter = g || 0;
@@ -66,14 +65,13 @@ cistern.getJSON = function(callback) {
 
 cistern.buildCistern = function() {
   var $id = $('#cistern').val();
-  var $ra = +($('#roofArea').val());
   var $m = $('#cisternModel').val();
   var $bh = +($('#cisternBase').val());
   var $g = +($('#gutterFt').val());
   var $inf = +($('#cisternInflow').val());
   var $out = +($('#cisternOutflow').val());
   var $al = +($('#cisternAddLabor').val()) || 0;
-  return new cisternMaker($id, $ra, $m, $bh, $g, $inf, $out, $al);
+  return new cisternMaker($id, $m, $bh, $g, $inf, $out, $al);
 };
 
 cistern.volumeCyl = function(d, h) {

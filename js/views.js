@@ -3,9 +3,9 @@ var loginView = {};
 loginView.init = function() {
   $('#login-content').show()
     .siblings().hide();
+  loginView.showLoginNav();
   loginView.handleCreate();
   loginView.handleLogin();
-  //loginView.handleLogout();
 };
 
 loginView.handleCreate = function() {
@@ -13,7 +13,7 @@ loginView.handleCreate = function() {
     e.preventDefault();
     let email = $('#new-user').val();
     let pwd = $('#new-password').val();
-    user.create(email, pwd);
+    user.create(userEmail, pwd);
     $('#new-user, #new-password').val('');
   });
 };
@@ -24,12 +24,23 @@ loginView.handleLogin = function() {
     user.email = $('#username').val();
     let pwd = $('#password').val();
     user.authenticate(pwd);
-    $('#new-user, #new-password').val('');
+    loginView.showLogoutNav();
+    $('#username, #password').val('');
   });
 };
 
-loginView.handleLogout = function() {
+loginView.showLoginNav = function() {
+  $('#login-nav').text('Login')
+    .removeClass('logout').addClass('login');
+  $('#main-nav li:last').siblings().hide();
+  $('.login').on('click', loginView.init);
+};
 
+loginView.showLogoutNav = function() {
+  $('#login-nav').text('Logout')
+    .removeClass('login').addClass('logout');
+  $('#main-nav li').show();
+  $('.logout').on('click', controller.logout);
 };
 
 var indexView = {};
@@ -113,13 +124,82 @@ indexView.updateProjectSummary = function() {
 
 };
 
+var rainwiseView = {};
+
+rainwiseView.init = function() {
+  $('#rainwise-content').show()
+    .siblings().hide();
+  rainwiseView.handleSave();
+};
+
+rainwiseView.handleSave = function() {
+  $('#rainwiseForm').off('submit').on('submit', function(e) {
+    e.preventDefault();
+
+  });
+};
+
+var rgView = {};
+
+rgView.init = function() {
+  $('#rg-content').show()
+    .siblings().hide();
+  rgView.infiltDisplay();
+  rgView.vegInfDisplay();
+  rgView.vegOutDisplay();
+  rgView.handleSave();
+};
+
+rgView.infiltDisplay = function() {
+  $('#infiltKnown').off('click').on('click', function() {
+    if (this.checked) {
+      $('#rgInfiltContainer').show();
+    } else {
+      $('#rgInfiltContainer').hide();
+    }
+  });
+};
+
+rgView.vegInfDisplay = function () {
+  $('input[name=rgInflow]').off('click').on('click', function() {
+    let val = $('input[name=rgInflow]:checked').val();
+    if (val ==='channel') {
+      $('#rgVegInfContainer').show();
+    } else {
+      $('#rgVegInfContainer').hide();
+    }
+  });
+};
+
+rgView.vegOutDisplay = function () {
+  $('input[name=rgOutflow]').off('click').on('click', function() {
+    let val = $('input[name=rgOutflow]:checked').val();
+    if (val ==='channel') {
+      $('#rgVegOutContainer').show();
+    } else {
+      $('#rgVegOutContainer').hide();
+    }
+  });
+};
+
+rgView.handleSave = function() {
+  $('#rgForm').off('submit').on('submit', function(e) {
+    e.preventDefault();
+    let $val = $('#rg-save').val();
+    if ($val === 'save') {
+      let newRG = rg.buildRG();
+      rg.allRGs.push(newRG);
+    }
+  });
+};
+
 var mulchView = {};
 
 mulchView.init = function() {
   $('#mulch-content').show()
     .siblings().hide();
-  mulchView.handleNew();
-  mulchView.handleUpdate();
+  mulchView.handleSave();
+  //mulchView.handleUpdate();
   mulchView.showTotal();
 };
 
@@ -160,8 +240,8 @@ mulchView.editZone = function() {
     mulch.mulchZones.forEach(function(zone) {
       if (zone.id === parseInt(curId)) {
         mulchView.populateForm(zone);
-        $('#mulch-add').hide();
-        $('#mulch-update').show().data('id', curId);
+        $('mulch-save').val('update').data('id', curId);
+        //$('#mulch-update').show().data('id', curId);
       }
     });
   });
@@ -176,29 +256,41 @@ mulchView.populateForm = function(zone) {
   $('#depth').val(zone.depth);
 };
 
-mulchView.handleNew = function() {
-  $('#mulch-add').off('click').on('click', function(e) {
+mulchView.handleSave = function() {
+  $('#mulchForm').off('submit').on('submit', function(e) {
     e.preventDefault();
-    let newMulchZone = mulch.buildMulch(mulch.zoneId);
-    mulch.mulchZones.push(newMulchZone);
-    mulch.zoneId += 1;
-    mulch.listen();
-    viewUtil.clearForm();
+    let $val = $('#mulch-save').val();
+    if ($val === 'save') {
+      let newMulchZone = mulch.buildMulch(mulch.zoneId);
+      mulch.mulchZones.push(newMulchZone);
+      mulch.zoneId += 1;
+      mulch.listen();
+      viewUtil.clearForm();
+    } else if ($val === 'update') {
+      let curId = parseInt($(this).data('id'));
+      let updated = mulch.buildMulch(curId);
+      mulch.findReplace(updated);
+      mulch.listen();
+      viewUtil.clearForm();
+      $val = 'save';
+    } else {
+      console.log('error: no mulch match.');
+    }
   });
 };
 
-mulchView.handleUpdate = function() {
-  $('#mulch-update').off('click').on('click', function(e) {
-    e.preventDefault();
-    var curId = parseInt($(this).data('id'));
-    var updated = mulch.buildMulch(curId);
-    mulch.findReplace(updated);
-    mulch.listen();
-    viewUtil.clearForm();
-    $('#mulch-update').hide();
-    $('#mulch-add').show();
-  });
-};
+// mulchView.handleUpdate = function() {
+//   $('#mulch-update').off('submit').on('submit', function(e) {
+//     e.preventDefault();
+//     var curId = parseInt($(this).data('id'));
+//     var updated = mulch.buildMulch(curId);
+//     mulch.findReplace(updated);
+//     mulch.listen();
+//     viewUtil.clearForm();
+//     $('#mulch-update').hide();
+//     $('#mulch-add').show();
+//   });
+// };
 
 mulchView.deleteZone = function() {
   $('#mulch-table-body .icon-bin2').off('click').on('click', function(e) {
@@ -351,7 +443,6 @@ cisternView.makeSummary = function(cur) {
   summary += `
   <tr><th>Item</th><th>Cost</th></tr>
   <tr><td>Model</td><td>${cur.model}</td></tr>
-  <tr><td>Roof area</td><td>${cur.roofArea} ft²</td></tr>
   <tr><td>Labor hours</td><td>${cur.totalHr}</td></tr>
   <tr><td>Labor cost</td><td>$${cur.laborTotal}</td></tr>
   <tr><td>Materials cost</td><td>$${cur.materialsTotal}</td></tr>
@@ -410,7 +501,6 @@ cisternView.makeMaterials = function(cur) {
 };
 
 cisternView.editButtons = function() {
-  //DON'T SHOW IF CUR == UBER
   let buttons = '';
   buttons += `
   <span class="icon-pencil2"></span>
@@ -481,7 +571,6 @@ cisternView.handleDelete = function() {
 
 cisternView.populateForm = function(cur) {
   $('#cistern').val(cur.cisternId);
-  $('#roofArea').val(cur.roofArea);
   $('#cisternModel').val(cur.model);
   $('#cisternBase').val(cur.baseHeight);
   $('#gutterFt').val(cur.gutter);
@@ -493,6 +582,8 @@ cisternView.populateForm = function(cur) {
 var viewUtil = {};
 
 viewUtil.clear = function(callback) {
+  $('#logout').hide();
+  $('#login').show();
   $('#project-selector').html('<option value="default">Select a Project</option>');
   $('#project-summary').html('');
   //clear mulch table

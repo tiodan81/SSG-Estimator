@@ -9,8 +9,13 @@ page(
 );
 
 page(
-  '/logout',
-  controller.logoutInit
+  '/rainwise',
+  controller.rainwiseInit
+);
+
+page(
+  '/rain-gardens',
+  controller.rgInit
 );
 
 page(

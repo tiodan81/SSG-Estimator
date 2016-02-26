@@ -10,6 +10,7 @@
   },
   "plumbing": {
     "pvc3In": 5.5,
+    "pvc4In": 7,
     "gutter": 7.5,
     "lowFlowKit": 75,
     "hardware": 20,
