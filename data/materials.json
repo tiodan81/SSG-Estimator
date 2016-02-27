@@ -1,12 +1,12 @@
 {
-  "gravel": {
-    "paverbase": 55
+  "bulk": {
+    "paverbase": 55,
+    "bioretention": 45,
+    "mulch": 40
   },
   "stone": {
     "Manor stone": 6.18,
     "Cinder block": 1.79
-  },
-  "mulch": {
   },
   "plumbing": {
     "pvc3In": 5.5,
@@ -19,5 +19,10 @@
     "cisternPump": 350,
     "firstFlushDiverter": 100,
     "cisternGauge": 50
+  },
+  "fees": {
+    "sodDump": 42,
+    "sodCutter": 142,
+    "dumpTruck": 350
   }
 }

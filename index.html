@@ -157,14 +157,18 @@
           <label class="fieldname">Outflow length:</label>
           <input type="number" id="rgOutLength" placeholder="ft" required>
 
-          <label class="fieldname">
-            <input id="fedByCistern" type="checkbox">
-            <span class="label-body">Fed by cistern</span>
+          <label class="label-body">Sod removal
+            <input type="radio" name="rgSod" value="manual">
+            <span class="label-body">by hand</span>
+            <input type="radio" name="rgSod" value="cutter">
+            <span class="label-body">sod cutter</span>
+            <input type="radio" name="rgSod" value="none">
+            <span class="label-body">none</span>
           </label>
 
           <label class="fieldname">
-            <input id="rgSodCutter" type="checkbox">
-            <span class="label-body">Sod cutter</span>
+            <input id="fedByCistern" type="checkbox">
+            <span class="label-body">Fed by cistern</span>
           </label>
 
           <label class="fieldname">

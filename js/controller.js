@@ -4,7 +4,7 @@ controller.checkLogin = function() {
   let auth = user.isLoggedIn();
   if (auth) {
     user.uid = auth.uid;
-    user.getProjectList();
+    project.getJSON(user.getProjectList);
   } else {
     loginView.init();
   }
@@ -33,5 +33,5 @@ controller.mulchInit = function() {
 };
 
 controller.cisternInit = function() {
-  cistern.getJSON(cisternView.init);
+  cisternView.init();
 };
