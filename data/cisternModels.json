@@ -1,5 +1,5 @@
 {
-  "b420": {
+  "B420": {
     "slimline": false,
     "purchasePrice": 450,
     "height": 64,
@@ -8,7 +8,7 @@
     "diameter": 45,
     "delivery": 250
   },
-  "b660": {
+  "B660": {
     "slimline": false,
     "purchasePrice": 680,
     "height": 48,
@@ -18,7 +18,7 @@
     "delivery": 250
 
   },
-  "b865": {
+  "B865": {
     "slimline": false,
     "purchasePrice": 870,
     "height": 75,
@@ -27,7 +27,7 @@
     "diameter": 61,
     "delivery": 250
   },
-  "b1110": {
+  "B1110": {
     "slimline": false,
     "purchasePrice": 900,
     "height": 56,
@@ -36,7 +36,7 @@
     "diameter": 84,
     "delivery": 250
   },
-  "b1320": {
+  "B1320": {
     "slimline": false,
     "purchasePrice": 1050,
     "height": 72,
@@ -45,7 +45,7 @@
     "diameter": 82,
     "delivery": 250
   },
-  "b2825": {
+  "B2825": {
     "slimline": false,
     "purchasePrice": 1600,
     "height": 92,
@@ -54,7 +54,7 @@
     "diameter": 102,
     "delivery": 250
   },
-  "b265": {
+  "B265": {
     "slimline": true,
     "purchasePrice": 450,
     "height": 64,
@@ -63,7 +63,7 @@
     "diameter": null,
     "delivery": 250
   },
-  "b530": {
+  "B530": {
     "slimline": true,
     "purchasePrice": 730,
     "height": 78,
@@ -72,7 +72,7 @@
     "diameter": null,
     "delivery": 250
   },
-  "p480": {
+  "P480": {
     "slimline": false,
     "purchasePrice": 564.34,
     "height": 71,
@@ -81,7 +81,7 @@
     "diameter": 47,
     "delivery": 90
   },
-  "p575": {
+  "P575": {
     "slimline": false,
     "purchasePrice": 627.21,
     "height": 44,
@@ -90,7 +90,7 @@
     "diameter": 71,
     "delivery": 90
   },
-  "p625": {
+  "P625": {
     "slimline": false,
     "purchasePrice": 670.15,
     "height": 90,
@@ -99,7 +99,7 @@
     "diameter": 47,
     "delivery": 90
   },
-  "p795": {
+  "P795": {
     "slimline": false,
     "purchasePrice": 791.30,
     "height": 112,
@@ -108,7 +108,7 @@
     "diameter": 47,
     "delivery": 90
   },
-  "p840": {
+  "P840": {
     "slimline": false,
     "purchasePrice": 706.96,
     "height": 72,
@@ -117,7 +117,7 @@
     "diameter": 62,
     "delivery": 90
   },
-  "p960": {
+  "P960": {
     "slimline": false,
     "purchasePrice": 725.36,
     "height": 67,
@@ -126,7 +126,7 @@
     "diameter": 71,
     "delivery": 90
   },
-  "p1150": {
+  "P1150": {
     "slimline": false,
     "purchasePrice": 809.70,
     "height": 79,
@@ -135,7 +135,7 @@
     "diameter": 71,
     "delivery": 90
   },
-  "p1440": {
+  "P1440": {
     "slimline": false,
     "purchasePrice": 898.65,
     "height": 63,
@@ -144,7 +144,7 @@
     "diameter": 91,
     "delivery": 90
   },
-  "p1535": {
+  "P1535": {
     "slimline": false,
     "purchasePrice": 952.32,
     "height": 103,
@@ -153,7 +153,7 @@
     "diameter": 71,
     "delivery": 90
   },
-  "p2000": {
+  "P2000": {
     "slimline": false,
     "purchasePrice": 1390.91,
     "height": 66,
@@ -162,7 +162,7 @@
     "diameter": 102,
     "delivery": 90
   },
-  "p2340": {
+  "P2340": {
     "slimline": false,
     "purchasePrice": 1439.98,
     "height": 92,
@@ -171,7 +171,7 @@
     "diameter": 91,
     "delivery": 90
   },
-  "p3000": {
+  "P3000": {
     "slimline": false,
     "purchasePrice": 1703.75,
     "height": 95,
@@ -180,7 +180,7 @@
     "diameter": 102,
     "delivery": 90
   },
-  "p4000": {
+  "P4000": {
     "slimline": false,
     "purchasePrice": 2671.40,
     "height": 123,
@@ -189,7 +189,7 @@
     "diameter": 102,
     "delivery": 90
   },
-  "p410": {
+  "P410": {
     "slimline": true,
     "purchasePrice": 892.51,
     "height": 75.5,

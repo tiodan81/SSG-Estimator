@@ -83,7 +83,7 @@ cistern.volumeRect = function(w, d, h) {
 };
 
 cistern.tankSalePrice = function (model, info) {
-  if (model === 'b420' || model === 'b265' || model === 'b530') {
+  if (model === 'B420' || model === 'B265' || model === 'B530') {
     return Math.ceil(info.purchasePrice + info.delivery);
   } else {
     return Math.ceil(info.purchasePrice * project.current.markup + info.delivery);
@@ -109,7 +109,7 @@ cistern.calcBaseLabor = function(c) {
   } else {
     labor = 10 + Math.ceil((c.paverbase + c.manorStones + c.cinderBlocks) / 3);
   }
-  if (c.model === 'b420' || c.model === 'b265' || c.model === 'b530') {
+  if (c.model === 'B420' || c.model === 'B265' || c.model === 'B530') {
     labor += 2;
   }
   return labor;
@@ -131,7 +131,7 @@ cistern.calculateBaseMaterials = function (c) {
     c.manorStoneCost = util.round('round', (c.manorStones * materials.stone[c.stoneType]), 0.01);
     c.slimlineRestraints = 0;
   }
-  c.bulkheadKit = c.model.charAt(0) === 'p' ? materials.plumbing.bulkheadKit : 0;
+  c.bulkheadKit = c.model.charAt(0) === 'P' ? materials.plumbing.bulkheadKit : 0;
   c.paverbaseCost = util.round('round', (c.paverbase * materials.gravel.paverbase), 0.01);
   c.baseMaterialsCost = util.round('round', c.paverbaseCost + c.cinderBlockCost + c.manorStoneCost + c.slimlineRestraints + c.bulkheadKit, 0.01);
 };
