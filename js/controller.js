@@ -35,3 +35,7 @@ controller.mulchInit = function() {
 controller.cisternInit = function() {
   cisternView.init();
 };
+
+$(function() {
+  controller.checkLogin();
+});
