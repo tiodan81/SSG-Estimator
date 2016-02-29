@@ -5,6 +5,18 @@ var project = {
   current: {}
 };
 
+project.getJSON = function(callback) {
+  $.getJSON('/data/cisternModels.json', function(data) {
+    cistern.tankModels = data;
+  });
+  if (!Object.keys(materials).length) {
+    $.getJSON('/data/materials.json', function(data) {
+      materials = data;
+    });
+  }
+  callback();
+};
+
 project.maker = function(client, city, labor, mkup, owner) {
   this.client = client;
   this.city = city;

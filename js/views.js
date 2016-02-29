@@ -188,7 +188,13 @@ rgView.handleSave = function() {
     let $val = $('#rg-save').val();
     if ($val === 'save') {
       let newRG = rg.buildRG();
+      rg.decider(newRG);
       rg.allRGs.push(newRG);
+      //renderNew
+      //updateUber
+      //saveToProject
+      //current = new
+      viewUtil.clearForm();
     }
   });
 };
@@ -468,6 +474,9 @@ cisternView.makeLabor = function(cur) {
 };
 
 cisternView.makeMaterials = function(cur) {
+  // Object.keys(cur).forEach(function(e) {
+  //   if key is number, toFixed(2)
+  // })
   let materials = '';
   materials += `
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
