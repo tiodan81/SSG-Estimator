@@ -31,7 +31,6 @@ rg.buildRG = function() {
 rg.decider = function(c) {
   if (c.infKnown) {
     let m = rg.getMultiplier(c);
-    console.log(m);
     rg.allCalcs(c, m);
     //calcs
   } else {
@@ -101,6 +100,7 @@ rg.calcSodDumpCost = function(c) {
     return 0;
   }
 };
+
 
 
 // inflow/outflow
