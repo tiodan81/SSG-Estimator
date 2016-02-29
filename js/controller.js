@@ -1,41 +1,41 @@
-var controller = {};
+var controller = {}
 
 controller.checkLogin = function() {
-  let auth = user.isLoggedIn();
+  let auth = user.isLoggedIn()
   if (auth) {
-    user.uid = auth.uid;
-    project.getJSON(user.getProjectList);
+    user.uid = auth.uid
+    project.getJSON(user.getProjectList)
   } else {
-    loginView.init();
+    loginView.init()
   }
-};
+}
 
 controller.loginInit = function() {
-  loginView.init();
-};
+  loginView.init()
+}
 
 controller.logout = function() {
-  user.logout();
-  project.clear();
-  viewUtil.clear(loginView.init);
-};
+  user.logout()
+  project.clear()
+  viewUtil.clear(loginView.init)
+}
 
 controller.rainwiseInit = function() {
-  rainwiseView.init();
-};
+  rainwiseView.init()
+}
 
 controller.rgInit = function() {
-  rgView.init();
-};
+  rgView.init()
+}
 
 controller.mulchInit = function() {
-  mulchView.init();
-};
+  mulchView.init()
+}
 
 controller.cisternInit = function() {
-  cisternView.init();
-};
+  cisternView.init()
+}
 
 $(function() {
-  controller.checkLogin();
-});
+  controller.checkLogin()
+})
