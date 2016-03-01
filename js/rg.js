@@ -80,13 +80,13 @@ rg.getArea = (c, m) => {
 
 rg.baseMaterials = (c) => {
   c.sodVolume = util.round('ceil', c.footprint / 6 / 27, 0.5)
-  c.bioretVolume = util.round('ceil', c.baseArea / 27, 0.5)
+  c.bioretentionVolume = util.round('ceil', c.baseArea / 27, 0.5)
   c.mulchVolume = util.round('ceil', c.footprint / 4 / 27, 0.5)
 }
 
 rg.baseMaterialCost = (c) => {
   c.sodDumpCost = rg.calcSodDumpCost(c)
-  c.bioretCost = util.round('round', c.bioretVolume * materials.bulk.bioretention, 0.01)
+  c.bioretentionCost = util.round('round', c.bioretentionVolume * materials.bulk.bioretention, 0.01)
   c.mulchCost = util.round('round', c.mulchVolume * materials.bulk.mulch, 0.01)
   c.cutterCost = c.sodRmMethod === 'cutter' ? materials.fees.sodCutter : 0
   c.truckCost = c.dumpTruck ? materials.fees.dumpTruck : 0
@@ -94,7 +94,7 @@ rg.baseMaterialCost = (c) => {
 }
 
 rg.baseMaterialsTotal = (c) => {
-  return util.round('round', c.sodDumpCost + c.bioretCost + c.mulchCost + c.cutterCost + c.truckCost + c.plantCost, 0.01)
+  return util.round('round', c.sodDumpCost + c.bioretentionCost + c.mulchCost + c.cutterCost + c.truckCost + c.plantCost, 0.01)
 }
 
 rg.calcSodDumpCost = (c) => {
@@ -153,7 +153,7 @@ rg.laborHrs = (c) => ({
 
   sodHrs:         rg.sodHrs(c.sodRmMethod, c.footprint),
   excavationHrs:  util.round('ceil', (c.baseArea / 2) + 3, 0.25),
-  bioretenHrs:    Math.round(2 * c.bioretVolume + 1),
+  bioretenHrs:    Math.round(2 * c.bioretentionVolume + 1),
   mulchHrs:       Math.round(2 * c.mulchVolume + 1),
   plantingHrs:    util.round('ceil', (c.footprint / 20) + 4, 0.25),
   dispersionHrs:  rg.channelHrs(c.dispersionChannelMaterials, 3, false),
