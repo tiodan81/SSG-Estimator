@@ -70,7 +70,7 @@ rg.allCalcs = function(cur, mult) {
   rg.plumbingMaterials(cur)
   rg.plumbingMaterialCost(cur)
   cur.laborHrs = rg.laborHrs(cur)
-  rg.laborCost(cur)
+  //rg.laborCost(cur)
 }
 
 rg.getArea = function(c, m) {
@@ -158,48 +158,49 @@ rg.pipeMaterialCost = function(m) {
 }
 
 rg.laborHrs = function(c) {
-  console.log(this);
+  let sodHrs = rg.sodHrs(c.sodRmMethod, c.footprint)
   let excavation = util.round('ceil', (c.baseArea / 2) + 3, 0.25)
   let bio = Math.round(2 * c.bioretVolume + 1)
   let mulch = Math.round(2 * c.mulchVolume + 1)
   let planting = util.round('ceil', (c.footprint / 20) + 4, 0.25)
-  let inf = c.infType === 'channel' ? this.channelHrs(c.inflowMaterials, c.infLen, c.infVeg).bind(this) : this.pipeHrs(c.infLen).bind(this)
-  let out = c.outType === 'channel' ? this.channelHrs(c.outflowMaterials, c.outLen, c.outVeg).bind(this) : this.pipeHrs(c.outLen).bind(this)
-
-  let channelHrs = (mat, len, veg) => {
-    let excav = len / 4
-    let soil = mat.bioretention + 1
-    let plant = veg ? len / 4 : 0
-    let rock = mat.drainageRock + 1
-
-    return {
-      excavationHrs: excav,
-      bioretenHrs: soil,
-      plantHrs: plant,
-      rockHrs: rock
-    }
-  }
-
-  let pipeHrs = (len) => len / 4
-
-  let sod = () => {
-    if (c.sodRmMethod === 'cutter') {
-      return util.round('ceil', c.footprint / 171, 0.25)
-    } else if (c.sodRmMethod === 'manual') {
-      return util.round('ceil', c.footprint / 60, 0.25)
-    } else {
-      return 0
-    }
-  }
+  let disp = rg.channelHrs(c.dispersionChannelMaterials, 3, false)
+  let inf = c.infType === 'channel' ? rg.channelHrs(c.inflowMaterials, c.infLen, c.infVeg) : rg.pipeHrs(c.infLen)
+  let out = c.outType === 'channel' ? rg.channelHrs(c.outflowMaterials, c.outLen, c.outVeg) : rg.pipeHrs(c.outLen)
 
   return {
-    sodHrs: this.sod(),
+    sodHrs: sodHrs,
     excavationHrs: excavation,
     bioretenHrs: bio,
     mulchHrs: mulch,
     plantingHrs: planting,
-    dispersionHrs: this.channelHrs(c.dispersionChannelMaterials, 3, false),
+    dispersionHrs: disp,
     inflowHrs: inf,
     outflowHrs: out
   }
 }
+
+rg.sodHrs = (method, footprint) => {
+  if (method === 'cutter') {
+    return util.round('ceil', footprint / 171, 0.25)
+  } else if (method === 'manual') {
+    return util.round('ceil', footprint / 60, 0.25)
+  } else {
+    return 0
+  }
+}
+
+rg.channelHrs = (mat, len, veg) => {
+  let excav = len / 4
+  let soil = mat.bioretention + 1
+  let plant = veg ? len / 4 : 0
+  let rock = mat.drainageRock + 1
+
+  return {
+    excavationHrs: excav,
+    bioretenHrs: soil,
+    plantHrs: plant,
+    rockHrs: rock
+  }
+}
+
+rg.pipeHrs = (len) => len / 4
