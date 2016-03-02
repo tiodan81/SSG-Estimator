@@ -46,8 +46,8 @@ rgView.handleSave = function() {
     e.preventDefault()
     let $val = $('#rg-save').val()
     if ($val === 'save') {
-      let newRG = rg.buildRG()
-      rg.decider(newRG)
+      // controller.rgNew()
+      let newRG = rg.makeNew()
       rg.allRGs.push(newRG)
       //renderNew
       //updateUber

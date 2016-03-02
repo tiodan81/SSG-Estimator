@@ -1,6 +1,6 @@
 var controller = {}
 
-controller.checkLogin = function() {
+controller.checkLogin = () => {
   let auth = user.isLoggedIn()
   if (auth) {
     user.uid = auth.uid
@@ -10,29 +10,33 @@ controller.checkLogin = function() {
   }
 }
 
-controller.loginInit = function() {
+controller.loginInit = () => {
   loginView.init()
 }
 
-controller.logout = function() {
+controller.logout = () => {
   user.logout()
   project.clear()
   viewUtil.clear(loginView.init)
 }
 
-controller.rainwiseInit = function() {
+controller.rainwiseInit = () => {
   rainwiseView.init()
 }
 
-controller.rgInit = function() {
+controller.rgInit = () => {
   rgView.init()
 }
 
-controller.mulchInit = function() {
+controller.rgNew = () => {
+
+}
+
+controller.mulchInit = () => {
   mulchView.init()
 }
 
-controller.cisternInit = function() {
+controller.cisternInit = () => {
   cisternView.init()
 }
 

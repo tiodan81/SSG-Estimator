@@ -201,8 +201,8 @@ cistern.updateUberTank = function() {
 cistern.saveToProject = function() {
   if(user.uid && project.current.client) {
     project.current.cisterns = {
-      uberTank: cistern.uberTank,
-      allCisterns: cistern.allCisterns
+      uberTank:     cistern.uberTank,
+      allCisterns:  cistern.allCisterns
     }
     project.updateComponent(project.current, 'cisterns')
   } else {
