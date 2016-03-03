@@ -73,6 +73,7 @@ rg.allCalcs = (cur, mult) => {
   cur.plumbingMaterialCost = rg.plumbingMaterialCost(cur)
   cur.laborHrs = rg.laborHrs(cur)
   cur.laborCost = rg.laborCost(cur)
+  cur.totals = rg.totals(cur)
 }
 
 rg.getArea = (c, m) => {
@@ -95,13 +96,15 @@ rg.baseMaterials = (c) => {
 
 rg.baseMaterialCost = (c) => {
   let m = c.baseMaterials
-  return {
+  let bmc = {
     sodDumpCost:        rg.calcSodDumpCost(c, m),
     bioretentionCost:   util.round('round', m.bioretentionVolume * materials.bulk.bioretention, 0.01),
     mulchCost:          util.round('round', m.mulchVolume * materials.bulk.mulch, 0.01),
     cutterCost:         c.sodRmMethod === 'cutter' ? materials.fees.sodCutter : 0,
     truckCost:          c.dumpTruck ? materials.fees.dumpTruck : 0
   }
+  bmc.total = util.sumObject(bmc)
+  return bmc
 }
 
 rg.calcSodDumpCost = (c, m) => {
@@ -136,25 +139,31 @@ rg.pipeMaterials = (len, inout) => ({
 rg.plumbingMaterialCost = (c) => {
   console.log(c);
   let m = c.plumbingMaterials
-  return {
+  let pmc = {
     dispersionMaterialCost:   rg.channelMaterialCost(m.dispersionChannelMaterials),
     inflowMaterialCost:       c.infType === 'channel' ? rg.channelMaterialCost(m.inflowMaterials, c.infVeg) : rg.pipeMaterialCost(m.inflowMaterials),
     outflowMaterialCost:      c.outType === 'channel' ? rg.channelMaterialCost(m.outflowMaterials, c.outVeg) : rg.pipeMaterialCost(m.outflowMaterials)
   }
+  pmc.total = util.round('round', pmc.dispersionMaterialCost.total + pmc.inflowMaterialCost.total + pmc.outflowMaterialCost.total ,0.01)
+  return pmc
 }
 
-rg.channelMaterialCost = (m, veg) => ({
-  pondlinerCost:    util.round('round', util.materialCost(m.pondlinerArea, materials.fabric.pondliner), 0.01),
-  bioretentionCost: util.round('round', util.materialCost(m.bioretention, materials.bulk.bioretention), 0.01),
-  drainageRockCost: util.round('round', util.materialCost(m.drainageRock, materials.bulk.drainageRock), 0.01),
-  channelPlantCost: veg ? util.round('round', util.materialCost(m.pondlinerArea, materials.misc.rgChannelPlanting), 0.01) : 0
-})
+rg.channelMaterialCost = (m, veg) => {
+  let cmc = {
+    pondlinerCost:    util.round('round', util.materialCost(m.pondlinerArea, materials.fabric.pondliner), 0.01),
+    bioretentionCost: util.round('round', util.materialCost(m.bioretention, materials.bulk.bioretention), 0.01),
+    drainageRockCost: util.round('round', util.materialCost(m.drainageRock, materials.bulk.drainageRock), 0.01),
+    channelPlantCost: veg ? util.round('round', util.materialCost(m.pondlinerArea, materials.misc.rgChannelPlanting), 0.01) : 0
+  }
+  cmc.total = util.sumObject(cmc)
+  return cmc
+}
 
 rg.pipeMaterialCost = (m) => {
   let pipe = m.pipe === '3in' ? materials.plumbing.pvc3In : materials.plumbing.pvc4In
 
   return {
-    pipeCost: util.round('round', util.materialCost(pipe, m.length), 0.01)
+    total: util.round('round', util.materialCost(pipe, m.length), 0.01)
   }
 }
 
@@ -204,40 +213,54 @@ rg.laborCost = (c) => {
   let inf = c.laborHrs.inflowHrs
   let out = c.laborHrs.outflowHrs
 
-  return {
+  let lc = {
     baseLaborCost:          rg.baseLaborCost(base),
     dispersionLaborCost:    rg.channelLaborCost(disp),
-    inflowLaborCost:        Object.keys(inf).length === 4 ? rg.channelLaborCost(inf) : util.laborCost(inf.pipeHrs),
-    outflowLaborCost:       Object.keys(out).length === 4 ? rg.channelLaborCost(out) : util.laborCost(out.pipeHrs)
+    inflowLaborCost:        Object.keys(inf).length === 4 ? rg.channelLaborCost(inf) : rg.pipeLaborCost(inf),
+    outflowLaborCost:       Object.keys(out).length === 4 ? rg.channelLaborCost(out) : rg.pipeLaborCost(out)
   }
+  return lc
 }
 
-rg.baseLaborCost = (base) => ({
-  sodLaborCost:           util.laborCost(base.sodHrs),
-  excavationLaborCost:    util.laborCost(base.excavationHrs),
-  bioretentionLaborCost:  util.laborCost(base.bioretenHrs),
-  mulchLaborCost:         util.laborCost(base.mulchHrs),
-  plantingLaborCost:      util.laborCost(base.plantingHrs)
+rg.baseLaborCost = (base) => {
+  let blc = {
+    sodLaborCost:           util.laborCost(base.sodHrs),
+    excavationLaborCost:    util.laborCost(base.excavationHrs),
+    bioretentionLaborCost:  util.laborCost(base.bioretenHrs),
+    mulchLaborCost:         util.laborCost(base.mulchHrs),
+    plantingLaborCost:      util.laborCost(base.plantingHrs)
+  }
+  blc.total = util.sumObject(blc)
+  return blc
+}
+
+rg.channelLaborCost = (channel) => {
+  let clc = {
+    excavationLaborCost:    util.laborCost(channel.excavationHrs),
+    bioretentionLaborCost:  util.laborCost(channel.bioretenHrs),
+    plantingLaborCost:      util.laborCost(channel.plantingHrs),
+    rockLaborCost:          util.laborCost(channel.rockHrs)
+  }
+  clc.total = util.sumObject(clc)
+  return clc
+}
+
+rg.pipeLaborCost = (pipe) => ({
+  total:          util.laborCost(pipe.pipeHrs)
 })
 
-rg.channelLaborCost = (channel) => ({
-  excavationLaborCost:    util.laborCost(channel.excavationHrs),
-  bioretentionLaborCost:  util.laborCost(channel.bioretenHrs),
-  plantingLaborCost:      util.laborCost(channel.plantingHrs),
-  rockLaborCost:          util.laborCost(channel.rockHrs)
-})
+rg.totals = (c) => {
+  let materials = util.round('round', c.baseMaterialCost.total + c.plumbingMaterialCost.total, 0.01)
+  let labor = util.round('round', c.laborCost.baseLaborCost.total + c.laborCost.dispersionLaborCost.total + c.laborCost.inflowLaborCost.total + c.laborCost.outflowLaborCost.total, 0.01)
+  let subtotal = util.round('round', materials + labor, 0.01)
+  let tax = util.round('round', util.salesTax(subtotal), 0.01)
+  let total = util.round('round', subtotal + tax, 0.01)
 
-rg.materialsTotal = () => {
-  base
-  dispersion
-  inflow
-  outflow
-}
-
-rg.baseMaterialsTotal = (c) => {
-  return util.round('round', c.sodDumpCost + c.bioretentionCost + c.mulchCost + c.cutterCost + c.truckCost + c.plantCost, 0.01)
-}
-
-rg.laborTotal = () => {
-  base
+  return {
+    materialsTotal: materials,
+    laborTotal:     labor,
+    subtotal:       subtotal,
+    tax:            tax,
+    total:          total
+  }
 }
