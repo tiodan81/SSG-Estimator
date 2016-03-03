@@ -24,12 +24,24 @@ controller.rainwiseInit = () => {
   rainwiseView.init()
 }
 
-controller.rgInit = () => {
+var rgController = {}
+
+rgController.init = () => {
   rgView.init()
 }
 
-controller.rgNew = () => {
+rgController.makeNew = () => {
 
+  if (c.infKnown) {
+    let c = rg.buildRG()
+    let m = rg.getMultiplier(c)
+    rg.allCalcs(c, m)
+    //calcs
+  } else {
+    let high = rg.getMultiplier(c, 1)
+    let low = rg.getMultiplier(c, 0.25)
+    //allCalcs high & low. or something
+  }
 }
 
 controller.mulchInit = () => {

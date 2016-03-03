@@ -28,20 +28,6 @@ rg.buildRG = () => {
   })
 }
 
-rg.makeNew = () => {
-  let c = rg.buildRG()
-
-  if (c.infKnown) {
-    let m = rg.getMultiplier(c)
-    rg.allCalcs(c, m)
-    //calcs
-  } else {
-    let high = rg.getMultiplier(c, 1)
-    let low = rg.getMultiplier(c, 0.25)
-    //allCalcs high & low. or something
-  }
-}
-
 rg.getMultiplier = (c, rate = c.infRate) => {
   const nums = [
     [0.033, 0.074],

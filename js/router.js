@@ -15,7 +15,7 @@ page(
 
 page(
   '/rain-gardens',
-  controller.rgInit
+  rgController.init
 )
 
 page(
