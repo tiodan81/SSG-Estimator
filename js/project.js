@@ -23,6 +23,7 @@ project.maker = function(client, city, labor, mkup, owner) {
   this.laborRate = labor
   this.markup = mkup
   this.owner = owner
+  this.rainGardens = {allRGs: [], uberRG:{}}
 }
 
 project.build = function() {

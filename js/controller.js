@@ -31,15 +31,24 @@ rgController.init = () => {
 }
 
 rgController.makeNew = () => {
+  let infKnown = $('#infiltKnown:checked').length ? true : false
 
-  if (c.infKnown) {
-    let c = rg.buildRG()
-    let m = rg.getMultiplier(c)
-    rg.allCalcs(c, m)
-    //calcs
+  if (infKnown) {
+    let newRG = rg.buildRG()
+    let m = rg.getMultiplier(newRG)
+    rg.allCalcs(newRG, m)
+    console.log(newRG);
+    rg.saveToProject(newRG)
+    //rgView.render(newRG)
   } else {
-    let high = rg.getMultiplier(c, 1)
-    let low = rg.getMultiplier(c, 0.25)
+    let high = rg.buildRG()
+    let mHigh = rg.getMultiplier(high, 1)
+    let highRG = rg.allCalcs(high, mHigh)
+    let low = rg.buildRG()
+    let mLow = rg.getMultiplier(low, 0.25)
+    let lowRG = rg.allCalcs(low, mLow)
+    highRG.lowEstimate = lowRG
+    rg.saveToProject(highRG)
     //allCalcs high & low. or something
   }
 }

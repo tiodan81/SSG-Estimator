@@ -1,5 +1,4 @@
 var rg = {
-  allRGs: [],
   current: {}
 }
 
@@ -249,4 +248,24 @@ rg.totals = (c) => {
     tax:            tax,
     total:          total
   }
+}
+
+rg.saveToProject = (newRG) => {
+  if(user.uid && project.current.client) {
+    rg.storeLocally(newRG)
+    project.updateComponent(project.current, 'rainGardens')
+  } else {
+    alert('Either you\'re not signed in or haven\'t initiated a project!')
+  }
+}
+
+rg.storeLocally = (newRG) => {
+  let cur = project.current.rainGardens
+  cur.allRGs.push(newRG)
+  //rg.updateUberRG(newRG)
+  rg.current = newRG
+}
+
+rg.updateUberRG = (rg) => {
+
 }
