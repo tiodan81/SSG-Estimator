@@ -47,15 +47,27 @@ rgView.handleSave = function() {
     let $val = $('#rg-save').val()
     if ($val === 'save') {
       rgController.makeNew()
-      // let newRG = rg.makeNew()
-      // rg.allRGs.push(newRG)
-      //renderNew
-      //updateUber
-      //saveToProject
-      //current = new
       viewUtil.clearForm()
+    } else if ($val === 'update') {
+      //do the update stuff
     }
   })
+}
+
+rgView.render = (rg) => {
+  rgView.populateSelector(rg)
+  //make tables
+  //show tables if not shown
+  //pop to summary
+  //show/handle edit buttons
+}
+
+rgView.populateSelector = (cur) => {
+  let curId = cur.id
+  if ($('#rg-selector option[value="' + curId + '"]').length === 0) {
+    let option = '<option value="' + curId + '">' + curId + '</option>'
+    $('#rg-selector').append(option)
+  }
 }
 
 // SUMMARY
@@ -70,7 +82,7 @@ rgView.handleSave = function() {
 //   inflow
 //   outflow (incl. dispersion?)
 //   total
-//   
+//
 // MATERIALS
 //   plants = base + inf + out
 //   bioretention = base + disp + inf + out
