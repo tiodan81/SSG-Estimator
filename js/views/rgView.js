@@ -57,3 +57,29 @@ rgView.handleSave = function() {
     }
   })
 }
+
+// SUMMARY
+//   labor Hours
+//   labor Cost
+//   materials Cost
+//   tax
+//   total
+//
+// LABOR - expandable?
+//   base
+//   inflow
+//   outflow (incl. dispersion?)
+//   total
+//   
+// MATERIALS
+//   plants = base + inf + out
+//   bioretention = base + disp + inf + out
+//   mulch = base
+//   drain rock = disp + inf + out
+//   pond liner = disp + inf + out
+//   pipe
+//     3" len
+//     4" len
+//   sodRm | method | cutterCost + sodDumpCost
+//   Truck
+//   total

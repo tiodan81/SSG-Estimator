@@ -146,9 +146,10 @@ rg.channelMaterialCost = (m, veg) => {
 
 rg.pipeMaterialCost = (m) => {
   let pipe = m.pipe === '3in' ? materials.plumbing.pvc3In : materials.plumbing.pvc4In
-
+  let cost = util.round('round', util.materialCost(pipe, m.length), 0.01)
   return {
-    total: util.round('round', util.materialCost(pipe, m.length), 0.01)
+    pipeCost: cost,
+    total:    cost
   }
 }
 
@@ -163,13 +164,22 @@ rg.laborHrs = (c) => {
   }
 }
 
-rg.baseHrs = (c) => ({
-  sodHrs:         rg.sodHrs(c.sodRmMethod, c.area.footprint),
-  excavationHrs:  util.round('ceil', (c.area.baseArea / 2) + 3, 0.25),
-  bioretenHrs:    Math.round(2 * c.baseMaterials.bioretentionVolume + 1),
-  mulchHrs:       Math.round(2 * c.baseMaterials.mulchVolume + 1),
-  plantingHrs:    util.round('ceil', (c.area.footprint / 20) + 4, 0.25),
-})
+rg.baseHrs = (c) => {
+  let sodHrs = rg.sodHrs(c.sodRmMethod, c.area.footprint)
+  let excavationHrs = util.round('ceil', (c.area.baseArea / 2) + 3, 0.25)
+  let bioretenHrs = Math.round(2 * c.baseMaterials.bioretentionVolume + 1)
+  let mulchHrs = Math.round(2 * c.baseMaterials.mulchVolume + 1)
+  let plantingHrs = util.round('ceil', (c.area.footprint / 20) + 4, 0.25)
+
+  return {
+    sodHrs:         sodHrs,
+    excavationHrs:  excavationHrs,
+    bioretenHrs:    bioretenHrs,
+    mulchHrs:       mulchHrs,
+    plantingHrs:    plantingHrs,
+    total:          util.round('ceil', sodHrs + excavationHrs + bioretenHrs + mulchHrs + plantingHrs, 0.25)
+  }
+}
 
 rg.sodHrs = (method, footprint) => {
   if (method === 'cutter') {
@@ -181,15 +191,24 @@ rg.sodHrs = (method, footprint) => {
   }
 }
 
-rg.channelHrs = (mat, len, veg) => ({
-  excavationHrs:  len / 4,
-  bioretenHrs:    mat.bioretention + 1,
-  plantingHrs:    veg ? len / 4 : 0,
-  rockHrs:        mat.drainageRock + 1
-})
+rg.channelHrs = (mat, len, veg) => {
+  let excavationHrs = len / 4
+  let bioretenHrs = mat.bioretention + 1
+  let plantingHrs = veg ? len / 4 : 0
+  let rockHrs = mat.drainageRock + 1
+
+  return {
+    excavationHrs: excavationHrs,
+    bioretenHrs: bioretenHrs,
+    plantingHrs: plantingHrs,
+    rockHrs: rockHrs,
+    total: util.round('ceil', excavationHrs + bioretenHrs + plantingHrs + rockHrs, 0.25)
+  }
+}
 
 rg.pipeHrs = (len) => ({
-  pipeHrs: len / 4
+  pipeHrs:  len / 4,
+  total:    len / 4
 })
 
 rg.laborCost = (c) => {
@@ -201,8 +220,8 @@ rg.laborCost = (c) => {
   let lc = {
     baseLaborCost:          rg.baseLaborCost(base),
     dispersionLaborCost:    rg.channelLaborCost(disp),
-    inflowLaborCost:        Object.keys(inf).length === 4 ? rg.channelLaborCost(inf) : rg.pipeLaborCost(inf),
-    outflowLaborCost:       Object.keys(out).length === 4 ? rg.channelLaborCost(out) : rg.pipeLaborCost(out)
+    inflowLaborCost:        Object.keys(inf).length === 5 ? rg.channelLaborCost(inf) : rg.pipeLaborCost(inf),
+    outflowLaborCost:       Object.keys(out).length === 5 ? rg.channelLaborCost(out) : rg.pipeLaborCost(out)
   }
   return lc
 }
@@ -236,17 +255,19 @@ rg.pipeLaborCost = (pipe) => ({
 
 rg.totals = (c) => {
   let materials = util.round('round', c.baseMaterialCost.total + c.plumbingMaterialCost.total, 0.01)
-  let labor = util.round('round', c.laborCost.baseLaborCost.total + c.laborCost.dispersionLaborCost.total + c.laborCost.inflowLaborCost.total + c.laborCost.outflowLaborCost.total, 0.01)
-  let subtotal = util.round('round', materials + labor, 0.01)
+  let laborCost = util.round('round', c.laborCost.baseLaborCost.total + c.laborCost.dispersionLaborCost.total + c.laborCost.inflowLaborCost.total + c.laborCost.outflowLaborCost.total, 0.01)
+  let laborHrs = util.round('ceil', c.laborHrs.baseHrs.total + c.laborHrs.dispersionHrs.total + c.laborHrs.inflowHrs.total + c.laborHrs.outflowHrs.total, 0.25)
+  let subtotal = util.round('round', materials + laborCost, 0.01)
   let tax = util.round('round', util.salesTax(subtotal), 0.01)
   let total = util.round('round', subtotal + tax, 0.01)
 
   return {
-    materialsTotal: materials,
-    laborTotal:     labor,
-    subtotal:       subtotal,
-    tax:            tax,
-    total:          total
+    materialsTotal:   materials,
+    laborCostTotal:   laborCost,
+    laborHrsTotal:    laborHrs,
+    subtotal:         subtotal,
+    tax:              tax,
+    total:            total
   }
 }
 
