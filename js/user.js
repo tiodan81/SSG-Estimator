@@ -1,12 +1,12 @@
-const firebase = new Firebase('https://ssgestimator.firebaseio.com/');
-const fbProjects = firebase.child('projects');
-const fbUsers = firebase.child('users');
+const firebase = new Firebase('https://ssgestimator.firebaseio.com/')
+const fbProjects = firebase.child('projects')
+const fbUsers = firebase.child('users')
 
 var user = {
   email: '',
   uid: '',
   projects: []
-};
+}
 
 user.create = function(email, pwd) {
   firebase.createUser({
@@ -16,23 +16,23 @@ user.create = function(email, pwd) {
     if (error) {
       switch (error.code) {
       case "EMAIL_TAKEN":
-        console.log('Cannot create user. Email ' + email + ' is already in use.');
-        break;
+        console.log('Cannot create user. Email ' + email + ' is already in use.')
+        break
       case "INVALID_EMAIL":
-        console.log('Invalid email.');
-        break;
+        console.log('Invalid email.')
+        break
       default:
-        alert(error);
-        console.log('error creating user: ', error);
+        alert(error)
+        console.log('error creating user: ', error)
       }
     } else {
-      console.log(userData);
-      console.log('Successfully created user account with uid: ', userData.uid);
-      user.email = email;
-      user.authenticate(pwd);
+      console.log(userData)
+      console.log('Successfully created user account with uid: ', userData.uid)
+      user.email = email
+      user.authenticate(pwd)
     }
-  });
-};
+  })
+}
 
 user.authenticate = function(pwd) {
   firebase.authWithPassword({
@@ -40,55 +40,55 @@ user.authenticate = function(pwd) {
     password  : pwd
   }, function(error, authData) {
     if (error) {
-      console.log('Login failed', error);
-      alert('Login failed. Please try again or create an account.');
+      console.log('Login failed', error)
+      alert('Login failed. Please try again or create an account.')
     } else {
-      console.log('Authenticated successfully with payload: ', authData);
-      user.uid = authData.uid;
-      user.getProjectList();
+      console.log('Authenticated successfully with payload: ', authData)
+      user.uid = authData.uid
+      user.getProjectList()
     }
-  });
-};
+  })
+}
 
 user.isLoggedIn = function() {
-  return firebase.getAuth();
-};
+  return firebase.getAuth()
+}
 
 user.logout = function() {
-  return firebase.unauth();
-};
+  return firebase.unauth()
+}
 
 user.setProjectOwner = function(newProject) {
-  let userRef = fbUsers.child(user.uid);
-  let obj = {};
-  obj[newProject.client] = true;
-  let userString = JSON.stringify(obj);
+  let userRef = fbUsers.child(user.uid)
+  let obj = {}
+  obj[newProject.client] = true
+  let userString = JSON.stringify(obj)
   if (userRef) {
-    userRef.child('projects').update(obj);
+    userRef.child('projects').update(obj)
   } else {
-    userRef.child('projects').set(obj);
+    userRef.child('projects').set(obj)
   }
-};
+}
 
 user.getProjectList = function() {
-  console.log('loading projects for user ' + user.uid);
+  console.log('loading projects for user ' + user.uid)
   fbUsers.child(user.uid).child('projects').once('value').then(function(snapshot) {
-    var loadingProjects = [];
+    var loadingProjects = []
 
     snapshot.forEach(function(proj) {
-      let curProj = proj.key();
+      let curProj = proj.key()
       let loadProjPromise = fbProjects.child(curProj).once('value').then(function(snap) {
-        project.allProjects.push(snap.val());
-        indexView.populateSelector(snap.val());
-      });
-      loadingProjects.push(loadProjPromise);
-    });
+        project.allProjects.push(snap.val())
+        indexView.populateSelector(snap.val())
+      })
+      loadingProjects.push(loadProjPromise)
+    })
 
-    return Promise.all(loadingProjects);
+    return Promise.all(loadingProjects)
   }).then(function() {
-    project.current = project.allProjects[0];
-    project.populate(project.current);
-    indexView.init();
-    loginView.showLogoutNav();
-  });
-};
+    project.current = project.allProjects[0]
+    project.populate(project.current)
+    indexView.init()
+    loginView.showLogoutNav()
+  })
+}

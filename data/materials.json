@@ -2,7 +2,8 @@
   "bulk": {
     "paverbase": 55,
     "bioretention": 45,
-    "mulch": 40
+    "mulch": 40,
+    "drainageRock": 40.5
   },
   "stone": {
     "Manor stone": 6.18,
@@ -20,9 +21,15 @@
     "firstFlushDiverter": 100,
     "cisternGauge": 50
   },
+  "fabric": {
+    "pondliner": 2.7
+  },
   "fees": {
     "sodDump": 42,
     "sodCutter": 142,
     "dumpTruck": 350
+  },
+  "misc": {
+    "rgChannelPlanting": 5
   }
 }

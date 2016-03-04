@@ -2,4 +2,5 @@
 .gitignore
 .tern-project
 node_modules
+rgNotes.md
 **/.DS_Store

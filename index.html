@@ -128,7 +128,7 @@
           <input type="number" id="rgPlantBudget" placeholder="$$$" required>
 
           <label class="label-body">Inflow
-            <input type="radio" name="rgInflow" value="channel">
+            <input type="radio" name="rgInflow" value="channel" required>
             <span class="label-body">channel</span>
             <input type="radio" name="rgInflow" value="pipe">
             <span class="label-body">pipe</span>
@@ -143,7 +143,7 @@
           <input type="number" id="rgInfLength" placeholder="ft" required>
 
           <label class="label-body">Outflow
-            <input type="radio" name="rgOutflow" value="channel">
+            <input type="radio" name="rgOutflow" value="channel" required>
             <span class="label-body">channel</span>
             <input type="radio" name="rgOutflow" value="pipe">
             <span class="label-body">pipe</span>
@@ -158,7 +158,7 @@
           <input type="number" id="rgOutLength" placeholder="ft" required>
 
           <label class="label-body">Sod removal
-            <input type="radio" name="rgSod" value="manual">
+            <input type="radio" name="rgSod" value="manual" required>
             <span class="label-body">by hand</span>
             <input type="radio" name="rgSod" value="cutter">
             <span class="label-body">sod cutter</span>
@@ -179,6 +179,9 @@
           <input id="rg-save" type="submit" value="save">
 
         </form>
+        <section id="rgDisplay">
+
+        </section>
       </section>
 
       <section id="mulch-content">
@@ -257,28 +260,28 @@
           <div class="fe">
             <label class="fieldname">Model:</label>
             <select id="cisternModel">
-              <option value="b420">Bushman 420</option>
-              <option value="b660">Bushman 660</option>
-              <option value="b865">Bushman 865</option>
-              <option value="b1110">Bushman 1110</option>
-              <option value="b1320">Bushman 1320</option>
-              <option value="b2825">Bushman 2825</option>
-              <option value="b265">Bushman 265 slimline</option>
-              <option value="b530">Bushman 530 slimline</option>
-              <option value="p480">Premier 480</option>
-              <option value="p575">Premier 575</option>
-              <option value="p625">Premier 625</option>
-              <option value="p795">Premier 795</option>
-              <option value="p840">Premier 840</option>
-              <option value="p960">Premier 960</option>
-              <option value="p1150">Premier 1150</option>
-              <option value="p1440">Premier 1440</option>
-              <option value="p1535">Premier 1535</option>
-              <option value="p2000">Premier 2000</option>
-              <option value="p2340">Premier 2340</option>
-              <option value="p3000">Premier 3000</option>
-              <option value="p4000">Premier 4000</option>
-              <option value="p410">Premier 410 slimline</option>
+              <option value="B420">Bushman 420</option>
+              <option value="B660">Bushman 660</option>
+              <option value="B865">Bushman 865</option>
+              <option value="B1110">Bushman 1110</option>
+              <option value="B1320">Bushman 1320</option>
+              <option value="B2825">Bushman 2825</option>
+              <option value="B265">Bushman 265 slimline</option>
+              <option value="B530">Bushman 530 slimline</option>
+              <option value="P480">Premier 480</option>
+              <option value="P575">Premier 575</option>
+              <option value="P625">Premier 625</option>
+              <option value="P795">Premier 795</option>
+              <option value="P840">Premier 840</option>
+              <option value="P960">Premier 960</option>
+              <option value="P1150">Premier 1150</option>
+              <option value="P1440">Premier 1440</option>
+              <option value="P1535">Premier 1535</option>
+              <option value="P2000">Premier 2000</option>
+              <option value="P2340">Premier 2340</option>
+              <option value="P3000">Premier 3000</option>
+              <option value="P4000">Premier 4000</option>
+              <option value="P410">Premier 410 slimline</option>
             </select>
           </div>
           <div class="fe">

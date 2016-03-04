@@ -1,41 +1,66 @@
-var controller = {};
+var controller = {}
 
-controller.checkLogin = function() {
-  let auth = user.isLoggedIn();
+controller.checkLogin = () => {
+  let auth = user.isLoggedIn()
   if (auth) {
-    user.uid = auth.uid;
-    project.getJSON(user.getProjectList);
+    user.uid = auth.uid
+    project.getJSON(user.getProjectList)
   } else {
-    loginView.init();
+    loginView.init()
   }
-};
+}
 
-controller.loginInit = function() {
-  loginView.init();
-};
+controller.loginInit = () => {
+  loginView.init()
+}
 
-controller.logout = function() {
-  user.logout();
-  project.clear();
-  viewUtil.clear(loginView.init);
-};
+controller.logout = () => {
+  user.logout()
+  project.clear()
+  viewUtil.clear(loginView.init)
+}
 
-controller.rainwiseInit = function() {
-  rainwiseView.init();
-};
+controller.rainwiseInit = () => {
+  rainwiseView.init()
+}
 
-controller.rgInit = function() {
-  rgView.init();
-};
+var rgController = {}
 
-controller.mulchInit = function() {
-  mulchView.init();
-};
+rgController.init = () => {
+  rgView.init()
+}
 
-controller.cisternInit = function() {
-  cisternView.init();
-};
+rgController.makeNew = () => {
+  let infKnown = $('#infiltKnown:checked').length ? true : false
+
+  if (infKnown) {
+    let newRG = rg.buildRG()
+    let m = rg.getMultiplier(newRG)
+    rg.allCalcs(newRG, m)
+    console.log(newRG);
+    rg.saveToProject(newRG)
+    //rgView.render(newRG)
+  } else {
+    let high = rg.buildRG()
+    let mHigh = rg.getMultiplier(high, 1)
+    let highRG = rg.allCalcs(high, mHigh)
+    let low = rg.buildRG()
+    let mLow = rg.getMultiplier(low, 0.25)
+    let lowRG = rg.allCalcs(low, mLow)
+    highRG.lowEstimate = lowRG
+    rg.saveToProject(highRG)
+    //allCalcs high & low. or something
+  }
+}
+
+controller.mulchInit = () => {
+  mulchView.init()
+}
+
+controller.cisternInit = () => {
+  cisternView.init()
+}
 
 $(function() {
-  controller.checkLogin();
-});
+  controller.checkLogin()
+})
