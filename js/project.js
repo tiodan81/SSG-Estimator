@@ -53,8 +53,6 @@ project.create = function(newProject) {
   user.setProjectOwner(newProject)
   project.allProjects.push(newProject)
   project.current = newProject
-  viewUtil.clearForm()
-  indexView.populateSelector(newProject)
   indexView.render(newProject)
 }
 

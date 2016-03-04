@@ -39,7 +39,7 @@ rgController.makeNew = () => {
     rg.allCalcs(newRG, m)
     console.log(newRG);
     rg.saveToProject(newRG)
-    //rgView.render(newRG)
+    rgView.render(newRG)
   } else {
     let high = rg.buildRG()
     let mHigh = rg.getMultiplier(high, 1)

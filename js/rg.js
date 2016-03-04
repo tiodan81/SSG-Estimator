@@ -220,8 +220,8 @@ rg.laborCost = (c) => {
   let lc = {
     baseLaborCost:          rg.baseLaborCost(base),
     dispersionLaborCost:    rg.channelLaborCost(disp),
-    inflowLaborCost:        Object.keys(inf).length === 5 ? rg.channelLaborCost(inf) : rg.pipeLaborCost(inf),
-    outflowLaborCost:       Object.keys(out).length === 5 ? rg.channelLaborCost(out) : rg.pipeLaborCost(out)
+    inflowLaborCost:        c.infType === 'channel' ? rg.channelLaborCost(inf) : rg.pipeLaborCost(inf),
+    outflowLaborCost:       c.outType === 'channel' ? rg.channelLaborCost(out) : rg.pipeLaborCost(out)
   }
   return lc
 }

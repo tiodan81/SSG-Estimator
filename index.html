@@ -180,7 +180,23 @@
 
         </form>
         <section id="rgDisplay">
-
+          <h3>Rain Gardens</h3>
+          <div>
+            <select id="rg-selector">
+              <option value="default">Select a rain garden</option>
+            </select>
+            <!-- edit buttons here?      -->
+          </div>
+          <ul id="rg-nav">
+            <button id="rg-nav-summary" class="button-primary">Summary</button>
+            <button id="rg-nav-labor">Labor</button>
+            <button id="rg-nav-materials">Materials</button>
+          </ul>
+          <div id="rg-tables">
+            <table id="rg-table-summary"></table>
+            <table id="rg-table-labor" class="collaptable"></table>
+            <table id="rg-table-materials" class="collaptable"></table>
+          </div>
         </section>
       </section>
 
@@ -322,6 +338,7 @@
             <button id="cistern-update">Update Tank</button>
           </div>
         </form>
+
         <section id="cistern-display">
           <h3>Cisterns</h3>
           <div class="fe">
@@ -345,6 +362,7 @@
     </main>
 
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/js/vendor/jquery.aCollapTable.js"></script>
     <script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
     <script type="text/javascript" src="/js/vendor/page.js"></script>
     <!-- MODELS -->
