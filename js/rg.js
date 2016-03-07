@@ -110,8 +110,10 @@ rg.calcSodDumpCost = (c, m) => {
 
 rg.plumbingMaterials = (c) => ({
   dispersionChannelMaterials:   c.roof < 1000 ? rg.channelMaterials(3) : rg.channelMaterials(6),
-  inflowMaterials:              c.infType === 'channel' ? rg.channelMaterials(c.infLen) : rg.pipeMaterials(c.infLen, 'in'),
-  outflowMaterials:             c.outType === 'channel' ? rg.channelMaterials(c.outLen) : rg.pipeMaterials(c.outLen, 'out')
+  inflow1Materials:             c.infType1 === 'channel' ? rg.channelMaterials(c.infLen1) : rg.pipeMaterials(c.infLen1, 'in'),
+  inflow2Materials:             c.infNum === 2 ? c.infType2 === 'channel' ? rg.channelMaterials(c.infLen2) : rg.pipeMaterials(c.infLen2, 'in') : null,
+  outflow1Materials:            c.outType1 === 'channel' ? rg.channelMaterials(c.outLen1) : rg.pipeMaterials(c.outLen1, 'out'),
+  outflow2Materials:            c.outNum === 2 ? c.outType2 === 'channel' ? rg.channelMaterials(c.outLen2) : rg.pipeMaterials(c.outLen2, 'in') : null
 })
 
 rg.channelMaterials = (len) => {
@@ -130,14 +132,16 @@ rg.pipeMaterials = (len, inout) => ({
 })
 
 rg.plumbingMaterialCost = (c) => {
-  console.log(c);
   let m = c.plumbingMaterials
   let pmc = {
     dispersionMaterialCost:   rg.channelMaterialCost(m.dispersionChannelMaterials),
-    inflowMaterialCost:       c.infType === 'channel' ? rg.channelMaterialCost(m.inflowMaterials, c.infVeg) : rg.pipeMaterialCost(m.inflowMaterials),
-    outflowMaterialCost:      c.outType === 'channel' ? rg.channelMaterialCost(m.outflowMaterials, c.outVeg) : rg.pipeMaterialCost(m.outflowMaterials)
+    inflow1MaterialCost:      c.infType1 === 'channel' ? rg.channelMaterialCost(m.inflow1Materials, c.infVeg1) : rg.pipeMaterialCost(m.inflow1Materials),
+    inflow2MaterialCost:      c.infNum === 2 ? c.infType2 === 'channel' ? rg.channelMaterialCost(m.inflow2Materials, c.infVeg2) : rg.pipeMaterialCost(m.inflow2Materials) : 0,
+    outflow1MaterialCost:     c.outType1 === 'channel' ? rg.channelMaterialCost(m.outflow1Materials, c.outVeg1) : rg.pipeMaterialCost(m.outflow1Materials),
+    outflow2MaterialCost:     c.outNum === 2 ? c.outType2 === 'channel' ? rg.channelMaterialCost(m.outflow2Materials, c.outVeg2) : rg.pipeMaterialCost(m.outflow2Materials) : 0
   }
-  pmc.total = util.round('round', pmc.dispersionMaterialCost.total + pmc.inflowMaterialCost.total + pmc.outflowMaterialCost.total ,0.01)
+  pmc.total = util.round('round', pmc.dispersionMaterialCost.total + pmc.inflow1MaterialCost.total + pmc.inflow2MaterialCost.total + pmc.outflow1MaterialCost.total + pmc.outflow2MaterialCost.total ,0.01)
+  console.log(pmc);
   return pmc
 }
 
@@ -167,8 +171,10 @@ rg.laborHrs = (c) => {
   return {
     baseHrs:        rg.baseHrs(c),
     dispersionHrs:  rg.channelHrs(m.dispersionChannelMaterials, 3, false),
-    inflowHrs:      c.infType === 'channel' ? rg.channelHrs(m.inflowMaterials, c.infLen, c.infVeg) : rg.pipeHrs(c.infLen),
-    outflowHrs:     c.outType === 'channel' ? rg.channelHrs(m.outflowMaterials, c.outLen, c.outVeg) : rg.pipeHrs(c.outLen)
+    inflow1Hrs:     c.infType1 === 'channel' ? rg.channelHrs(m.inflow1Materials, c.infLen1, c.infVeg1) : rg.pipeHrs(c.infLen1),
+    inflow2Hrs:     c.infNum === 2 ? c.infType2 === 'channel' ? rg.channelHrs(m.inflow2Materials, c.infLen2, c.infVeg2) : rg.pipeHrs(c.infLen2) : 0,
+    outflow1Hrs:    c.outType1 === 'channel' ? rg.channelHrs(m.outflow1Materials, c.outLen1, c.outVeg1) : rg.pipeHrs(c.outLen1),
+    outflow2Hrs:    c.outNum === 2 ? c.outType2 === 'channel' ? rg.channelHrs(m.outflow2Materials, c.outLen2, c.outVeg2) : rg.pipeHrs(c.outLen2) : 0
   }
 }
 
@@ -222,14 +228,18 @@ rg.pipeHrs = (len) => ({
 rg.laborCost = (c) => {
   let base = c.laborHrs.baseHrs
   let disp = c.laborHrs.dispersionHrs
-  let inf = c.laborHrs.inflowHrs
-  let out = c.laborHrs.outflowHrs
+  let inf1 = c.laborHrs.inflow1Hrs
+  let inf2 = c.infNum === 2 ? c.laborHrs.inflow2Hrs : 0
+  let out1 = c.laborHrs.outflow1Hrs
+  let out2 = c.outNum === 2 ? c.laborHrs.outflow2Hrs : 0
 
   let lc = {
     baseLaborCost:          rg.baseLaborCost(base),
     dispersionLaborCost:    rg.channelLaborCost(disp),
-    inflowLaborCost:        c.infType === 'channel' ? rg.channelLaborCost(inf) : rg.pipeLaborCost(inf),
-    outflowLaborCost:       c.outType === 'channel' ? rg.channelLaborCost(out) : rg.pipeLaborCost(out)
+    inflow1LaborCost:       c.infType1 === 'channel' ? rg.channelLaborCost(inf1) : rg.pipeLaborCost(inf1),
+    inflow2LaborCost:       inf2 != 0 ? c.infType2 === 'channel' ? rg.channelLaborCost(inf2) : rg.pipeLaborCost(inf2) : 0,
+    outflow1LaborCost:      c.outType1 === 'channel' ? rg.channelLaborCost(out1) : rg.pipeLaborCost(out1),
+    outflow2LaborCost:      out2 != 0 ? c.outType2 === 'channel' ? rg.channelLaborCost(out2) : rg.pipeLaborCost(out2) : 0
   }
   return lc
 }
@@ -262,15 +272,18 @@ rg.pipeLaborCost = (pipe) => ({
 })
 
 rg.totals = (c) => {
+  let lc = c.laborCost
+  let lh = c.laborHrs
+
   let materialsCost = util.round('round', c.baseMaterialCost.total + c.plumbingMaterialCost.total, 0.01)
-  let laborCost = util.round('round', c.laborCost.baseLaborCost.total + c.laborCost.dispersionLaborCost.total + c.laborCost.inflowLaborCost.total + c.laborCost.outflowLaborCost.total, 0.01)
-  let laborHrs = util.round('ceil', c.laborHrs.baseHrs.total + c.laborHrs.dispersionHrs.total + c.laborHrs.inflowHrs.total + c.laborHrs.outflowHrs.total, 0.25)
-  let subtotal = util.round('round', materials + laborCost, 0.01)
+  let laborCost = util.round('round', lc.baseLaborCost.total + lc.dispersionLaborCost.total + lc.inflow1LaborCost.total + lc.inflow2LaborCost.total + lc.outflow1LaborCost.total + lc.outflow2LaborCost.total, 0.01)
+  let laborHrs = util.round('ceil', lh.baseHrs.total + lh.dispersionHrs.total + lh.inflow1Hrs.total + lh.inflow2Hrs.total + lh.outflow1Hrs.total + lh.outflow2Hrs.total, 0.25)
+  let subtotal = util.round('round', materialsCost + laborCost, 0.01)
   let tax = util.round('round', util.salesTax(subtotal), 0.01)
   let total = util.round('round', subtotal + tax, 0.01)
 
   return {
-    materialsTotal:       rg.materialTotals(c),
+    //plantMaterialTotal:   rg.plantMaterialTotals(c),
     materialsCostTotal:   materials,
     laborCostTotal:       laborCost,
     laborHrsTotal:        laborHrs,
@@ -280,9 +293,9 @@ rg.totals = (c) => {
   }
 }
 
-rg.materialTotals = (c) => {
-  let plantCost = util.round('round', rg.plantCost + rg.plumbingMaterialCost.inflowMaterialCost.channelPlantCost + rg.plumbingMaterialCost.outflowMaterialCost.channelPlantCost, 0.01)
-
+//what the hell is this?
+rg.plantMaterialTotals = (c) => {
+  return util.round('round', rg.plantCost + rg.plumbingMaterialCost.inflow1MaterialCost.channelPlantCost + rg.plumbingMaterialCost.inflow2MaterialCost.channelPlantCost + rg.plumbingMaterialCost.outflow1MaterialCost.channelPlantCost + rg.plumbingMaterialCost.outflow2MaterialCost.channelPlantCost, 0.01)
 }
 
 rg.saveToProject = (newRG) => {
