@@ -4,6 +4,8 @@ rgView.init = () => {
   $('#rg-content').show()
     .siblings().hide()
   rgView.infiltDisplay()
+  $('#rg-inflow-num').off('change').on('change', rgView.flowQty)
+  $('#rg-outflow-num').off('change').on('change', rgView.flowQty)
   rgView.vegInfDisplay()
   rgView.vegOutDisplay()
   rgView.handleSave()
@@ -17,6 +19,15 @@ rgView.infiltDisplay = () => {
       $('#rgInfiltContainer').hide()
     }
   })
+}
+
+rgView.flowQty = function() {
+  console.log($(this).val());
+  if ($(this).val() == 2) {
+    $(this).parent().siblings('div:last').show()
+  } else {
+    $(this).parent().siblings('div:last').hide()
+  }
 }
 
 rgView.vegInfDisplay = () => {
@@ -71,6 +82,32 @@ rgView.populateSelector = (cur) => {
   }
 }
 
+rgView.handleSelector = function() {
+  $('#rg-selector').off('change').on('change', function() {
+    let id = $('#rg-selector').val()
+    if (id === 'All rain gardens') {
+      rgView.makeTables(rg.uberTank)
+      $('#rg-edit-buttons').hide()
+    } else {
+      let curRG = util.findObjInArray(id, project.rainGardens.uberRG, 'id')
+      rgView.makeTables(curRG[0])
+      rg.current = curRG[0]
+      $('#rg-edit-buttons').show()
+    }
+    rgView.showSummary()
+  })
+}
+
+rgView.showSummary = function() {
+  let $selected = $('.button-primary').attr('id').split('-')[2]
+  if ($selected != 'summary') {
+    $('#rg-nav-summary').addClass('button-primary')
+    .siblings().removeClass('button-primary')
+    $('#rg-table-summary').show()
+    .siblings().hide()
+  }
+}
+
 rgView.handleCollapse = function() {
   $('.collaptable').aCollapTable({
   // the table is collapased at start
@@ -117,6 +154,7 @@ rgView.makeLabor = (rg) => {
   <tr data-id="6" data-parent="1"><td>Planting</td><td>${lh.baseHrs.plantingHrs}</td><td>$${lc.baseLaborCost.plantingLaborCost}</td></tr>
   <tr data-id="10" data-parent=""><td>Inflow</td><td>${lh.inflowHrs.total}</td><td>$${lc.inflowLaborCost.total}</td></tr>
   `
+  //will break if rg has channel & pipe in/out
   if (rg.infType === 'channel') {
     labor += `
     <tr data-id="10" data-parent="2"><td>Excavation</td><td>${lh.inflowHrs.excavationHrs}</td><td>$${lc.inflowLaborCost.excavationLaborCost}</td></tr>
@@ -148,8 +186,18 @@ rgView.makeLabor = (rg) => {
   return labor
 }
 
+rgView.makeMaterials = (rg) => {
+  //need channel/pipe branching
+  let bio = util.round('round', rg.baseMaterials.bioretentionVolume + rg.plumbingMaterials.dispersionChannelMaterials.bioretention + rg.plumbingMaterials.inflowMaterials.bioretention + rg.plumbingMaterials.outflowMaterials.bioretention ,0.01)
+  // let bioCost =
+  // let rock =
+  // let rockCost =
+  // let pond =
+  // let pondCost =
+  let sodCost = util.round('round', rg.baseMaterialCost.cutterCost + rg.baseMaterialCost.sodDumpCost, 0.01)
+}
+
 // MATERIALS
-//   plants = base + inf + out
 //   bioretention = base + disp + inf + out
 //   mulch = base
 //   drain rock = disp + inf + out

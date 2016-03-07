@@ -54,6 +54,14 @@ nav {
 	display: none;
 }
 
+#rgInflow2-container {
+	display: none;
+}
+
+#rgOutflow2-container {
+	display: none;
+}
+
 #rgVegOutContainer {
 	display: none;
 }

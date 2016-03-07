@@ -198,11 +198,11 @@ rg.channelHrs = (mat, len, veg) => {
   let rockHrs = mat.drainageRock + 1
 
   return {
-    excavationHrs: excavationHrs,
-    bioretenHrs: bioretenHrs,
-    plantingHrs: plantingHrs,
-    rockHrs: rockHrs,
-    total: util.round('ceil', excavationHrs + bioretenHrs + plantingHrs + rockHrs, 0.25)
+    excavationHrs:  excavationHrs,
+    bioretenHrs:    bioretenHrs,
+    plantingHrs:    plantingHrs,
+    rockHrs:        rockHrs,
+    total:          util.round('ceil', excavationHrs + bioretenHrs + plantingHrs + rockHrs, 0.25)
   }
 }
 
@@ -254,7 +254,7 @@ rg.pipeLaborCost = (pipe) => ({
 })
 
 rg.totals = (c) => {
-  let materials = util.round('round', c.baseMaterialCost.total + c.plumbingMaterialCost.total, 0.01)
+  let materialsCost = util.round('round', c.baseMaterialCost.total + c.plumbingMaterialCost.total, 0.01)
   let laborCost = util.round('round', c.laborCost.baseLaborCost.total + c.laborCost.dispersionLaborCost.total + c.laborCost.inflowLaborCost.total + c.laborCost.outflowLaborCost.total, 0.01)
   let laborHrs = util.round('ceil', c.laborHrs.baseHrs.total + c.laborHrs.dispersionHrs.total + c.laborHrs.inflowHrs.total + c.laborHrs.outflowHrs.total, 0.25)
   let subtotal = util.round('round', materials + laborCost, 0.01)
@@ -262,13 +262,19 @@ rg.totals = (c) => {
   let total = util.round('round', subtotal + tax, 0.01)
 
   return {
-    materialsTotal:   materials,
-    laborCostTotal:   laborCost,
-    laborHrsTotal:    laborHrs,
-    subtotal:         subtotal,
-    tax:              tax,
-    total:            total
+    materialsTotal:       rg.materialTotals(c),
+    materialsCostTotal:   materials,
+    laborCostTotal:       laborCost,
+    laborHrsTotal:        laborHrs,
+    subtotal:             subtotal,
+    tax:                  tax,
+    total:                total
   }
+}
+
+rg.materialTotals = (c) => {
+  let plantCost = util.round('round', rg.plantCost + rg.plumbingMaterialCost.inflowMaterialCost.channelPlantCost + rg.plumbingMaterialCost.outflowMaterialCost.channelPlantCost, 0.01)
+
 }
 
 rg.saveToProject = (newRG) => {

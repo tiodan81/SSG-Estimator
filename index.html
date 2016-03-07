@@ -127,35 +127,91 @@
           <label class="fieldname">Plant budget:</label>
           <input type="number" id="rgPlantBudget" placeholder="$$$" required>
 
-          <label class="label-body">Inflow
-            <input type="radio" name="rgInflow" value="channel" required>
-            <span class="label-body">channel</span>
-            <input type="radio" name="rgInflow" value="pipe">
-            <span class="label-body">pipe</span>
-          </label>
+          <div id="rg-inflows">
+            <label class="label-body">Number of inflows
+              <select id="rg-inflow-num">
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+            </label>
 
-          <label id="rgVegInfContainer">
-            <input id="rgVegInflow" type="checkbox">
-            <span class="label-body">Vegetated inflow</span>
-          </label>
+            <div id="rgInflow1-container">
+              <label class="label-body">Inflow 1
+                <input type="radio" name="rgInflow1" value="channel" required>
+                <span class="label-body">channel</span>
+                <input type="radio" name="rgInflow1" value="pipe">
+                <span class="label-body">pipe</span>
+              </label>
 
-          <label class="fieldname">Inflow length:</label>
-          <input type="number" id="rgInfLength" placeholder="ft" required>
+              <label id="rgVegInfContainer1">
+                <input id="rgVegInflow1" type="checkbox">
+                <span class="label-body">Vegetated inflow</span>
+              </label>
 
-          <label class="label-body">Outflow
-            <input type="radio" name="rgOutflow" value="channel" required>
-            <span class="label-body">channel</span>
-            <input type="radio" name="rgOutflow" value="pipe">
-            <span class="label-body">pipe</span>
-          </label>
+              <label class="fieldname">Inflow 1 length:</label>
+              <input type="number" id="rgInfLength1" placeholder="ft" required>
+            </div>
 
-          <label id="rgVegOutContainer">
-            <input id="rgVegOutflow" type="checkbox">
-            <span class="label-body">Vegetated outflow</span>
-          </label>
+            <div id="rgInflow2-container">
+              <label class="label-body">Inflow 2
+                <input type="radio" name="rgInflow2" value="channel">
+                <span class="label-body">channel</span>
+                <input type="radio" name="rgInflow2" value="pipe">
+                <span class="label-body">pipe</span>
+              </label>
 
-          <label class="fieldname">Outflow length:</label>
-          <input type="number" id="rgOutLength" placeholder="ft" required>
+              <label id="rgVegInfContainer2">
+                <input id="rgVegInflow2" type="checkbox">
+                <span class="label-body">Vegetated inflow</span>
+              </label>
+
+              <label class="fieldname">Inflow 2 length:</label>
+              <input type="number" id="rgInfLength1" placeholder="ft">
+            </div>
+
+          </div>
+
+          <div id="rg-outflows">
+            <label class="label-body">Number of outflows
+              <select id="rg-outflow-num">
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+            </label>
+            <div id="rgOutflow1-container">
+              <label class="label-body">Outflow 1
+                <input type="radio" name="rgOutflow1" value="channel" required>
+                <span class="label-body">channel</span>
+                <input type="radio" name="rgOutflow1" value="pipe">
+                <span class="label-body">pipe</span>
+              </label>
+              <label id="rgVegOutContainer1">
+                <input id="rgVegOutflow1" type="checkbox">
+                <span class="label-body">Vegetated outflow</span>
+              </label>
+
+              <label class="fieldname">Outflow 1 length:</label>
+              <input type="number" id="rgOutLength1" placeholder="ft" required>
+            </div>
+
+            <div id="rgOutflow2-container">
+            <label class="label-body">Outflow 2
+              <input type="radio" name="rgOutflow2" value="channel">
+              <span class="label-body">channel</span>
+              <input type="radio" name="rgOutflow2" value="pipe">
+              <span class="label-body">pipe</span>
+            </label>
+
+            <label id="rgVegOutContainer2">
+              <input id="rgVegOutflow2" type="checkbox">
+              <span class="label-body">Vegetated outflow</span>
+            </label>
+
+            <label class="fieldname">Outflow 2 length:</label>
+            <input type="number" id="rgOutLength2" placeholder="ft">
+
+          </div>
+          </div>
 
           <label class="label-body">Sod removal
             <input type="radio" name="rgSod" value="manual" required>
