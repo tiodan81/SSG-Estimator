@@ -6,12 +6,11 @@ rgView.init = () => {
   rgView.infiltDisplay()
   $('#rg-inflow-num').off('change').on('change', rgView.flowQty)
   $('#rg-outflow-num').off('change').on('change', rgView.flowQty)
-  rgView.vegInfDisplay()
-  rgView.vegOutDisplay()
+  $('.rgflowtype').off('click').on('click', rgView.vegDisplay)
   rgView.handleSave()
 }
 
-rgView.infiltDisplay = () => {
+rgView.infiltDisplay = function() {
   $('#infiltKnown').off('click').on('click', function() {
     if (this.checked) {
       $('#rgInfiltContainer').show()
@@ -22,7 +21,6 @@ rgView.infiltDisplay = () => {
 }
 
 rgView.flowQty = function() {
-  console.log($(this).val());
   if ($(this).val() == 2) {
     $(this).parent().siblings('div:last').show()
   } else {
@@ -30,26 +28,13 @@ rgView.flowQty = function() {
   }
 }
 
-rgView.vegInfDisplay = () => {
-  $('input[name=rgInflow]').off('click').on('click', function() {
-    let val = $('input[name=rgInflow]:checked').val()
-    if (val ==='channel') {
-      $('#rgVegInfContainer').show()
-    } else {
-      $('#rgVegInfContainer').hide()
-    }
-  })
-}
-
-rgView.vegOutDisplay = () => {
-  $('input[name=rgOutflow]').off('click').on('click', function() {
-    let val = $('input[name=rgOutflow]:checked').val()
-    if (val ==='channel') {
-      $('#rgVegOutContainer').show()
-    } else {
-      $('#rgVegOutContainer').hide()
-    }
-  })
+rgView.vegDisplay = function() {
+  let $val = $(this).val()
+  if ($val ==='channel') {
+    $(this).parent().siblings('.rgVegContainer').show()
+  } else {
+    $(this).parent().siblings('.rgVegContainer').hide()
+  }
 }
 
 rgView.handleSave = () => {
