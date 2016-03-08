@@ -118,7 +118,7 @@ rgView.makeSummary = (rg) => {
   <tr><th>Item</th><th>Cost</th></tr>
   <tr><td>Labor hours</td><td>${rg.totals.laborHrsTotal}</td></tr>
   <tr><td>Labor cost</td><td>$${rg.totals.laborCostTotal}</td></tr>
-  <tr><td>Materials cost</td><td>$${rg.totals.materialsTotal}</td></tr>
+  <tr><td>Materials cost</td><td>$${rg.totals.materialsCostTotal}</td></tr>
   <tr><td>Tax</td><td>$${rg.totals.tax}</td></tr>
   <tr><td>Total</td><td>$${rg.totals.total}</td></tr>
   `
@@ -137,37 +137,21 @@ rgView.makeLabor = (rg) => {
   <tr data-id="4" data-parent="1"><td>Bioretention</td><td>${lh.baseHrs.bioretenHrs}</td><td>$${lc.baseLaborCost.bioretentionLaborCost}</td></tr>
   <tr data-id="5" data-parent="1"><td>Mulch</td><td>${lh.baseHrs.mulchHrs}</td><td>$${lc.baseLaborCost.mulchLaborCost}</td></tr>
   <tr data-id="6" data-parent="1"><td>Planting</td><td>${lh.baseHrs.plantingHrs}</td><td>$${lc.baseLaborCost.plantingLaborCost}</td></tr>
-  <tr data-id="10" data-parent=""><td>Inflow</td><td>${lh.inflowHrs.total}</td><td>$${lc.inflowLaborCost.total}</td></tr>
+  <tr data-id="10" data-parent=""><td>Inflow 1</td><td>${lh.inflow1Hrs.total}</td><td>$${lc.inflow1LaborCost.total}</td></tr>
   `
-  //will break if rg has channel & pipe in/out
-  if (rg.infType === 'channel') {
-    labor += `
-    <tr data-id="10" data-parent="2"><td>Excavation</td><td>${lh.inflowHrs.excavationHrs}</td><td>$${lc.inflowLaborCost.excavationLaborCost}</td></tr>
-    <tr data-id="11" data-parent="2"><td>Bioretention</td><td>${lh.inflowHrs.bioretenHrs}</td><td>$${lc.inflowLaborCost.bioretentionLaborCost}</td></tr>
-    <tr data-id="12" data-parent="2"><td>Planting</td><td>${lh.inflowHrs.plantingHrs}</td><td>$${lc.inflowLaborCost.plantingLaborCost}</td></tr>
-    <tr data-id="13" data-parent="2"><td>Drain rock</td><td>${lh.inflowHrs.rockHrs}</td><td>$${lc.inflowLaborCost.rockLaborCost}</td></tr>
-    `
-  } else {
-    labor += `<tr data-id="14" data-parent="2"><td>Inflow pipe</td><td>${lh.inflowHrs.pipeHrs}</td><td>$${lc.inflowLaborCost.total}</td></tr>`
-  }
+  if (rg.infNum == 2) {
+    labor += `<tr data-id="11" data-parent=""><td>Inflow 2</td><td>${lh.inflow2Hrs.total}</td><td>$${lc.inflow2LaborCost.total}</td></tr>`
+  } //inf2
+  labor += `<tr data-id="20" data-parent=""><td>Outflow 1</td><td>${lh.outflow1Hrs.total}</td><td>$${lc.outflow1LaborCost.total}</td></tr>`
 
-  labor += `<tr data-id="20" data-parent=""><td>Outflow</td><td>${lh.outflowHrs.total}</td><td>$${lc.outflowLaborCost.total}</td></tr>`
-  if (rg.outType === 'channel') {
-    labor += `
-    <tr data-id="21" data-parent="20"><td>Excavation</td><td>${lh.outflowHrs.excavationHrs}</td><td>$${lc.outflowLaborCost.excavationLaborCost}</td></tr>
-    <tr data-id="22" data-parent="20"><td>Bioretention</td><td>${lh.outflowHrs.bioretenHrs}</td><td>$${lc.outflowLaborCost.bioretentionLaborCost}</td></tr>
-    <tr data-id="23" data-parent="20"><td>Planting</td><td>${lh.outflowHrs.plantingHrs}</td><td>$${lc.outflowLaborCost.plantingLaborCost}</td></tr>
-    <tr data-id="24" data-parent="20"><td>Drain rock</td><td>${lh.outflowHrs.rockHrs}</td><td>$${lc.outflowLaborCost.rockLaborCost}</td></tr>
-    `
-  } else {
-    labor += `<tr data-id="25" data-parent="20"><td>Outflow pipe</td><td>${lh.outflowHrs.pipeHrs}</td><td>$${lc.outflowLaborCost.total}</td></tr>`
-  }
+  if (rg.outNum == 2) {
+    labor += `<tr data-id="21" data-parent=""><td>Outflow 2</td><td>${lh.outflow2Hrs.total}</td><td>$${lc.outflow2LaborCost.total}</td></tr>`
+  } //out2
 
-  labor += `<tr data-id="30" data-parent=""><td>Dispersion</td><td>${lh.dispersionHrs.total}</td><td>$${lc.dispersionLaborCost.total}</td></tr>
-    <tr data-id="31" data-parent="30"><td>Excavation</td><td>${lh.dispersionHrs.excavationHrs}</td><td>$${lc.dispersionLaborCost.excavationLaborCost}</td></tr>
-    <tr data-id="32" data-parent="30"><td>Bioretention</td><td>${lh.dispersionHrs.bioretenHrs}</td><td>$${lc.dispersionLaborCost.bioretentionLaborCost}</td></tr>
-    <tr data-id="34" data-parent="30"><td>Drain rock</td><td>${lh.dispersionHrs.rockHrs}</td><td>$${lc.dispersionLaborCost.rockLaborCost}</td></tr>
-    <tr data-id="40" data-parent=""><td>Total</td><td>${rg.totals.laborHrsTotal}</td><td>$${rg.totals.laborCostTotal}</td></tr>`
+  labor += `
+    <tr data-id="30" data-parent=""><td>Dispersion</td><td>${lh.dispersionHrs.total}</td><td>$${lc.dispersionLaborCost.total}</td></tr>
+    <tr data-id="40" data-parent=""><td>Total</td><td>${rg.totals.laborHrsTotal}</td><td>$${rg.totals.laborCostTotal}</td></tr>
+    `
   return labor
 }
 
