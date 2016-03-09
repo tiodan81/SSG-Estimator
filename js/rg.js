@@ -85,7 +85,7 @@ rg.baseMaterials = (c) => {
   let a = c.area
   return {
     sodVolume:            util.round('ceil', a.footprint / 6 / 27, 0.5),
-    bioretentionVolume:   util.round('ceil', a.baseArea / 27, 0.5),
+    bioretention:         util.round('ceil', a.baseArea / 27, 0.5),
     mulchVolume:          util.round('ceil', a.footprint / 4 / 27, 0.5)
   }
 }
@@ -94,7 +94,7 @@ rg.baseMaterialCost = (c) => {
   let m = c.baseMaterials
   let bmc = {
     sodDumpCost:        rg.calcSodDumpCost(c, m),
-    bioretentionCost:   util.round('round', m.bioretentionVolume * materials.bulk.bioretention, 0.01),
+    bioretentionCost:   util.round('round', m.bioretention * materials.bulk.bioretention, 0.01),
     mulchCost:          util.round('round', m.mulchVolume * materials.bulk.mulch, 0.01),
     cutterCost:         c.sodRmMethod === 'cutter' ? materials.fees.sodCutter : 0,
     truckCost:          c.dumpTruck ? materials.fees.dumpTruck : 0
@@ -116,23 +116,25 @@ rg.plumbingMaterials = (c) => ({
   inflow1Materials:             c.infType1 === 'channel' ? rg.channelMaterials(c.infLen1) : rg.pipeMaterials(c.infLen1, 'in'),
   inflow2Materials:             c.infNum === 2 ? c.infType2 === 'channel' ? rg.channelMaterials(c.infLen2) : rg.pipeMaterials(c.infLen2, 'in') : null,
   outflow1Materials:            c.outType1 === 'channel' ? rg.channelMaterials(c.outLen1) : rg.pipeMaterials(c.outLen1, 'out'),
-  outflow2Materials:            c.outNum === 2 ? c.outType2 === 'channel' ? rg.channelMaterials(c.outLen2) : rg.pipeMaterials(c.outLen2, 'in') : null
+  outflow2Materials:            c.outNum === 2 ? c.outType2 === 'channel' ? rg.channelMaterials(c.outLen2) : rg.pipeMaterials(c.outLen2, 'out') : null
 })
 
 rg.channelMaterials = (len) => {
   let area = Math.round(len * 2)
 
   return {
-    pondlinerArea:  area,
+    pondliner:      area,
     bioretention:   len > 3 ? util.round('ceil', area / 3 / 27, 0.5) : 0.1,
     drainageRock:   len > 3 ? util.round('ceil', area / 3 / 27, 0.5) : 0.1
   }
 }
 
-rg.pipeMaterials = (len, inout) => ({
-  pipe:   inout === 'in' ? '3in' : '4in',
-  length: len
-})
+rg.pipeMaterials = (len, inout) => {
+  let type = inout === 'in' ? 'pvc3In' : 'pvc4In'
+  let obj = {}
+  obj[type] = len
+  return obj
+}
 
 rg.plumbingMaterialCost = (c) => {
   let m = c.plumbingMaterials
@@ -150,22 +152,29 @@ rg.plumbingMaterialCost = (c) => {
 
 rg.channelMaterialCost = (m, veg) => {
   let cmc = {
-    pondlinerCost:    util.round('round', util.materialCost(m.pondlinerArea, materials.fabric.pondliner), 0.01),
+    pondlinerCost:    util.round('round', util.materialCost(m.pondliner, materials.fabric.pondliner), 0.01),
     bioretentionCost: util.round('round', util.materialCost(m.bioretention, materials.bulk.bioretention), 0.01),
     drainageRockCost: util.round('round', util.materialCost(m.drainageRock, materials.bulk.drainageRock), 0.01),
-    channelPlantCost: veg ? util.round('round', util.materialCost(m.pondlinerArea, materials.misc.rgChannelPlanting), 0.01) : 0
+    plantCost: veg ? util.round('round', util.materialCost(m.pondliner, materials.misc.rgChannelPlanting), 0.01) : 0
   }
   cmc.total = util.sumObject(cmc)
   return cmc
 }
 
 rg.pipeMaterialCost = (m) => {
-  let pipe = m.pipe === '3in' ? materials.plumbing.pvc3In : materials.plumbing.pvc4In
-  let cost = util.round('round', util.materialCost(pipe, m.length), 0.01)
-  return {
-    pipeCost: cost,
-    total:    cost
+  let key, type, cost
+  if (m.hasOwnProperty('pvc3In')) {
+    key = 'pvc3InCost'
+    type = materials.plumbing.pvc3In
+    cost = util.round('round', util.materialCost(type, m.pvc3In), 0.01)
+  } else {
+    key = 'pvc4InCost'
+    type = materials.plumbing.pvc4In
+    cost = util.round('round', util.materialCost(type, m.pvc4In), 0.01)
   }
+  let obj = { total: cost }
+  obj[key] = cost
+  return obj
 }
 
 rg.laborHrs = (c) => {
@@ -184,7 +193,7 @@ rg.laborHrs = (c) => {
 rg.baseHrs = (c) => {
   let sodHrs = rg.sodHrs(c.sodRmMethod, c.area.footprint)
   let excavationHrs = util.round('ceil', (c.area.baseArea / 2) + 3, 0.25)
-  let bioretenHrs = Math.round(2 * c.baseMaterials.bioretentionVolume + 1)
+  let bioretenHrs = Math.round(2 * c.baseMaterials.bioretention + 1)
   let mulchHrs = Math.round(2 * c.baseMaterials.mulchVolume + 1)
   let plantingHrs = util.round('ceil', (c.area.footprint / 20) + 4, 0.25)
 
@@ -297,40 +306,19 @@ rg.totals = (c) => {
 }
 
 rg.materialSummary = (c) => {
-  let bio =  c.baseMaterials.bioretentionVolume + c.plumbingMaterials.dispersionChannelMaterials.bioretention
-  let rock = c.plumbingMaterials.drainageRock
-  let pond = c.plumbingMaterials.
-  let bioCost = c.baseMaterialsCost.bioretentionCost + c.plumbingMaterialCost.dispersionMaterialCost.bioretentionCost
-  let rockCost = c.plumbingMaterialCost.drainageRockCost
-  let pondCost =
-  let sodCost = util.round('round', c.baseMaterialCost.cutterCost + c.baseMaterialCost.sodDumpCost, 0.01)
-  let pvc3In = 0,
-  let pvc4In = 0,
-  let pvc3InCost = 0,
-  let pvc4InCost = 0
-
-  if (infType1 === 'channel') {
-    bio += c.plumbingMaterials.inflow1Materials.bioretention
-    rock += c.plumbingMaterials.inflow1Materials.drainageRock
-    pond += c.plumbingMaterials.inflow1Materials.pondlinerArea
-    bioCost += c.plumbingMaterialCost.inflow1MaterialCost.bioretentionCost
-    rockCost += c.plumbingMaterialCost.inflow1MaterialCost.drainageRockCost
-    pondCost += c.plumbingMaterialCost.inflow1MaterialCost.pondlinerCost
-  } else {
-    pvc3In += c.plumbingMaterials.inflow1Materials.length
-    pvc3InCost += c.plumbingMaterialCost.inflow1MaterialCost.total
-  }
-
-
   return {
-    bio:        util.round('round', bio, 0.5)
-    bioCost:
-    rock:
-    rockCost:
-    pond:
-    pondCost:
-    sodCost:
-    plantCost:  util.round('round', rg.plantCost + rg.plumbingMaterialCost.inflow1MaterialCost.channelPlantCost + rg.plumbingMaterialCost.inflow2MaterialCost.channelPlantCost + rg.plumbingMaterialCost.outflow1MaterialCost.channelPlantCost + rg.plumbingMaterialCost.outflow2MaterialCost.channelPlantCost, 0.01)
+    bio: util.round('round', util.plucky('bioretention', c), 0.25),
+    rock: util.round('round', util.plucky('drainageRock', c), 0.25),
+    pond: util.round('round', util.plucky('pondliner', c), 1),
+    bioCost: util.round('round', util.plucky('bioretentionCost', c), 0.01),
+    rockCost: util.round('round', util.plucky('drainageRockCost', c), 0.01),
+    pondCost: util.round('round', util.plucky('pondlinerCost', c), 0.01),
+    sodCost: util.round('round', c.baseMaterialCost.cutterCost + c.baseMaterialCost.sodDumpCost, 0.01),
+    pvc3In: util.round('round', util.plucky('pvc3In', c), 1),
+    pvc4In: util.round('round', util.plucky('pvc4In', c), 1),
+    pvc3InCost: util.round('round', util.plucky('pvc3InCost', c), 0.01),
+    pvc4InCost: util.round('round', util.plucky('pvc4InCost', c), 0.01),
+    plantCost:  util.round('round', util.plucky('plantCost', c), 0.01)
   }
 }
 
