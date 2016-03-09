@@ -286,7 +286,7 @@ rg.totals = (c) => {
   let total = util.round('round', subtotal + tax, 0.01)
 
   return {
-    //plantMaterialTotal:   rg.plantMaterialTotals(c),
+    materialSummary:      rg.materialSummary(c),
     materialsCostTotal:   materialsCost,
     laborCostTotal:       laborCost,
     laborHrsTotal:        laborHrs,
@@ -296,9 +296,42 @@ rg.totals = (c) => {
   }
 }
 
-//what the hell is this? should all plant costs be folded together or channel plants kept separate from base plants?
-rg.plantMaterialTotals = (c) => {
-  return util.round('round', rg.plantCost + rg.plumbingMaterialCost.inflow1MaterialCost.channelPlantCost + rg.plumbingMaterialCost.inflow2MaterialCost.channelPlantCost + rg.plumbingMaterialCost.outflow1MaterialCost.channelPlantCost + rg.plumbingMaterialCost.outflow2MaterialCost.channelPlantCost, 0.01)
+rg.materialSummary = (c) => {
+  let bio =  c.baseMaterials.bioretentionVolume + c.plumbingMaterials.dispersionChannelMaterials.bioretention
+  let rock = c.plumbingMaterials.drainageRock
+  let pond = c.plumbingMaterials.
+  let bioCost = c.baseMaterialsCost.bioretentionCost + c.plumbingMaterialCost.dispersionMaterialCost.bioretentionCost
+  let rockCost = c.plumbingMaterialCost.drainageRockCost
+  let pondCost =
+  let sodCost = util.round('round', c.baseMaterialCost.cutterCost + c.baseMaterialCost.sodDumpCost, 0.01)
+  let pvc3In = 0,
+  let pvc4In = 0,
+  let pvc3InCost = 0,
+  let pvc4InCost = 0
+
+  if (infType1 === 'channel') {
+    bio += c.plumbingMaterials.inflow1Materials.bioretention
+    rock += c.plumbingMaterials.inflow1Materials.drainageRock
+    pond += c.plumbingMaterials.inflow1Materials.pondlinerArea
+    bioCost += c.plumbingMaterialCost.inflow1MaterialCost.bioretentionCost
+    rockCost += c.plumbingMaterialCost.inflow1MaterialCost.drainageRockCost
+    pondCost += c.plumbingMaterialCost.inflow1MaterialCost.pondlinerCost
+  } else {
+    pvc3In += c.plumbingMaterials.inflow1Materials.length
+    pvc3InCost += c.plumbingMaterialCost.inflow1MaterialCost.total
+  }
+
+
+  return {
+    bio:        util.round('round', bio, 0.5)
+    bioCost:
+    rock:
+    rockCost:
+    pond:
+    pondCost:
+    sodCost:
+    plantCost:  util.round('round', rg.plantCost + rg.plumbingMaterialCost.inflow1MaterialCost.channelPlantCost + rg.plumbingMaterialCost.inflow2MaterialCost.channelPlantCost + rg.plumbingMaterialCost.outflow1MaterialCost.channelPlantCost + rg.plumbingMaterialCost.outflow2MaterialCost.channelPlantCost, 0.01)
+  }
 }
 
 rg.saveToProject = (newRG) => {

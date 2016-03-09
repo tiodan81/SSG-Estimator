@@ -167,13 +167,13 @@ rgView.makeMaterials = (rg) => {
 }
 
 // MATERIALS
-//   bioretention = base + disp + inf + out
+//   bioretention = base + disp + inf1 + inf2 + out1 + out2
 //   mulch = base
-//   drain rock = disp + inf + out
-//   pond liner = disp + inf + out
+//   drain rock = disp + inf1/2 + out1/2
+//   pond liner = disp + inf1/2 + out1/2
 //   pipe
-//     3" len
-//     4" len
+//     3" len1/2
+//     4" len1/2
 //   sodRm | method | cutterCost + sodDumpCost
 //   Truck
 //   total
