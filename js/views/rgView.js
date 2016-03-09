@@ -8,6 +8,8 @@ rgView.init = () => {
   $('#rg-outflow-num').off('change').on('change', rgView.flowQty)
   $('.rgflowtype').off('click').on('click', rgView.vegDisplay)
   rgView.handleSave()
+  rgView.handleSelector()
+  rgView.handleNav()
 }
 
 rgView.infiltDisplay = function() {
@@ -50,12 +52,15 @@ rgView.handleSave = () => {
   })
 }
 
-rgView.render = (rg) => {
-  rgView.populateSelector(rg)
-  rgView.makeTables(rg)
+rgView.render = (cur) => {
+  rgView.populateSelector(cur)
+  $('#rg-selector').val(rg.current.id)
+  rgView.makeTables(cur)
   rgView.handleCollapse()
-  //show tables if not shown
-  //pop to summary
+  if ($('#rg-display').css('display') === 'none') {
+    $('#rg-display').show()
+  }
+  rgView.showSummary()
   //show/handle edit buttons
 }
 
@@ -80,6 +85,22 @@ rgView.handleSelector = function() {
       $('#rg-edit-buttons').show()
     }
     rgView.showSummary()
+  })
+}
+
+rgView.handleNav = function() {
+  $('#rg-nav > button').off('click').on('click', function() {
+    let $curNav = $('.button-primary').attr('id').split('-')[2]
+    let $nextNav = $(this).attr('id').split('-')[2]
+    $(this).addClass('button-primary')
+      .siblings().removeClass('button-primary')
+    if ($curNav != $nextNav) {
+      let target = '#rg-table-' + $nextNav
+      $(target).show()
+        .siblings().hide()
+    } else {
+      return
+    }
   })
 }
 

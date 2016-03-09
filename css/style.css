@@ -66,6 +66,19 @@ nav {
 	display: none;
 }
 
+#rg-display {
+	display: none;
+}
+
+#rg-table-labor {
+  display: none;
+}
+
+#rg-table-materials {
+  display: none;
+}
+
+
 #mulch-update {
   display: none;
 }
