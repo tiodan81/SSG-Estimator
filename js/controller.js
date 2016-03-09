@@ -4,7 +4,7 @@ controller.checkLogin = () => {
   let auth = user.isLoggedIn()
   if (auth) {
     user.uid = auth.uid
-    project.getJSON(user.getProjectList)
+    user.getProjectList()
   } else {
     loginView.init()
   }
