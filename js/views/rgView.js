@@ -181,19 +181,19 @@ rgView.makeMaterials = (rg) => {
   let materials = ''
   materials += `
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
-  <tr><td>Planting</td><td>n/a</td><td>${mat.plantCost}</td></tr>
-  <tr><td>Bioretention</td><td>${mat.bio}</td><td>$${mat.bioCost}</td></tr>
-  <tr><td>Mulch</td><td>${rg.baseMaterials.bioretention}</td><td>$${rg.baseMaterialCost.mulchCost}</td></tr>
-  <tr><td>Drain rock</td><td>${mat.rock}</td><td>$${mat.rockCost}</td></tr>
-  <tr><td>Pond liner</td><td>${mat.pond}</td><td>$${mat.pondCost}</td></tr>
+  <tr><td>Planting</td><td>n/a</td><td>$${mat.plantCost}</td></tr>
+  <tr><td>Bioretention</td><td>${mat.bio} yd</td><td>$${mat.bioCost}</td></tr>
+  <tr><td>Mulch</td><td>${rg.baseMaterials.bioretention} yd</td><td>$${rg.baseMaterialCost.mulchCost}</td></tr>
+  <tr><td>Drain rock</td><td>${mat.rock} yd</td><td>$${mat.rockCost}</td></tr>
+  <tr><td>Pond liner</td><td>${mat.pond} ft²</td><td>$${mat.pondCost}</td></tr>
   `
   if (rg.infType1 === 'pipe' || rg.infType2 === 'pipe') {
-    materials += `<tr><td>3" PVC</td><td>${mat.pvc3In}</td><td>$${mat.pvc3InCost}</td></tr>`
+    materials += `<tr><td>3" PVC</td><td>${mat.pvc3In} ft</td><td>$${mat.pvc3InCost}</td></tr>`
   }
   if (rg.outType1 === 'pipe' || rg.outType2 === 'pipe') {
-    materials += `<tr><td>4" PVC</td><td>${mat.pvc4In}</td><td>$${mat.pvc4InCost}</td></tr>`
+    materials += `<tr><td>4" PVC</td><td>${mat.pvc4In} ft</td><td>$${mat.pvc4InCost}</td></tr>`
   }
-  materials += `<tr><td>Sod removal</td><td>${rg.sodRmMethod}</td><td>$${mat.sodCost}</td></tr>`
+  materials += `<tr><td>Sod removal - ${rg.sodRmMethod}</td><td>${rg.baseMaterials.sodVolume} yd</td><td>$${mat.sodCost}</td></tr>`
   if (rg.dumpTruck) {
     materials += `<tr><td>Dump truck</td><td>n/a</td><td>$${rg.baseMaterialsCost.truckCost}</td></tr>`
   }
