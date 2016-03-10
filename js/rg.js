@@ -321,6 +321,16 @@ rg.materialSummary = (c) => {
   }
 }
 
+rg.preventDuplicates = () => {
+  let $id = $('#rgID').val()
+  let $exists = util.findObjInArray($id, project.current.rainGardens.allRGs, 'id').length
+  if ($exists) {
+    return true
+  } else {
+    return false
+  }
+}
+
 rg.saveToProject = (newRG) => {
   if(user.uid && project.current.client) {
     rg.storeLocally(newRG)
@@ -331,8 +341,17 @@ rg.saveToProject = (newRG) => {
 }
 
 rg.storeLocally = (newRG) => {
-  let cur = project.current.rainGardens
-  cur.allRGs.push(newRG)
+  let cur = project.current.rainGardens.allRGs
+  let $exists = util.findObjInArray(newRG.id, cur, 'id')
+  if($exists.length) {
+    cur.forEach((c,i) => {
+      if(newRG.id === c.id) {
+        cur[i] = newRG
+      }
+    })
+  } else {
+    cur.push(newRG)
+  }
   //rg.updateUberRG(newRG)
   rg.current = newRG
 }

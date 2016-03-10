@@ -30,10 +30,10 @@ rgController.init = () => {
   rgView.init()
 }
 
-rgController.makeNew = () => {
-  let infKnown = $('#infiltKnown:checked').length ? true : false
+rgController.save = () => {
+  let $infKnown = $('#infiltKnown:checked').length ? true : false
 
-  if (infKnown) {
+  if ($infKnown) {
     let newRG = rg.buildRG()
     let m = rg.getMultiplier(newRG)
     rg.allCalcs(newRG, m)
@@ -49,7 +49,8 @@ rgController.makeNew = () => {
     let lowRG = rg.allCalcs(low, mLow)
     highRG.lowEstimate = lowRG
     rg.saveToProject(highRG)
-    //allCalcs high & low. or something
+    rg.render(highRG)
+    //render low somehow?
   }
 }
 

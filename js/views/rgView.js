@@ -44,10 +44,17 @@ rgView.handleSave = () => {
     e.preventDefault()
     let $val = $('#rg-save').val()
     if ($val === 'save') {
-      rgController.makeNew()
+      let dupe = rg.preventDuplicates()
+      if (dupe) {
+        alert('That id has already been used. Please choose a different id.')
+        return false
+      }
+      rgController.save()
       rgView.clearForm()
     } else if ($val === 'update') {
-      //do the update stuff
+      rgController.save()
+      rgView.clearForm()
+      $('#rg-save').val('save')
     }
   })
 }
@@ -140,7 +147,6 @@ rgView.handleDelete = function() {
     })
     $('rg-selector > option[value="' + old.id + '"]').remove()
     //rg.updateUberRG()
-    project.updateComponent(project.current, 'rainGardens')
     if (all.length) {
       rg.current = all[0]
       $('#rg-selector').val(rg.current.id)
@@ -149,8 +155,10 @@ rgView.handleDelete = function() {
       rgView.editButtons()
     } else {
       rg.current = {}
+      project.current.rainGardens = { allRGs: [], uberRG:{} }
       $('#rg-display').hide()
     }
+    project.updateComponent(project.current, 'rainGardens')
   })
 }
 
@@ -158,7 +166,7 @@ rgView.populateForm = function(cur) {
   //need to show/display appropriate fields for infilt, inout2
   $('#rgID').val(cur.id)
   $('#roofArea').val(cur.roof)
-  $('#infiltKnown').prop('checked', cur.infiltKnown)
+  $('#infiltKnown').prop('checked', cur.infKnown)
   $('#rgInfiltRate').val(cur.infRate)
   $('#rgPlantBudget').val(cur.plantCost)
   $('#rg-inflow-num').val(cur.infNum)
