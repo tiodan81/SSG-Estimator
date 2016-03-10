@@ -40,12 +40,12 @@ rgView.vegDisplay = function() {
 }
 
 rgView.handleSave = () => {
-  $('#rgForm').off('submit').on('submit', function(e) {
+  $('#rg-form').off('submit').on('submit', function(e) {
     e.preventDefault()
     let $val = $('#rg-save').val()
     if ($val === 'save') {
       rgController.makeNew()
-      viewUtil.clearForm()
+      rgView.clearForm()
     } else if ($val === 'update') {
       //do the update stuff
     }
@@ -61,7 +61,7 @@ rgView.render = (cur) => {
     $('#rg-display').show()
   }
   rgView.showSummary()
-  //show/handle edit buttons
+  rgView.editButtons()
 }
 
 rgView.populateSelector = (cur) => {
@@ -106,12 +106,87 @@ rgView.handleNav = function() {
 
 rgView.showSummary = function() {
   let $selected = $('.button-primary').attr('id').split('-')[2]
+  console.log($selected);
   if ($selected != 'summary') {
     $('#rg-nav-summary').addClass('button-primary')
     .siblings().removeClass('button-primary')
     $('#rg-table-summary').show()
     .siblings().hide()
   }
+}
+
+rgView.editButtons = function() {
+  $('#rg-edit-buttons').show()
+  rgView.handleEdit()
+  rgView.handleDelete()
+}
+
+rgView.handleEdit = function() {
+  $('#rg-edit-buttons .icon-pencil2').off('click').on('click', function(e) {
+    //e.preventDefault()
+    rgView.populateForm(rg.current)
+    $('#rg-save').val('update')
+  })
+}
+
+rgView.handleDelete = function() {
+  $('#rg-edit-buttons .icon-bin2').off('click').on('click', function() {
+    let old = rg.current
+    let all = project.current.rainGardens.allRGs
+    all.forEach((e, i) => {
+      if (e.id === old.id) {
+        all.splice(i, 1)
+      }
+    })
+    $('rg-selector > option[value="' + old.id + '"]').remove()
+    //rg.updateUberRG()
+    project.updateComponent(project.current, 'rainGardens')
+    if (all.length) {
+      rg.current = all[0]
+      $('#rg-selector').val(rg.current.id)
+      rgView.makeTables(rg.current)
+      rgView.showSummary()
+      rgView.editButtons()
+    } else {
+      rg.current = {}
+      $('#rg-display').hide()
+    }
+  })
+}
+
+rgView.populateForm = function(cur) {
+  //need to show/display appropriate fields for infilt, inout2
+  $('#rgID').val(cur.id)
+  $('#roofArea').val(cur.roof)
+  $('#infiltKnown').prop('checked', cur.infiltKnown)
+  $('#rgInfiltRate').val(cur.infRate)
+  $('#rgPlantBudget').val(cur.plantCost)
+  $('#rg-inflow-num').val(cur.infNum)
+  $('input[name="rgInflow1"][value="' + cur.infType1 + '"]').prop('checked', true)
+  $('#rgVegInflow1').prop('checked', cur.infVeg1)
+  $('#rgInfLength1').val(cur.infLen1)
+  $('input[name="rgInflow2"][value="' + cur.infType2 + '"]').prop('checked', true)
+  $('#rgVegInflow2').prop('checked', cur.infVeg2)
+  $('#rgInfLength2').val(cur.infLen2)
+  $('#rg-outflow-num').val(cur.outNum)
+  $('input[name="rgOutflow1"][value="' + cur.outType1 + '"]').prop('checked', true)
+  $('#rgVegOutflow1').prop('checked', cur.outVeg1)
+  $('#rgOutLength1').val(cur.outLen1)
+  $('input[name="rgOutflow2"][value="' + cur.outType2 + '"]').prop('checked', true)
+  $('#rgVegOutflow2').prop('checked', cur.outVeg2)
+  $('#rgOutLength2').val(cur.outLen2)
+  $('#fedByCistern').prop('checked', cur.fedByCistern)
+  $('input[name="rgSod"][value="' + cur.sodRmMethod + '"]').prop('checked', true)
+  $('#rgDumpTruck').prop('checked', cur.dumpTruck)
+}
+
+rgView.clearForm = function() {
+  console.log('clearing')
+  $('#rg-form input[type="text"]').val('')
+  $('#rg-form input[type="number"]').val('')
+  $('#rg-form input[type="checkbox"]').prop('checked', false)
+  $('#rg-form input[type="radio"]').prop('checked', false)
+  $('#rg-form input[type="select"]').val('1')
 }
 
 rgView.handleCollapse = function() {
@@ -195,7 +270,7 @@ rgView.makeMaterials = (rg) => {
   }
   materials += `<tr><td>Sod removal - ${rg.sodRmMethod}</td><td>${rg.baseMaterials.sodVolume} yd</td><td>$${mat.sodCost}</td></tr>`
   if (rg.dumpTruck) {
-    materials += `<tr><td>Dump truck</td><td>n/a</td><td>$${rg.baseMaterialsCost.truckCost}</td></tr>`
+    materials += `<tr><td>Dump truck</td><td>n/a</td><td>$${rg.baseMaterialCost.truckCost}</td></tr>`
   }
   materials += `<tr><td>Total</td><td></td><td>$${rg.totals.materialsCostTotal}</td></tr>`
   return materials

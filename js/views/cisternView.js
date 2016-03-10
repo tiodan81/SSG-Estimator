@@ -207,7 +207,7 @@ cisternView.editButtons = function() {
 
 cisternView.handleEdit = function() {
   $('#cistern-edit-buttons .icon-pencil2').off('click').on('click', function(e) {
-    e.preventDefault()
+    //e.preventDefault()
     let cur = cistern.current
     cisternView.populateForm(cur)
     $('#cistern-add').hide()
