@@ -5,7 +5,7 @@ var project = {
   current: {}
 }
 
-project.getJSON = function(callback) {
+project.getJSON = function() {
   $.getJSON('/data/cisternModels.json', function(data) {
     cistern.tankModels = data
   })
@@ -14,7 +14,6 @@ project.getJSON = function(callback) {
       materials = data
     })
   }
-  callback()
 }
 
 project.maker = function(client, city, labor, mkup, owner) {
@@ -53,8 +52,6 @@ project.create = function(newProject) {
   user.setProjectOwner(newProject)
   project.allProjects.push(newProject)
   project.current = newProject
-  viewUtil.clearForm()
-  indexView.populateSelector(newProject)
   indexView.render(newProject)
 }
 

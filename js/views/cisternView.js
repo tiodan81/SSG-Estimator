@@ -13,7 +13,6 @@ cisternView.init = function() {
 }
 
 cisternView.displayExisting = function() {
-  let $display = $('#cistern-display')
   if (cistern.allCisterns.length) {
     $('#cistern-selector').empty()
     cistern.allCisterns.forEach(function(e) {
@@ -168,7 +167,6 @@ cisternView.makeMaterials = function(cur) {
   materials += `
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
   <tr><td>Tank</td><td>1</td><td>$${cur.salePrice}</td></tr>
-  <tr><td>Gutter</td><td>${cur.gutter}ft</td><td>$${cur.gutterCost}</td></tr>
   <tr><td>Paverbase</td><td>${cur.paverbase}yd</td><td>$${cur.paverbaseCost}</td></tr>
   `
   if (cur.manorStones != 0) {
@@ -209,7 +207,7 @@ cisternView.editButtons = function() {
 
 cisternView.handleEdit = function() {
   $('#cistern-edit-buttons .icon-pencil2').off('click').on('click', function(e) {
-    e.preventDefault()
+    //e.preventDefault()
     let cur = cistern.current
     cisternView.populateForm(cur)
     $('#cistern-add').hide()

@@ -106,7 +106,7 @@
 
         <h3>Add a rain garden</h3>
 
-        <form id="rgForm">
+        <form id="rg-form">
 
           <label class="fieldname">ID:</label>
           <input type="text" id="rgID" placeholder="rain garden name" required>
@@ -121,41 +121,96 @@
 
           <div id="rgInfiltContainer">
             <label class="fieldname">Infiltration rate:</label>
-            <input type="number" id="rgInfiltRate" placeholder="in/hr">
+            <input type="number" id="rgInfiltRate" step="0.01" placeholder="in/hr">
           </div>
 
           <label class="fieldname">Plant budget:</label>
           <input type="number" id="rgPlantBudget" placeholder="$$$" required>
 
-          <label class="label-body">Inflow
-            <input type="radio" name="rgInflow" value="channel" required>
-            <span class="label-body">channel</span>
-            <input type="radio" name="rgInflow" value="pipe">
-            <span class="label-body">pipe</span>
-          </label>
+          <div id="rg-inflows">
+            <label class="label-body">Number of inflows
+              <select id="rg-inflow-num">
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+            </label>
 
-          <label id="rgVegInfContainer">
-            <input id="rgVegInflow" type="checkbox">
-            <span class="label-body">Vegetated inflow</span>
-          </label>
+            <div id="rgInflow1-container">
+              <label class="label-body">Inflow 1
+                <input class="rgflowtype" type="radio" name="rgInflow1" value="channel" required>
+                <span class="label-body">channel</span>
+                <input class="rgflowtype" type="radio" name="rgInflow1" value="pipe">
+                <span class="label-body">pipe</span>
+              </label>
 
-          <label class="fieldname">Inflow length:</label>
-          <input type="number" id="rgInfLength" placeholder="ft" required>
+              <label class="rgVegContainer">
+                <input id="rgVegInflow1" type="checkbox">
+                <span class="label-body">Vegetated inflow</span>
+              </label>
 
-          <label class="label-body">Outflow
-            <input type="radio" name="rgOutflow" value="channel" required>
-            <span class="label-body">channel</span>
-            <input type="radio" name="rgOutflow" value="pipe">
-            <span class="label-body">pipe</span>
-          </label>
+              <label class="fieldname">Inflow 1 length:</label>
+              <input type="number" id="rgInfLength1" placeholder="ft" required>
+            </div>
 
-          <label id="rgVegOutContainer">
-            <input id="rgVegOutflow" type="checkbox">
-            <span class="label-body">Vegetated outflow</span>
-          </label>
+            <div id="rgInflow2-container">
+              <label class="label-body">Inflow 2
+                <input class="rgflowtype" type="radio" name="rgInflow2" value="channel">
+                <span class="label-body">channel</span>
+                <input class="rgflowtype" type="radio" name="rgInflow2" value="pipe">
+                <span class="label-body">pipe</span>
+              </label>
 
-          <label class="fieldname">Outflow length:</label>
-          <input type="number" id="rgOutLength" placeholder="ft" required>
+              <label class="rgVegContainer">
+                <input id="rgVegInflow2" type="checkbox">
+                <span class="label-body">Vegetated inflow</span>
+              </label>
+
+              <label class="fieldname">Inflow 2 length:</label>
+              <input type="number" id="rgInfLength2" placeholder="ft">
+            </div>
+
+          </div>
+
+          <div id="rg-outflows">
+            <label class="label-body">Number of outflows
+              <select id="rg-outflow-num">
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+            </label>
+            <div id="rgOutflow1-container">
+              <label class="label-body">Outflow 1
+                <input class="rgflowtype" type="radio" name="rgOutflow1" value="channel" required>
+                <span class="label-body">channel</span>
+                <input class="rgflowtype" type="radio" name="rgOutflow1" value="pipe">
+                <span class="label-body">pipe</span>
+              </label>
+              <label class="rgVegContainer">
+                <input id="rgVegOutflow1" type="checkbox">
+                <span class="label-body">Vegetated outflow</span>
+              </label>
+
+              <label class="fieldname">Outflow 1 length:</label>
+              <input type="number" id="rgOutLength1" placeholder="ft" required>
+            </div>
+
+            <div id="rgOutflow2-container">
+              <label class="label-body">Outflow 2
+                <input class="rgflowtype" type="radio" name="rgOutflow2" value="channel">
+                <span class="label-body">channel</span>
+                <input class="rgflowtype" type="radio" name="rgOutflow2" value="pipe">
+                <span class="label-body">pipe</span>
+              </label>
+
+              <label class="rgVegContainer">
+                <input id="rgVegOutflow2" type="checkbox">
+                <span class="label-body">Vegetated outflow</span>
+              </label>
+
+              <label class="fieldname">Outflow 2 length:</label>
+              <input type="number" id="rgOutLength2" placeholder="ft">
+            </div>
+          </div>
 
           <label class="label-body">Sod removal
             <input type="radio" name="rgSod" value="manual" required>
@@ -179,8 +234,27 @@
           <input id="rg-save" type="submit" value="save">
 
         </form>
-        <section id="rgDisplay">
 
+        <section id="rg-display">
+          <h3>Rain Gardens</h3>
+          <div>
+            <select id="rg-selector">
+            </select>
+          </div>
+          <div id="rg-edit-buttons">
+            <span class="icon-pencil2"></span>
+            <span class="icon-bin2"></span>
+          </div>
+          <ul id="rg-nav">
+            <button id="rg-nav-summary" class="button-primary">Summary</button>
+            <button id="rg-nav-labor">Labor</button>
+            <button id="rg-nav-materials">Materials</button>
+          </ul>
+          <div id="rg-tables">
+            <table id="rg-table-summary"></table>
+            <table id="rg-table-labor" class="collaptable"></table>
+            <table id="rg-table-materials" class="collaptable"></table>
+          </div>
         </section>
       </section>
 
@@ -322,6 +396,7 @@
             <button id="cistern-update">Update Tank</button>
           </div>
         </form>
+
         <section id="cistern-display">
           <h3>Cisterns</h3>
           <div class="fe">
@@ -345,6 +420,7 @@
     </main>
 
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="/js/vendor/jquery.aCollapTable.js"></script>
     <script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
     <script type="text/javascript" src="/js/vendor/page.js"></script>
     <!-- MODELS -->

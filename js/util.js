@@ -30,3 +30,15 @@ util.sumObject = (obj) => {
                   return sum + obj[key]
                 }, 0)
 }
+
+util.plucky = function (key, obj) {
+  var sum = 0
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop) && key === prop) {
+      sum += obj[prop]
+    } else if (Object.prototype.toString.call(obj[prop]) === '[object Object]') {
+      sum += util.plucky(key, obj[prop])
+    }
+  }
+  return sum
+}

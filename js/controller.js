@@ -4,7 +4,7 @@ controller.checkLogin = () => {
   let auth = user.isLoggedIn()
   if (auth) {
     user.uid = auth.uid
-    project.getJSON(user.getProjectList)
+    user.getProjectList()
   } else {
     loginView.init()
   }
@@ -30,16 +30,16 @@ rgController.init = () => {
   rgView.init()
 }
 
-rgController.makeNew = () => {
-  let infKnown = $('#infiltKnown:checked').length ? true : false
+rgController.save = () => {
+  let $infKnown = $('#infiltKnown:checked').length ? true : false
 
-  if (infKnown) {
+  if ($infKnown) {
     let newRG = rg.buildRG()
     let m = rg.getMultiplier(newRG)
     rg.allCalcs(newRG, m)
     console.log(newRG);
     rg.saveToProject(newRG)
-    //rgView.render(newRG)
+    rgView.render(newRG)
   } else {
     let high = rg.buildRG()
     let mHigh = rg.getMultiplier(high, 1)
@@ -49,7 +49,8 @@ rgController.makeNew = () => {
     let lowRG = rg.allCalcs(low, mLow)
     highRG.lowEstimate = lowRG
     rg.saveToProject(highRG)
-    //allCalcs high & low. or something
+    rg.render(highRG)
+    //render low somehow?
   }
 }
 

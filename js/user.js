@@ -86,8 +86,11 @@ user.getProjectList = function() {
 
     return Promise.all(loadingProjects)
   }).then(function() {
-    project.current = project.allProjects[0]
-    project.populate(project.current)
+    if (project.allProjects.length) {
+      project.current = project.allProjects[0]
+      project.populate(project.current)
+    }
+    project.getJSON()
     indexView.init()
     loginView.showLogoutNav()
   })

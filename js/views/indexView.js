@@ -30,6 +30,8 @@ indexView.handleProjectForm = function() {
 indexView.render = function(project) {
   $('#projectForm').hide()
     .siblings().show()
+  viewUtil.clearForm()
+  indexView.populateSelector(project)
   $('#project-selector').val(project.client)
   $('#project-summary').html(indexView.makeTable(project))
 }

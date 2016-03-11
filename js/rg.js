@@ -9,18 +9,29 @@ rg.rgMaker = function(rg) {
 }
 
 rg.buildRG = () => {
+  let inNum = +($('#rg-inflow-num').val())
+  let outNum = +($('#rg-outflow-num').val())
+
   return new rg.rgMaker({
     id:           $('#rgID').val(),
     roof:         +($('#roofArea').val()),
     infKnown:     $('#infiltKnown:checked').length ? true : false,
     infRate:      +($('#rgInfiltRate').val()),
     plantCost:    +($('#rgPlantBudget').val()),
-    infType:      $('input[name=rgInflow]:checked').val(),
-    infVeg:       $('#rgVegInflow:checked').length ? true : false,
-    infLen:       +($('#rgInfLength').val()),
-    outType:      $('input[name=rgOutflow]:checked').val(),
-    outVeg:       $('#rgVegOutflow:checked').length ? true : false,
-    outLen:       +($('#rgOutLength').val()),
+    infNum:       inNum,
+    infType1:     $('input[name=rgInflow1]:checked').val(),
+    infVeg1:      $('#rgVegInflow1:checked').length ? true : false,
+    infLen1:      +($('#rgInfLength1').val()),
+    infType2:     inNum == 2 ? $('input[name=rgInflow2]:checked').val() : null,
+    infVeg2:      inNum == 2 ? $('#rgVegInflow2:checked').length ? true : false : null,
+    infLen2:      inNum == 2 ? +($('#rgInfLength2').val()): null,
+    outNum:       outNum,
+    outType1:     $('input[name=rgOutflow1]:checked').val(),
+    outVeg1:      $('#rgVegOutflow1:checked').length ? true : false,
+    outLen1:      +($('#rgOutLength1').val()),
+    outType2:     outNum == 2 ? $('input[name=rgOutflow2]:checked').val() : null,
+    outVeg2:      outNum == 2 ? $('#rgVegOutflow2:checked').length ? true : false : null,
+    outLen2:      outNum == 2 ? +($('#rgOutLength2').val()) : null,
     fedByCistern: $('#fedByCistern:checked').length ? true : false,
     sodRmMethod:  $('input[name=rgSod]:checked').val(),
     dumpTruck:    $('#rgDumpTruck:checked').length ? true : false
@@ -74,7 +85,7 @@ rg.baseMaterials = (c) => {
   let a = c.area
   return {
     sodVolume:            util.round('ceil', a.footprint / 6 / 27, 0.5),
-    bioretentionVolume:   util.round('ceil', a.baseArea / 27, 0.5),
+    bioretention:         util.round('ceil', a.baseArea / 27, 0.5),
     mulchVolume:          util.round('ceil', a.footprint / 4 / 27, 0.5)
   }
 }
@@ -83,7 +94,7 @@ rg.baseMaterialCost = (c) => {
   let m = c.baseMaterials
   let bmc = {
     sodDumpCost:        rg.calcSodDumpCost(c, m),
-    bioretentionCost:   util.round('round', m.bioretentionVolume * materials.bulk.bioretention, 0.01),
+    bioretentionCost:   util.round('round', m.bioretention * materials.bulk.bioretention, 0.01),
     mulchCost:          util.round('round', m.mulchVolume * materials.bulk.mulch, 0.01),
     cutterCost:         c.sodRmMethod === 'cutter' ? materials.fees.sodCutter : 0,
     truckCost:          c.dumpTruck ? materials.fees.dumpTruck : 0
@@ -102,55 +113,67 @@ rg.calcSodDumpCost = (c, m) => {
 
 rg.plumbingMaterials = (c) => ({
   dispersionChannelMaterials:   c.roof < 1000 ? rg.channelMaterials(3) : rg.channelMaterials(6),
-  inflowMaterials:              c.infType === 'channel' ? rg.channelMaterials(c.infLen) : rg.pipeMaterials(c.infLen, 'in'),
-  outflowMaterials:             c.outType === 'channel' ? rg.channelMaterials(c.outLen) : rg.pipeMaterials(c.outLen, 'out')
+  inflow1Materials:             c.infType1 === 'channel' ? rg.channelMaterials(c.infLen1) : rg.pipeMaterials(c.infLen1, 'in'),
+  inflow2Materials:             c.infNum === 2 ? c.infType2 === 'channel' ? rg.channelMaterials(c.infLen2) : rg.pipeMaterials(c.infLen2, 'in') : null,
+  outflow1Materials:            c.outType1 === 'channel' ? rg.channelMaterials(c.outLen1) : rg.pipeMaterials(c.outLen1, 'out'),
+  outflow2Materials:            c.outNum === 2 ? c.outType2 === 'channel' ? rg.channelMaterials(c.outLen2) : rg.pipeMaterials(c.outLen2, 'out') : null
 })
 
 rg.channelMaterials = (len) => {
   let area = Math.round(len * 2)
 
   return {
-    pondlinerArea:  area,
+    pondliner:      area,
     bioretention:   len > 3 ? util.round('ceil', area / 3 / 27, 0.5) : 0.1,
     drainageRock:   len > 3 ? util.round('ceil', area / 3 / 27, 0.5) : 0.1
   }
 }
 
-rg.pipeMaterials = (len, inout) => ({
-  pipe:   inout === 'in' ? '3in' : '4in',
-  length: len
-})
+rg.pipeMaterials = (len, inout) => {
+  let type = inout === 'in' ? 'pvc3In' : 'pvc4In'
+  let obj = {}
+  obj[type] = len
+  return obj
+}
 
 rg.plumbingMaterialCost = (c) => {
-  console.log(c);
   let m = c.plumbingMaterials
   let pmc = {
     dispersionMaterialCost:   rg.channelMaterialCost(m.dispersionChannelMaterials),
-    inflowMaterialCost:       c.infType === 'channel' ? rg.channelMaterialCost(m.inflowMaterials, c.infVeg) : rg.pipeMaterialCost(m.inflowMaterials),
-    outflowMaterialCost:      c.outType === 'channel' ? rg.channelMaterialCost(m.outflowMaterials, c.outVeg) : rg.pipeMaterialCost(m.outflowMaterials)
+    inflow1MaterialCost:      c.infType1 === 'channel' ? rg.channelMaterialCost(m.inflow1Materials, c.infVeg1) : rg.pipeMaterialCost(m.inflow1Materials),
+    inflow2MaterialCost:      c.infNum === 2 ? c.infType2 === 'channel' ? rg.channelMaterialCost(m.inflow2Materials, c.infVeg2) : rg.pipeMaterialCost(m.inflow2Materials) : {total: 0},
+    outflow1MaterialCost:     c.outType1 === 'channel' ? rg.channelMaterialCost(m.outflow1Materials, c.outVeg1) : rg.pipeMaterialCost(m.outflow1Materials),
+    outflow2MaterialCost:     c.outNum === 2 ? c.outType2 === 'channel' ? rg.channelMaterialCost(m.outflow2Materials, c.outVeg2) : rg.pipeMaterialCost(m.outflow2Materials) : {total: 0}
   }
-  pmc.total = util.round('round', pmc.dispersionMaterialCost.total + pmc.inflowMaterialCost.total + pmc.outflowMaterialCost.total ,0.01)
+  pmc.total = util.round('round', pmc.dispersionMaterialCost.total + pmc.inflow1MaterialCost.total + pmc.inflow2MaterialCost.total + pmc.outflow1MaterialCost.total + pmc.outflow2MaterialCost.total ,0.01)
   return pmc
 }
 
 rg.channelMaterialCost = (m, veg) => {
   let cmc = {
-    pondlinerCost:    util.round('round', util.materialCost(m.pondlinerArea, materials.fabric.pondliner), 0.01),
+    pondlinerCost:    util.round('round', util.materialCost(m.pondliner, materials.fabric.pondliner), 0.01),
     bioretentionCost: util.round('round', util.materialCost(m.bioretention, materials.bulk.bioretention), 0.01),
     drainageRockCost: util.round('round', util.materialCost(m.drainageRock, materials.bulk.drainageRock), 0.01),
-    channelPlantCost: veg ? util.round('round', util.materialCost(m.pondlinerArea, materials.misc.rgChannelPlanting), 0.01) : 0
+    plantCost: veg ? util.round('round', util.materialCost(m.pondliner, materials.misc.rgChannelPlanting), 0.01) : 0
   }
   cmc.total = util.sumObject(cmc)
   return cmc
 }
 
 rg.pipeMaterialCost = (m) => {
-  let pipe = m.pipe === '3in' ? materials.plumbing.pvc3In : materials.plumbing.pvc4In
-  let cost = util.round('round', util.materialCost(pipe, m.length), 0.01)
-  return {
-    pipeCost: cost,
-    total:    cost
+  let key, type, cost
+  if (m.hasOwnProperty('pvc3In')) {
+    key = 'pvc3InCost'
+    type = materials.plumbing.pvc3In
+    cost = util.round('round', util.materialCost(type, m.pvc3In), 0.01)
+  } else {
+    key = 'pvc4InCost'
+    type = materials.plumbing.pvc4In
+    cost = util.round('round', util.materialCost(type, m.pvc4In), 0.01)
   }
+  let obj = { total: cost }
+  obj[key] = cost
+  return obj
 }
 
 rg.laborHrs = (c) => {
@@ -159,15 +182,17 @@ rg.laborHrs = (c) => {
   return {
     baseHrs:        rg.baseHrs(c),
     dispersionHrs:  rg.channelHrs(m.dispersionChannelMaterials, 3, false),
-    inflowHrs:      c.infType === 'channel' ? rg.channelHrs(m.inflowMaterials, c.infLen, c.infVeg) : rg.pipeHrs(c.infLen),
-    outflowHrs:     c.outType === 'channel' ? rg.channelHrs(m.outflowMaterials, c.outLen, c.outVeg) : rg.pipeHrs(c.outLen)
+    inflow1Hrs:     c.infType1 === 'channel' ? rg.channelHrs(m.inflow1Materials, c.infLen1, c.infVeg1) : rg.pipeHrs(c.infLen1),
+    inflow2Hrs:     c.infNum === 2 ? c.infType2 === 'channel' ? rg.channelHrs(m.inflow2Materials, c.infLen2, c.infVeg2) : rg.pipeHrs(c.infLen2) : {total: 0},
+    outflow1Hrs:    c.outType1 === 'channel' ? rg.channelHrs(m.outflow1Materials, c.outLen1, c.outVeg1) : rg.pipeHrs(c.outLen1),
+    outflow2Hrs:    c.outNum === 2 ? c.outType2 === 'channel' ? rg.channelHrs(m.outflow2Materials, c.outLen2, c.outVeg2) : rg.pipeHrs(c.outLen2) : {total: 0}
   }
 }
 
 rg.baseHrs = (c) => {
   let sodHrs = rg.sodHrs(c.sodRmMethod, c.area.footprint)
   let excavationHrs = util.round('ceil', (c.area.baseArea / 2) + 3, 0.25)
-  let bioretenHrs = Math.round(2 * c.baseMaterials.bioretentionVolume + 1)
+  let bioretenHrs = Math.round(2 * c.baseMaterials.bioretention + 1)
   let mulchHrs = Math.round(2 * c.baseMaterials.mulchVolume + 1)
   let plantingHrs = util.round('ceil', (c.area.footprint / 20) + 4, 0.25)
 
@@ -198,11 +223,11 @@ rg.channelHrs = (mat, len, veg) => {
   let rockHrs = mat.drainageRock + 1
 
   return {
-    excavationHrs: excavationHrs,
-    bioretenHrs: bioretenHrs,
-    plantingHrs: plantingHrs,
-    rockHrs: rockHrs,
-    total: util.round('ceil', excavationHrs + bioretenHrs + plantingHrs + rockHrs, 0.25)
+    excavationHrs:  excavationHrs,
+    bioretenHrs:    bioretenHrs,
+    plantingHrs:    plantingHrs,
+    rockHrs:        rockHrs,
+    total:          util.round('ceil', excavationHrs + bioretenHrs + plantingHrs + rockHrs, 0.25)
   }
 }
 
@@ -214,14 +239,18 @@ rg.pipeHrs = (len) => ({
 rg.laborCost = (c) => {
   let base = c.laborHrs.baseHrs
   let disp = c.laborHrs.dispersionHrs
-  let inf = c.laborHrs.inflowHrs
-  let out = c.laborHrs.outflowHrs
+  let inf1 = c.laborHrs.inflow1Hrs
+  let inf2 = c.infNum === 2 ? c.laborHrs.inflow2Hrs : 0
+  let out1 = c.laborHrs.outflow1Hrs
+  let out2 = c.outNum === 2 ? c.laborHrs.outflow2Hrs : 0
 
   let lc = {
     baseLaborCost:          rg.baseLaborCost(base),
     dispersionLaborCost:    rg.channelLaborCost(disp),
-    inflowLaborCost:        Object.keys(inf).length === 5 ? rg.channelLaborCost(inf) : rg.pipeLaborCost(inf),
-    outflowLaborCost:       Object.keys(out).length === 5 ? rg.channelLaborCost(out) : rg.pipeLaborCost(out)
+    inflow1LaborCost:       c.infType1 === 'channel' ? rg.channelLaborCost(inf1) : rg.pipeLaborCost(inf1),
+    inflow2LaborCost:       inf2 != 0 ? c.infType2 === 'channel' ? rg.channelLaborCost(inf2) : rg.pipeLaborCost(inf2) : {total: 0},
+    outflow1LaborCost:      c.outType1 === 'channel' ? rg.channelLaborCost(out1) : rg.pipeLaborCost(out1),
+    outflow2LaborCost:      out2 != 0 ? c.outType2 === 'channel' ? rg.channelLaborCost(out2) : rg.pipeLaborCost(out2) : {total: 0}
   }
   return lc
 }
@@ -254,20 +283,51 @@ rg.pipeLaborCost = (pipe) => ({
 })
 
 rg.totals = (c) => {
-  let materials = util.round('round', c.baseMaterialCost.total + c.plumbingMaterialCost.total, 0.01)
-  let laborCost = util.round('round', c.laborCost.baseLaborCost.total + c.laborCost.dispersionLaborCost.total + c.laborCost.inflowLaborCost.total + c.laborCost.outflowLaborCost.total, 0.01)
-  let laborHrs = util.round('ceil', c.laborHrs.baseHrs.total + c.laborHrs.dispersionHrs.total + c.laborHrs.inflowHrs.total + c.laborHrs.outflowHrs.total, 0.25)
-  let subtotal = util.round('round', materials + laborCost, 0.01)
+  let lc = c.laborCost
+  let lh = c.laborHrs
+
+  let materialsCost = util.round('round', c.baseMaterialCost.total + c.plumbingMaterialCost.total + c.plantCost, 0.01)
+  let laborCost = util.round('round', lc.baseLaborCost.total + lc.dispersionLaborCost.total + lc.inflow1LaborCost.total + lc.inflow2LaborCost.total + lc.outflow1LaborCost.total + lc.outflow2LaborCost.total, 0.01)
+  let laborHrs = util.round('ceil', lh.baseHrs.total + lh.dispersionHrs.total + lh.inflow1Hrs.total + lh.inflow2Hrs.total + lh.outflow1Hrs.total + lh.outflow2Hrs.total, 0.25)
+  let subtotal = util.round('round', materialsCost + laborCost, 0.01)
   let tax = util.round('round', util.salesTax(subtotal), 0.01)
   let total = util.round('round', subtotal + tax, 0.01)
 
   return {
-    materialsTotal:   materials,
-    laborCostTotal:   laborCost,
-    laborHrsTotal:    laborHrs,
-    subtotal:         subtotal,
-    tax:              tax,
-    total:            total
+    materialSummary:      rg.materialSummary(c),
+    materialsCostTotal:   materialsCost,
+    laborCostTotal:       laborCost,
+    laborHrsTotal:        laborHrs,
+    subtotal:             subtotal,
+    tax:                  tax,
+    total:                total
+  }
+}
+
+rg.materialSummary = (c) => {
+  return {
+    bio: util.round('round', util.plucky('bioretention', c), 0.25),
+    rock: util.round('round', util.plucky('drainageRock', c), 0.25),
+    pond: util.round('round', util.plucky('pondliner', c), 1),
+    bioCost: util.round('round', util.plucky('bioretentionCost', c), 0.01),
+    rockCost: util.round('round', util.plucky('drainageRockCost', c), 0.01),
+    pondCost: util.round('round', util.plucky('pondlinerCost', c), 0.01),
+    sodCost: util.round('round', c.baseMaterialCost.cutterCost + c.baseMaterialCost.sodDumpCost, 0.01),
+    pvc3In: util.round('round', util.plucky('pvc3In', c), 1),
+    pvc4In: util.round('round', util.plucky('pvc4In', c), 1),
+    pvc3InCost: util.round('round', util.plucky('pvc3InCost', c), 0.01),
+    pvc4InCost: util.round('round', util.plucky('pvc4InCost', c), 0.01),
+    plantCost:  util.round('round', util.plucky('plantCost', c), 0.01)
+  }
+}
+
+rg.preventDuplicates = () => {
+  let $id = $('#rgID').val()
+  let $exists = util.findObjInArray($id, project.current.rainGardens.allRGs, 'id').length
+  if ($exists) {
+    return true
+  } else {
+    return false
   }
 }
 
@@ -281,8 +341,17 @@ rg.saveToProject = (newRG) => {
 }
 
 rg.storeLocally = (newRG) => {
-  let cur = project.current.rainGardens
-  cur.allRGs.push(newRG)
+  let cur = project.current.rainGardens.allRGs
+  let $exists = util.findObjInArray(newRG.id, cur, 'id')
+  if($exists.length) {
+    cur.forEach((c,i) => {
+      if(newRG.id === c.id) {
+        cur[i] = newRG
+      }
+    })
+  } else {
+    cur.push(newRG)
+  }
   //rg.updateUberRG(newRG)
   rg.current = newRG
 }
