@@ -3,6 +3,7 @@ var rgView = {}
 rgView.init = () => {
   $('#rg-content').show()
     .siblings().hide()
+  rgView.displayExisting()
   rgView.infiltDisplay()
   $('#rg-inflow-num').off('change').on('change', rgView.flowQty)
   $('#rg-outflow-num').off('change').on('change', rgView.flowQty)
@@ -10,6 +11,21 @@ rgView.init = () => {
   rgView.handleSave()
   rgView.handleSelector()
   rgView.handleNav()
+}
+
+rgView.displayExisting = () => {
+  let $existing = project.current.rainGardens
+  if ($existing.allRGs.length) {
+    $('#rg-selector').empty()
+    $existing.allRGs.forEach((e) => {
+      rgView.populateSelector(e)
+    })
+    //rgView.populateSelector($existing.uberRG)
+    rg.current = $existing.allRGs[0]    //handle on project load? like this it won't save state on nav within session
+    rgView.render(rg.current)
+  } else {
+    return
+  }
 }
 
 rgView.infiltDisplay = function() {
@@ -86,7 +102,7 @@ rgView.handleSelector = function() {
       rgView.makeTables(rg.uberTank)
       $('#rg-edit-buttons').hide()
     } else {
-      let curRG = util.findObjInArray(id, project.rainGardens.uberRG, 'id')
+      let curRG = util.findObjInArray(id, project.current.rainGardens.allRGs, 'id')
       rgView.makeTables(curRG[0])
       rg.current = curRG[0]
       $('#rg-edit-buttons').show()
@@ -113,7 +129,6 @@ rgView.handleNav = function() {
 
 rgView.showSummary = function() {
   let $selected = $('.button-primary').attr('id').split('-')[2]
-  console.log($selected);
   if ($selected != 'summary') {
     $('#rg-nav-summary').addClass('button-primary')
     .siblings().removeClass('button-primary')
@@ -189,12 +204,14 @@ rgView.populateForm = function(cur) {
 }
 
 rgView.clearForm = function() {
-  console.log('clearing')
   $('#rg-form input[type="text"]').val('')
   $('#rg-form input[type="number"]').val('')
   $('#rg-form input[type="checkbox"]').prop('checked', false)
   $('#rg-form input[type="radio"]').prop('checked', false)
-  $('#rg-form input[type="select"]').val('1')
+  $('#rg-form select').val('1')
+  $('#rgInfiltContainer').hide()
+  $('#rgInflow2-container').hide()
+  $('#rgOutflow2-container').hide()
 }
 
 rgView.handleCollapse = function() {
