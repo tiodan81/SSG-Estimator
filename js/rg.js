@@ -357,5 +357,86 @@ rg.storeLocally = (newRG) => {
 }
 
 rg.updateUberRG = (rg) => {
-
+  let rgs = project.current.rainGardens
+  let uber = rg.makeUberRG(rgs.allRGs)
+  rgs.uberRG = uber
+  if (rgs.allRGs.length > 1) {
+    rgView.populateSelector(uber)
+  }
 }
+
+rg.makeUberRG = (all) => {
+
+  totals: all.forEach((e) => {
+    //get e.totals
+    //iterate through all props of e.totals -> reduce sum of each prop
+  })
+}
+
+rg.merger = function(arr) {
+  var merged = $.extend(true, {}, arr[0])
+  for (var i = 1; i < arr.length; i++) {
+    for (var prop in arr[i]) {
+      if (typeof(merged[prop]) === 'number') {
+        merged[prop] += arr[i][prop]
+      } else if (Object.prototype.toString.call(merged[prop]) === '[object Object]') {
+        for (var nestprop in merged[prop]) {
+          if (typeof(merged[prop][nestprop]) === 'number') {
+            merged[prop][nestprop] += arr[i][prop][nestprop]
+          }
+        }
+      }
+    }
+  }
+  return merged
+}
+
+rg.stripper = function(arr) {
+  var newarr = []
+  arr.forEach(function(e, i) {
+    newarr.push(_.pick(e, ['totals', 'laborHrs', 'laborCost', 'baseMaterials', 'sodRmMethod', 'dumpTruck', 'baseMaterialCost.truckCost']))
+  })
+  return newarr
+}
+
+var merger = function(arr) {
+  var merged = Object.assign({}, arr[0])
+
+  var _adder = function(obj, key) {
+    if (typeof(obj[key]) === 'number') {
+      return obj[key]
+    } else if (typeof(obj[key]) === 'boolean') {
+      return obj[key]
+    } else if (Object.prototype.toString.call(obj[key]) === '[object Object]') {
+      for (let prop in obj[key]) {
+        _adder(obj[key], prop)
+      }
+    }
+  }
+
+  var _walker = function(a) {
+    for (let i = 1; i < a.length; i++) {
+      for (let prop in a[i]) {
+        merged[prop] += _adder(a[i], prop)
+      }
+    }
+  }
+
+  _walker(arr)
+
+  return merged
+}
+
+// var arrMaker = function(arr, key) {
+//   var newArr = []
+//   arr.forEach(function(e) {
+//     for (var prop in e) {
+//       if (e.hasOwnProperty(key) && key === prop) {
+//         newArr.push(e[prop])
+//       }
+//     }
+//   })
+//   return newArr
+// }
+//
+//
