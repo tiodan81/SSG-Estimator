@@ -403,13 +403,12 @@ var merger = function(arr) {
   var merged = Object.assign({}, arr[0])
 
   var _adder = function(obj, key) {
+    console.log(obj[key]);
     if (typeof(obj[key]) === 'number') {
       return obj[key]
-    } else if (typeof(obj[key]) === 'boolean') {
-      return obj[key]
     } else if (Object.prototype.toString.call(obj[key]) === '[object Object]') {
-      for (let prop in obj[key]) {
-        _adder(obj[key], prop)
+      for (let nestprop in obj[key]) {
+        _adder(obj[key], nestprop)
       }
     }
   }
@@ -417,6 +416,7 @@ var merger = function(arr) {
   var _walker = function(a) {
     for (let i = 1; i < a.length; i++) {
       for (let prop in a[i]) {
+        console.log(a[i], prop);
         merged[prop] += _adder(a[i], prop)
       }
     }

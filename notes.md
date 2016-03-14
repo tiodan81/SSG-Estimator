@@ -64,3 +64,13 @@
 * 2/16: 2
 * 2/17: 6.5
 * 2/18: 11:15 -
+
+to make tables, need:
+  rg.totals -- NUM +
+    .materialSummary -- OBJ -- NUM
+  rg.laborHrs  -- OBJS -- NUM
+  rg.laborCost -- OBJS -- NUM
+  rg.baseMaterials -- NUM
+  rg.sodRmMethod -- STRING
+  rg.dumpTruck  -- BOOL
+  rg.baseMaterialCost.truckCost -- NUM
