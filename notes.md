@@ -66,8 +66,8 @@
 * 2/18: 11:15 -
 
 to make tables, need:
-  rg.totals -- NUM +
-    .materialSummary -- OBJ -- NUM
+  rg.totals -- NUM
+  rg.materialSummary -- NUM
   rg.laborHrs  -- OBJS -- NUM
   rg.laborCost -- OBJS -- NUM
   rg.baseMaterials -- NUM

@@ -247,37 +247,35 @@ rgView.makeSummary = (rg) => {
 }
 
 rgView.makeLabor = (rg) => {
-  let lh = rg.laborHrs
-  let lc = rg.laborCost
   let labor = ''
   labor += `
   <tr><th>Item</th><th>Hours</th><th>Cost</th></tr>
-  <tr data-id="1" data-parent=""><td>Base</td><td>${lh.baseHrs.total}</td><td>$${lc.baseLaborCost.total}</td></tr>
-  <tr data-id="2" data-parent="1"><td>Sod Removal</td><td>${lh.baseHrs.sodHrs}</td><td>$${lc.baseLaborCost.sodLaborCost}</td></tr>
-  <tr data-id="3" data-parent="1"><td>Excavation</td><td>${lh.baseHrs.excavationHrs}</td><td>$${lc.baseLaborCost.excavationLaborCost}</td></tr>
-  <tr data-id="4" data-parent="1"><td>Bioretention</td><td>${lh.baseHrs.bioretenHrs}</td><td>$${lc.baseLaborCost.bioretentionLaborCost}</td></tr>
-  <tr data-id="5" data-parent="1"><td>Mulch</td><td>${lh.baseHrs.mulchHrs}</td><td>$${lc.baseLaborCost.mulchLaborCost}</td></tr>
-  <tr data-id="6" data-parent="1"><td>Planting</td><td>${lh.baseHrs.plantingHrs}</td><td>$${lc.baseLaborCost.plantingLaborCost}</td></tr>
-  <tr data-id="10" data-parent=""><td>Inflow 1</td><td>${lh.inflow1Hrs.total}</td><td>$${lc.inflow1LaborCost.total}</td></tr>
+  <tr data-id="1" data-parent=""><td>Base</td><td>${rg.baseHrs.total}</td><td>$${rg.baseLaborCost.total}</td></tr>
+  <tr data-id="2" data-parent="1"><td>Sod Removal</td><td>${rg.baseHrs.sodHrs}</td><td>$${rg.baseLaborCost.sodLaborCost}</td></tr>
+  <tr data-id="3" data-parent="1"><td>Excavation</td><td>${rg.baseHrs.excavationHrs}</td><td>$${rg.baseLaborCost.excavationLaborCost}</td></tr>
+  <tr data-id="4" data-parent="1"><td>Bioretention</td><td>${rg.baseHrs.bioretenHrs}</td><td>$${rg.baseLaborCost.bioretentionLaborCost}</td></tr>
+  <tr data-id="5" data-parent="1"><td>Mulch</td><td>${rg.baseHrs.mulchHrs}</td><td>$${rg.baseLaborCost.mulchLaborCost}</td></tr>
+  <tr data-id="6" data-parent="1"><td>Planting</td><td>${rg.baseHrs.plantingHrs}</td><td>$${rg.baseLaborCost.plantingLaborCost}</td></tr>
+  <tr data-id="10" data-parent=""><td>Inflow 1</td><td>${rg.inflow1Hrs.total}</td><td>$${rg.inflow1LaborCost.total}</td></tr>
   `
   if (rg.infNum == 2) {
-    labor += `<tr data-id="11" data-parent=""><td>Inflow 2</td><td>${lh.inflow2Hrs.total}</td><td>$${lc.inflow2LaborCost.total}</td></tr>`
+    labor += `<tr data-id="11" data-parent=""><td>Inflow 2</td><td>${rg.inflow2Hrs.total}</td><td>$${rg.inflow2LaborCost.total}</td></tr>`
   } //inf2
-  labor += `<tr data-id="20" data-parent=""><td>Outflow 1</td><td>${lh.outflow1Hrs.total}</td><td>$${lc.outflow1LaborCost.total}</td></tr>`
+  labor += `<tr data-id="20" data-parent=""><td>Outflow 1</td><td>${rg.outflow1Hrs.total}</td><td>$${rg.outflow1LaborCost.total}</td></tr>`
 
   if (rg.outNum == 2) {
-    labor += `<tr data-id="21" data-parent=""><td>Outflow 2</td><td>${lh.outflow2Hrs.total}</td><td>$${lc.outflow2LaborCost.total}</td></tr>`
+    labor += `<tr data-id="21" data-parent=""><td>Outflow 2</td><td>${rg.outflow2Hrs.total}</td><td>$${rg.outflow2LaborCost.total}</td></tr>`
   } //out2
 
   labor += `
-    <tr data-id="30" data-parent=""><td>Dispersion</td><td>${lh.dispersionHrs.total}</td><td>$${lc.dispersionLaborCost.total}</td></tr>
+    <tr data-id="30" data-parent=""><td>Dispersion</td><td>${rg.dispersionHrs.total}</td><td>$${rg.dispersionLaborCost.total}</td></tr>
     <tr data-id="40" data-parent=""><td>Total</td><td>${rg.totals.laborHrsTotal}</td><td>$${rg.totals.laborCostTotal}</td></tr>
     `
   return labor
 }
 
 rgView.makeMaterials = (rg) => {
-  let mat = rg.totals.materialSummary
+  let mat = rg.materialSummary
   let materials = ''
   materials += `
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>

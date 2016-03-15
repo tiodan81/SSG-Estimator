@@ -67,9 +67,10 @@ rg.allCalcs = (cur, mult) => {
   cur.baseMaterialCost = rg.baseMaterialCost(cur)
   cur.plumbingMaterials = rg.plumbingMaterials(cur)
   cur.plumbingMaterialCost = rg.plumbingMaterialCost(cur)
-  cur.laborHrs = rg.laborHrs(cur)
-  cur.laborCost = rg.laborCost(cur)
+  rg.laborHrs(cur)
+  rg.laborCost(cur)
   cur.totals = rg.totals(cur)
+  cur.materialSummary = rg.materialSummary(cur)
 }
 
 rg.getArea = (c, m) => {
@@ -179,14 +180,12 @@ rg.pipeMaterialCost = (m) => {
 rg.laborHrs = (c) => {
   let m = c.plumbingMaterials
 
-  return {
-    baseHrs:        rg.baseHrs(c),
-    dispersionHrs:  rg.channelHrs(m.dispersionChannelMaterials, 3, false),
-    inflow1Hrs:     c.infType1 === 'channel' ? rg.channelHrs(m.inflow1Materials, c.infLen1, c.infVeg1) : rg.pipeHrs(c.infLen1),
-    inflow2Hrs:     c.infNum === 2 ? c.infType2 === 'channel' ? rg.channelHrs(m.inflow2Materials, c.infLen2, c.infVeg2) : rg.pipeHrs(c.infLen2) : {total: 0},
-    outflow1Hrs:    c.outType1 === 'channel' ? rg.channelHrs(m.outflow1Materials, c.outLen1, c.outVeg1) : rg.pipeHrs(c.outLen1),
-    outflow2Hrs:    c.outNum === 2 ? c.outType2 === 'channel' ? rg.channelHrs(m.outflow2Materials, c.outLen2, c.outVeg2) : rg.pipeHrs(c.outLen2) : {total: 0}
-  }
+  c.baseHrs = rg.baseHrs(c)
+  c.dispersionHrs = rg.channelHrs(m.dispersionChannelMaterials, 3, false)
+  c.inflow1Hrs = c.infType1 === 'channel' ? rg.channelHrs(m.inflow1Materials, c.infLen1, c.infVeg1) : rg.pipeHrs(c.infLen1)
+  c.inflow2Hrs = c.infNum === 2 ? c.infType2 === 'channel' ? rg.channelHrs(m.inflow2Materials, c.infLen2, c.infVeg2) : rg.pipeHrs(c.infLen2) : {total: 0}
+  c.outflow1Hrs = c.outType1 === 'channel' ? rg.channelHrs(m.outflow1Materials, c.outLen1, c.outVeg1) : rg.pipeHrs(c.outLen1)
+  c.outflow2Hrs = c.outNum === 2 ? c.outType2 === 'channel' ? rg.channelHrs(m.outflow2Materials, c.outLen2, c.outVeg2) : rg.pipeHrs(c.outLen2) : {total: 0}
 }
 
 rg.baseHrs = (c) => {
@@ -237,22 +236,15 @@ rg.pipeHrs = (len) => ({
 })
 
 rg.laborCost = (c) => {
-  let base = c.laborHrs.baseHrs
-  let disp = c.laborHrs.dispersionHrs
-  let inf1 = c.laborHrs.inflow1Hrs
-  let inf2 = c.infNum === 2 ? c.laborHrs.inflow2Hrs : 0
-  let out1 = c.laborHrs.outflow1Hrs
-  let out2 = c.outNum === 2 ? c.laborHrs.outflow2Hrs : 0
+  let inf2 = c.infNum === 2 ? c.inflow2Hrs : 0
+  let out2 = c.outNum === 2 ? c.outflow2Hrs : 0
 
-  let lc = {
-    baseLaborCost:          rg.baseLaborCost(base),
-    dispersionLaborCost:    rg.channelLaborCost(disp),
-    inflow1LaborCost:       c.infType1 === 'channel' ? rg.channelLaborCost(inf1) : rg.pipeLaborCost(inf1),
-    inflow2LaborCost:       inf2 != 0 ? c.infType2 === 'channel' ? rg.channelLaborCost(inf2) : rg.pipeLaborCost(inf2) : {total: 0},
-    outflow1LaborCost:      c.outType1 === 'channel' ? rg.channelLaborCost(out1) : rg.pipeLaborCost(out1),
-    outflow2LaborCost:      out2 != 0 ? c.outType2 === 'channel' ? rg.channelLaborCost(out2) : rg.pipeLaborCost(out2) : {total: 0}
-  }
-  return lc
+  c.baseLaborCost = rg.baseLaborCost(c.baseHrs)
+  c.dispersionLaborCost = rg.channelLaborCost(c.dispersionHrs)
+  c.inflow1LaborCost = c.infType1 === 'channel' ? rg.channelLaborCost(c.inflow1Hrs) : rg.pipeLaborCost(c.inflow1Hrs)
+  c.inflow2LaborCost = inf2 != 0 ? c.infType2 === 'channel' ? rg.channelLaborCost(inf2) : rg.pipeLaborCost(inf2) : {total: 0},
+  c.outflow1LaborCost = c.outType1 === 'channel' ? rg.channelLaborCost(c.outflow1Hrs) : rg.pipeLaborCost(c.outflow1Hrs),
+  c.outflow2LaborCost = out2 != 0 ? c.outType2 === 'channel' ? rg.channelLaborCost(out2) : rg.pipeLaborCost(out2) : {total: 0}
 }
 
 rg.baseLaborCost = (base) => {
@@ -287,14 +279,13 @@ rg.totals = (c) => {
   let lh = c.laborHrs
 
   let materialsCost = util.round('round', c.baseMaterialCost.total + c.plumbingMaterialCost.total + c.plantCost, 0.01)
-  let laborCost = util.round('round', lc.baseLaborCost.total + lc.dispersionLaborCost.total + lc.inflow1LaborCost.total + lc.inflow2LaborCost.total + lc.outflow1LaborCost.total + lc.outflow2LaborCost.total, 0.01)
-  let laborHrs = util.round('ceil', lh.baseHrs.total + lh.dispersionHrs.total + lh.inflow1Hrs.total + lh.inflow2Hrs.total + lh.outflow1Hrs.total + lh.outflow2Hrs.total, 0.25)
+  let laborCost = util.round('round', c.baseLaborCost.total + c.dispersionLaborCost.total + c.inflow1LaborCost.total + c.inflow2LaborCost.total + c.outflow1LaborCost.total + c.outflow2LaborCost.total, 0.01)
+  let laborHrs = util.round('ceil', c.baseHrs.total + c.dispersionHrs.total + c.inflow1Hrs.total + c.inflow2Hrs.total + c.outflow1Hrs.total + c.outflow2Hrs.total, 0.25)
   let subtotal = util.round('round', materialsCost + laborCost, 0.01)
   let tax = util.round('round', util.salesTax(subtotal), 0.01)
   let total = util.round('round', subtotal + tax, 0.01)
 
   return {
-    materialSummary:      rg.materialSummary(c),
     materialsCostTotal:   materialsCost,
     laborCostTotal:       laborCost,
     laborHrsTotal:        laborHrs,
@@ -304,22 +295,20 @@ rg.totals = (c) => {
   }
 }
 
-rg.materialSummary = (c) => {
-  return {
-    bio: util.round('round', util.plucky('bioretention', c), 0.25),
-    rock: util.round('round', util.plucky('drainageRock', c), 0.25),
-    pond: util.round('round', util.plucky('pondliner', c), 1),
-    bioCost: util.round('round', util.plucky('bioretentionCost', c), 0.01),
-    rockCost: util.round('round', util.plucky('drainageRockCost', c), 0.01),
-    pondCost: util.round('round', util.plucky('pondlinerCost', c), 0.01),
-    sodCost: util.round('round', c.baseMaterialCost.cutterCost + c.baseMaterialCost.sodDumpCost, 0.01),
-    pvc3In: util.round('round', util.plucky('pvc3In', c), 1),
-    pvc4In: util.round('round', util.plucky('pvc4In', c), 1),
-    pvc3InCost: util.round('round', util.plucky('pvc3InCost', c), 0.01),
-    pvc4InCost: util.round('round', util.plucky('pvc4InCost', c), 0.01),
-    plantCost:  util.round('round', util.plucky('plantCost', c), 0.01)
-  }
-}
+rg.materialSummary = (c) => ({
+  bio:        util.round('round', util.plucky('bioretention', c), 0.25),
+  rock:       util.round('round', util.plucky('drainageRock', c), 0.25),
+  pond:       util.round('round', util.plucky('pondliner', c), 1),
+  bioCost:    util.round('round', util.plucky('bioretentionCost', c), 0.01),
+  rockCost:   util.round('round', util.plucky('drainageRockCost', c), 0.01),
+  pondCost:   util.round('round', util.plucky('pondlinerCost', c), 0.01),
+  sodCost:    util.round('round', c.baseMaterialCost.cutterCost + c.baseMaterialCost.sodDumpCost, 0.01),
+  pvc3In:     util.round('round', util.plucky('pvc3In', c), 1),
+  pvc4In:     util.round('round', util.plucky('pvc4In', c), 1),
+  pvc3InCost: util.round('round', util.plucky('pvc3InCost', c), 0.01),
+  pvc4InCost: util.round('round', util.plucky('pvc4InCost', c), 0.01),
+  plantCost:  util.round('round', util.plucky('plantCost', c), 0.01)
+})
 
 rg.preventDuplicates = () => {
   let $id = $('#rgID').val()
@@ -366,11 +355,16 @@ rg.updateUberRG = (rg) => {
 }
 
 rg.makeUberRG = (all) => {
+  const picked = rg.picker(all, ['totals', 'materialSummary', 'baseHrs', 'dispersionHrs', 'inflow1Hrs', 'inflow2Hrs', 'outflow1Hrs', 'outflow2Hrs', 'baseLaborCost', 'dispersionLaborCost', 'inflow1LaborCost', 'inflow2LaborCost', 'outflow1LaborCost', 'outflow2LaborCost', 'baseMaterials', 'sodRmMethod', 'dumpTruck', 'baseMaterialCost.truckCost'])
+  return rg.merger(picked)
+}
 
-  totals: all.forEach((e) => {
-    //get e.totals
-    //iterate through all props of e.totals -> reduce sum of each prop
+rg.picker = function(arr, prop) {
+  var newarr = []
+  arr.forEach(function(e, i) {
+    newarr.push(_.pick(e, prop))
   })
+  return newarr
 }
 
 rg.merger = function(arr) {
@@ -390,53 +384,3 @@ rg.merger = function(arr) {
   }
   return merged
 }
-
-rg.stripper = function(arr) {
-  var newarr = []
-  arr.forEach(function(e, i) {
-    newarr.push(_.pick(e, ['totals', 'laborHrs', 'laborCost', 'baseMaterials', 'sodRmMethod', 'dumpTruck', 'baseMaterialCost.truckCost']))
-  })
-  return newarr
-}
-
-var merger = function(arr) {
-  var merged = Object.assign({}, arr[0])
-
-  var _adder = function(obj, key) {
-    console.log(obj[key]);
-    if (typeof(obj[key]) === 'number') {
-      return obj[key]
-    } else if (Object.prototype.toString.call(obj[key]) === '[object Object]') {
-      for (let nestprop in obj[key]) {
-        _adder(obj[key], nestprop)
-      }
-    }
-  }
-
-  var _walker = function(a) {
-    for (let i = 1; i < a.length; i++) {
-      for (let prop in a[i]) {
-        console.log(a[i], prop);
-        merged[prop] += _adder(a[i], prop)
-      }
-    }
-  }
-
-  _walker(arr)
-
-  return merged
-}
-
-// var arrMaker = function(arr, key) {
-//   var newArr = []
-//   arr.forEach(function(e) {
-//     for (var prop in e) {
-//       if (e.hasOwnProperty(key) && key === prop) {
-//         newArr.push(e[prop])
-//       }
-//     }
-//   })
-//   return newArr
-// }
-//
-//
