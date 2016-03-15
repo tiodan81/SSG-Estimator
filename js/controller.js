@@ -37,7 +37,7 @@ rgController.save = () => {
     let newRG = rg.buildRG()
     let m = rg.getMultiplier(newRG)
     rg.allCalcs(newRG, m)
-    console.log(newRG);
+    console.log(newRG)
     rg.saveToProject(newRG)
     rgView.render(newRG)
   } else {

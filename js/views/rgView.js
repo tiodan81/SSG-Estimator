@@ -20,7 +20,7 @@ rgView.displayExisting = () => {
     $existing.allRGs.forEach((e) => {
       rgView.populateSelector(e)
     })
-    //rgView.populateSelector($existing.uberRG)
+    rgView.populateSelector($existing.uberRG)
     rg.current = $existing.allRGs[0]    //handle on project load? like this it won't save state on nav within session
     rgView.render(rg.current)
   } else {
@@ -145,7 +145,6 @@ rgView.editButtons = function() {
 
 rgView.handleEdit = function() {
   $('#rg-edit-buttons .icon-pencil2').off('click').on('click', function(e) {
-    //e.preventDefault()
     rgView.populateForm(rg.current)
     $('#rg-save').val('update')
   })
@@ -161,7 +160,7 @@ rgView.handleDelete = function() {
       }
     })
     $('rg-selector > option[value="' + old.id + '"]').remove()
-    //rg.updateUberRG()
+    rg.updateUberRG()
     if (all.length) {
       rg.current = all[0]
       $('#rg-selector').val(rg.current.id)
@@ -260,12 +259,12 @@ rgView.makeLabor = (rg) => {
   `
   if (rg.infNum == 2) {
     labor += `<tr data-id="11" data-parent=""><td>Inflow 2</td><td>${rg.inflow2Hrs.total}</td><td>$${rg.inflow2LaborCost.total}</td></tr>`
-  } //inf2
+  }
   labor += `<tr data-id="20" data-parent=""><td>Outflow 1</td><td>${rg.outflow1Hrs.total}</td><td>$${rg.outflow1LaborCost.total}</td></tr>`
 
   if (rg.outNum == 2) {
     labor += `<tr data-id="21" data-parent=""><td>Outflow 2</td><td>${rg.outflow2Hrs.total}</td><td>$${rg.outflow2LaborCost.total}</td></tr>`
-  } //out2
+  }
 
   labor += `
     <tr data-id="30" data-parent=""><td>Dispersion</td><td>${rg.dispersionHrs.total}</td><td>$${rg.dispersionLaborCost.total}</td></tr>
@@ -291,9 +290,12 @@ rgView.makeMaterials = (rg) => {
   if (rg.outType1 === 'pipe' || rg.outType2 === 'pipe') {
     materials += `<tr><td>4" PVC</td><td>${mat.pvc4In} ft</td><td>$${mat.pvc4InCost}</td></tr>`
   }
-  materials += `<tr><td>Sod removal - ${rg.sodRmMethod}</td><td>${rg.baseMaterials.sodVolume} yd</td><td>$${mat.sodCost}</td></tr>`
+  materials += `<tr><td>Sod removal</td><td>${rg.baseMaterials.sodVolume} yd</td><td>$${mat.sodDumpCost}</td></tr>`
+  if (rg.sodRmMethod === 'cutter') {
+    materials += `<tr><td>Sod cutter</td><td>n/a</td><td>$${rg.cutterCost}</td></tr>`
+  }
   if (rg.dumpTruck) {
-    materials += `<tr><td>Dump truck</td><td>n/a</td><td>$${rg.baseMaterialCost.truckCost}</td></tr>`
+    materials += `<tr><td>Dump truck</td><td>n/a</td><td>$${rg.truckCost}</td></tr>`
   }
   materials += `<tr><td>Total</td><td></td><td>$${rg.totals.materialsCostTotal}</td></tr>`
   return materials
