@@ -99,7 +99,7 @@ rgView.handleSelector = function() {
   $('#rg-selector').off('change').on('change', function() {
     let id = $('#rg-selector').val()
     if (id === 'All rain gardens') {
-      rgView.makeTables(rg.uberTank)
+      rgView.makeTables(project.current.rainGardens.uberRG)
       $('#rg-edit-buttons').hide()
     } else {
       let curRG = util.findObjInArray(id, project.current.rainGardens.allRGs, 'id')
@@ -255,19 +255,19 @@ rgView.makeLabor = (rg) => {
   <tr data-id="4" data-parent="1"><td>Bioretention</td><td>${rg.baseHrs.bioretenHrs}</td><td>$${rg.baseLaborCost.bioretentionLaborCost}</td></tr>
   <tr data-id="5" data-parent="1"><td>Mulch</td><td>${rg.baseHrs.mulchHrs}</td><td>$${rg.baseLaborCost.mulchLaborCost}</td></tr>
   <tr data-id="6" data-parent="1"><td>Planting</td><td>${rg.baseHrs.plantingHrs}</td><td>$${rg.baseLaborCost.plantingLaborCost}</td></tr>
-  <tr data-id="10" data-parent=""><td>Inflow 1</td><td>${rg.inflow1Hrs.total}</td><td>$${rg.inflow1LaborCost.total}</td></tr>
+  <tr data-id="10" data-parent=""><td>Inflow 1</td><td>${rg.inflow1Hrs}</td><td>$${rg.inflow1LaborCost}</td></tr>
   `
   if (rg.infNum == 2) {
-    labor += `<tr data-id="11" data-parent=""><td>Inflow 2</td><td>${rg.inflow2Hrs.total}</td><td>$${rg.inflow2LaborCost.total}</td></tr>`
+    labor += `<tr data-id="11" data-parent=""><td>Inflow 2</td><td>${rg.inflow2Hrs}</td><td>$${rg.inflow2LaborCost}</td></tr>`
   }
-  labor += `<tr data-id="20" data-parent=""><td>Outflow 1</td><td>${rg.outflow1Hrs.total}</td><td>$${rg.outflow1LaborCost.total}</td></tr>`
+  labor += `<tr data-id="20" data-parent=""><td>Outflow 1</td><td>${rg.outflow1Hrs}</td><td>$${rg.outflow1LaborCost}</td></tr>`
 
   if (rg.outNum == 2) {
-    labor += `<tr data-id="21" data-parent=""><td>Outflow 2</td><td>${rg.outflow2Hrs.total}</td><td>$${rg.outflow2LaborCost.total}</td></tr>`
+    labor += `<tr data-id="21" data-parent=""><td>Outflow 2</td><td>${rg.outflow2Hrs}</td><td>$${rg.outflow2LaborCost}</td></tr>`
   }
 
   labor += `
-    <tr data-id="30" data-parent=""><td>Dispersion</td><td>${rg.dispersionHrs.total}</td><td>$${rg.dispersionLaborCost.total}</td></tr>
+    <tr data-id="30" data-parent=""><td>Dispersion</td><td>${rg.dispersionHrs}</td><td>$${rg.dispersionLaborCost}</td></tr>
     <tr data-id="40" data-parent=""><td>Total</td><td>${rg.totals.laborHrsTotal}</td><td>$${rg.totals.laborCostTotal}</td></tr>
     `
   return labor

@@ -2,6 +2,11 @@ const firebase = new Firebase('https://ssgestimator.firebaseio.com/')
 const fbProjects = firebase.child('projects')
 const fbUsers = firebase.child('users')
 
+const nuke = function() {
+  fbProjects.remove()
+  fbUsers.remove()
+}
+
 var user = {
   email: '',
   uid: '',
