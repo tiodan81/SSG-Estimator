@@ -22,7 +22,8 @@ project.maker = function(client, city, labor, mkup, owner) {
   this.laborRate = labor
   this.markup = mkup
   this.owner = owner
-  this.rainGardens = {allRGs: [], uberRG:{}}
+  this.rainGardens = { allRGs: [], uberRG: {} }
+  this.cisterns = { allCisterns: [], uberTank: {} }
 }
 
 project.build = function() {
@@ -90,7 +91,7 @@ project.addOwner = function() {
 }
 
 project.populate = function(cur) {
-  if (typeof(cur.cisterns) != 'undefined') {
+  if (typeof(cur.cisterns) != 'undefined') {        //change this
     cistern.allCisterns = cur.cisterns.allCisterns
     cistern.uberTank = cur.cisterns.uberTank
     cistern.current = cistern.allCisterns[0]

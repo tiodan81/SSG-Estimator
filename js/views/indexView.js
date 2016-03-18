@@ -65,12 +65,16 @@ indexView.makeTable = function(cur) {
   <table id="project-table">
   <tr><th>Item</th><th>Labor Hours</th><th>Labor Cost</th><th>Materials Cost</th><th>Subtotal</th><th>Tax</th><th>Total</th></tr>
   `
-  if (cur.cisterns) {
+  if (cur.rainGardens.allRGs.length) {
+    let rgs = cur.rainGardens.uberRG
+    html += `<tr><td>Rain gardens</td><td>${rgs.totals.laborHrsTotal}</td><td>${rgs.totals.laborCostTotal}</td><td>${rgs.totals.materialsCostTotal}</td><td>${rgs.totals.subtotal}</td><td>${rgs.totals.tax}</td><td>${rgs.totals.total}</td></tr>`
+  }
+  if (cur.cisterns.allCisterns.length) {
     let cisterns = cur.cisterns.uberTank
     html += `<tr><td>Cisterns</td><td>${cisterns.totalHr}</td><td>${cisterns.laborTotal}</td><td>${cisterns.materialsTotal}</td><td>${cisterns.subtotal}</td><td>${cisterns.tax}</td><td>${cisterns.total}</td></tr>`
   }
+  //<tr><td>Mulch</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
   html +=`
-  <tr><td>Mulch</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
   <tr><td>Total</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
   </table>
   `
