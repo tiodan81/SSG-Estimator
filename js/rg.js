@@ -335,32 +335,39 @@ rg.updateUberRG = () => {
 }
 
 rg.makeUberRG = (all) => {
-  const picked = rg.picker(all, ['totals', 'materialSummary', 'baseHrs', 'dispersionHrs', 'inflow1Hrs', 'inflow2Hrs', 'outflow1Hrs', 'outflow2Hrs', 'baseLaborCost', 'dispersionLaborCost', 'inflow1LaborCost', 'inflow2LaborCost', 'outflow1LaborCost', 'outflow2LaborCost', 'baseMaterials', 'baseMaterialCost','sodRmMethod', 'dumpTruck'])
+  const picked = util.objectStripper(all, ['totals', 'materialSummary', 'baseHrs', 'dispersionHrs', 'inflow1Hrs', 'inflow2Hrs', 'outflow1Hrs', 'outflow2Hrs', 'baseLaborCost', 'dispersionLaborCost', 'inflow1LaborCost', 'inflow2LaborCost', 'outflow1LaborCost', 'outflow2LaborCost', 'baseMaterials', 'baseMaterialCost'])
   let uber = rg.merger(picked)
   uber.id = 'All rain gardens'
+  uber.dumpTruck = util.picker(all, 'dumpTruck').indexOf(true) >= 0 ? true : false
+  uber.sodRmMethod = rg.getUberSodRmMethod(all)
   if (uber.dumpTruck) { uber.truckCost = materials.fees.dumpTruck }
   if (uber.sodRmMethod === 'cutter') { uber.cutterCost = materials.fees.sodCutter }
+  if (uber.inflow2Hrs > 0) { uber.infNum = 2 }
+  if (uber.outflow2Hrs > 0) { uber.outNum = 2 }
   return uber
 }
 
-rg.picker = function(arr, prop) {
-  var newarr = []
-  arr.forEach(function(e, i) {
-    newarr.push(_.pick(e, prop))
-  })
-  return newarr
+rg.getUberSodRmMethod = function(arr) {
+  let method = util.picker(arr, 'sodRmMethod')
+
+  if (method.indexOf('cutter') >= 0) {
+    return 'cutter'
+  } else if (method.indexOf('manual') >= 0) {
+    return 'manual'
+  } else {
+    return 'none'
+  }
 }
 
 rg.merger = function(arr) {
-  var merged = $.extend(true, {}, arr[0])
-  for (var i = 1; i < arr.length; i++) {
-    for (var prop in arr[i]) {
+  let merged = $.extend(true, {}, arr[0])
+
+  for (let i = 1; i < arr.length; i++) {
+    for (let prop in arr[i]) {
       if (typeof(merged[prop]) === 'number') {
         merged[prop] += arr[i][prop]
-      } else if (merged[prop] === null) {
-
       } else if (Object.prototype.toString.call(merged[prop]) === '[object Object]') {
-        for (var nestprop in merged[prop]) {
+        for (let nestprop in merged[prop]) {
           if (typeof(merged[prop][nestprop]) === 'number') {
             merged[prop][nestprop] += arr[i][prop][nestprop]
           }

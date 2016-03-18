@@ -159,7 +159,7 @@ rgView.handleDelete = function() {
         all.splice(i, 1)
       }
     })
-    $('rg-selector > option[value="' + old.id + '"]').remove()
+    $('#rg-selector > option[value="' + old.id + '"]').remove()
     rg.updateUberRG()
     if (all.length) {
       rg.current = all[0]
@@ -278,7 +278,7 @@ rgView.makeMaterials = (rg) => {
   let materials = ''
   materials += `
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
-  <tr><td>Planting</td><td>n/a</td><td>$${mat.plantCost}</td></tr>
+  <tr><td>Planting</td><td></td><td>$${mat.plantCost}</td></tr>
   <tr><td>Bioretention</td><td>${mat.bio} yd</td><td>$${mat.bioCost}</td></tr>
   <tr><td>Mulch</td><td>${rg.baseMaterials.bioretention} yd</td><td>$${rg.baseMaterialCost.mulchCost}</td></tr>
   <tr><td>Drain rock</td><td>${mat.rock} yd</td><td>$${mat.rockCost}</td></tr>
@@ -292,10 +292,10 @@ rgView.makeMaterials = (rg) => {
   }
   materials += `<tr><td>Sod removal</td><td>${rg.baseMaterials.sodVolume} yd</td><td>$${mat.sodDumpCost}</td></tr>`
   if (rg.sodRmMethod === 'cutter') {
-    materials += `<tr><td>Sod cutter</td><td>n/a</td><td>$${rg.cutterCost}</td></tr>`
+    materials += `<tr><td>Sod cutter</td><td></td><td>$${rg.cutterCost}</td></tr>`
   }
   if (rg.dumpTruck) {
-    materials += `<tr><td>Dump truck</td><td>n/a</td><td>$${rg.truckCost}</td></tr>`
+    materials += `<tr><td>Dump truck</td><td></td><td>$${rg.truckCost}</td></tr>`
   }
   materials += `<tr><td>Total</td><td></td><td>$${rg.totals.materialsCostTotal}</td></tr>`
   return materials

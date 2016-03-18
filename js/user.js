@@ -5,6 +5,7 @@ const fbUsers = firebase.child('users')
 const nuke = function() {
   fbProjects.remove()
   fbUsers.remove()
+  page('/')
 }
 
 var user = {

@@ -31,6 +31,7 @@ util.sumObject = (obj) => {
                 }, 0)
 }
 
+//sums all values of key in obj
 util.plucky = function (key, obj) {
   var sum = 0
   for (var prop in obj) {
@@ -43,22 +44,17 @@ util.plucky = function (key, obj) {
   return sum
 }
 
-util.flattenObject = function(ob) {
-  var toReturn = {}
+//returns array of objects with desired props
+util.objectStripper = function(arr, props) {
+  var newarr = []
+  arr.forEach(function(e) {
+    newarr.push(_.pick(e, props))
+  })
+  return newarr
+}
 
-  for (var i in ob) {
-    if (!ob.hasOwnProperty(i)) continue
-
-    if ((typeof ob[i]) == 'object') {
-      var flatObject = flattenObject(ob[i])
-      for (var x in flatObject) {
-        if (!flatObject.hasOwnProperty(x)) continue
-
-        toReturn[i + '.' + x] = flatObject[x]
-      }
-    } else {
-      toReturn[i] = ob[i]
-    }
-  }
-  return toReturn
+//returns de-duped array of desired property values from array of objects
+util.picker = function(arr, prop) {
+  return arr.map((obj) => obj[prop])
+            .filter((v, i, a) => a.indexOf(v) == i)
 }
