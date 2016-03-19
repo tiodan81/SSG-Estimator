@@ -40,5 +40,5 @@ loginView.showLogoutNav = function() {
   $('#login-nav').text('Logout')
     .removeClass('login').addClass('logout')
   $('#main-nav li').show()
-  $('.logout').on('click', controller.logout)
+  $('.logout').on('click', userController.logout)
 }

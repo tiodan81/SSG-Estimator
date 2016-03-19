@@ -5,12 +5,12 @@ page(
 
 page(
   '/login',
-  controller.loginInit
+  userController.loginInit
 )
 
 page(
   '/rainwise',
-  controller.rainwiseInit
+  mulchController.init
 )
 
 page(
@@ -20,12 +20,12 @@ page(
 
 page(
   '/mulch',
-  controller.mulchInit
+  mulchController.init
 )
 
 page(
   '/cisterns',
-  controller.cisternInit
+  cisternController.init
 )
 
 page.start()

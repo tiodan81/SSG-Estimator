@@ -59,6 +59,7 @@ indexView.handleSelector = function() {
 }
 
 indexView.makeTable = function(cur) {
+  console.log(cur);
   let html = ''
   html += `
   <h2>${cur.client}</h2>

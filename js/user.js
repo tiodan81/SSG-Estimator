@@ -78,8 +78,9 @@ user.setProjectOwner = function(newProject) {
 
 user.getProjectList = function() {
   console.log('loading projects for user ' + user.uid)
+
   fbUsers.child(user.uid).child('projects').once('value').then(function(snapshot) {
-    var loadingProjects = []
+    let loadingProjects = []
 
     snapshot.forEach(function(proj) {
       let curProj = proj.key()

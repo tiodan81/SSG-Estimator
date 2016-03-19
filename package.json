@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "express": "^4.13.3",
-    "flat": "^2.0.0",
     "lodash": "^4.6.1",
     "page": "^1.6.4",
     "pushstate-server": "^1.8.1"
