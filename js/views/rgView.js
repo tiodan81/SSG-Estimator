@@ -20,7 +20,7 @@ rgView.displayExisting = () => {
     $existing.allRGs.forEach((e) => {
       rgView.populateSelector(e)
     })
-    //rgView.populateSelector($existing.uberRG)
+    rgView.populateSelector($existing.uberRG)
     rg.current = $existing.allRGs[0]    //handle on project load? like this it won't save state on nav within session
     rgView.render(rg.current)
   } else {
@@ -99,7 +99,7 @@ rgView.handleSelector = function() {
   $('#rg-selector').off('change').on('change', function() {
     let id = $('#rg-selector').val()
     if (id === 'All rain gardens') {
-      rgView.makeTables(rg.uberTank)
+      rgView.makeTables(project.current.rainGardens.uberRG)
       $('#rg-edit-buttons').hide()
     } else {
       let curRG = util.findObjInArray(id, project.current.rainGardens.allRGs, 'id')
@@ -145,7 +145,6 @@ rgView.editButtons = function() {
 
 rgView.handleEdit = function() {
   $('#rg-edit-buttons .icon-pencil2').off('click').on('click', function(e) {
-    //e.preventDefault()
     rgView.populateForm(rg.current)
     $('#rg-save').val('update')
   })
@@ -160,8 +159,8 @@ rgView.handleDelete = function() {
         all.splice(i, 1)
       }
     })
-    $('rg-selector > option[value="' + old.id + '"]').remove()
-    //rg.updateUberRG()
+    $('#rg-selector > option[value="' + old.id + '"]').remove()
+    rg.updateUberRG()
     if (all.length) {
       rg.current = all[0]
       $('#rg-selector').val(rg.current.id)
@@ -247,41 +246,39 @@ rgView.makeSummary = (rg) => {
 }
 
 rgView.makeLabor = (rg) => {
-  let lh = rg.laborHrs
-  let lc = rg.laborCost
   let labor = ''
   labor += `
   <tr><th>Item</th><th>Hours</th><th>Cost</th></tr>
-  <tr data-id="1" data-parent=""><td>Base</td><td>${lh.baseHrs.total}</td><td>$${lc.baseLaborCost.total}</td></tr>
-  <tr data-id="2" data-parent="1"><td>Sod Removal</td><td>${lh.baseHrs.sodHrs}</td><td>$${lc.baseLaborCost.sodLaborCost}</td></tr>
-  <tr data-id="3" data-parent="1"><td>Excavation</td><td>${lh.baseHrs.excavationHrs}</td><td>$${lc.baseLaborCost.excavationLaborCost}</td></tr>
-  <tr data-id="4" data-parent="1"><td>Bioretention</td><td>${lh.baseHrs.bioretenHrs}</td><td>$${lc.baseLaborCost.bioretentionLaborCost}</td></tr>
-  <tr data-id="5" data-parent="1"><td>Mulch</td><td>${lh.baseHrs.mulchHrs}</td><td>$${lc.baseLaborCost.mulchLaborCost}</td></tr>
-  <tr data-id="6" data-parent="1"><td>Planting</td><td>${lh.baseHrs.plantingHrs}</td><td>$${lc.baseLaborCost.plantingLaborCost}</td></tr>
-  <tr data-id="10" data-parent=""><td>Inflow 1</td><td>${lh.inflow1Hrs.total}</td><td>$${lc.inflow1LaborCost.total}</td></tr>
+  <tr data-id="1" data-parent=""><td>Base</td><td>${rg.baseHrs.total}</td><td>$${rg.baseLaborCost.total}</td></tr>
+  <tr data-id="2" data-parent="1"><td>Sod Removal</td><td>${rg.baseHrs.sodHrs}</td><td>$${rg.baseLaborCost.sodLaborCost}</td></tr>
+  <tr data-id="3" data-parent="1"><td>Excavation</td><td>${rg.baseHrs.excavationHrs}</td><td>$${rg.baseLaborCost.excavationLaborCost}</td></tr>
+  <tr data-id="4" data-parent="1"><td>Bioretention</td><td>${rg.baseHrs.bioretenHrs}</td><td>$${rg.baseLaborCost.bioretentionLaborCost}</td></tr>
+  <tr data-id="5" data-parent="1"><td>Mulch</td><td>${rg.baseHrs.mulchHrs}</td><td>$${rg.baseLaborCost.mulchLaborCost}</td></tr>
+  <tr data-id="6" data-parent="1"><td>Planting</td><td>${rg.baseHrs.plantingHrs}</td><td>$${rg.baseLaborCost.plantingLaborCost}</td></tr>
+  <tr data-id="10" data-parent=""><td>Inflow 1</td><td>${rg.inflow1Hrs}</td><td>$${rg.inflow1LaborCost}</td></tr>
   `
   if (rg.infNum == 2) {
-    labor += `<tr data-id="11" data-parent=""><td>Inflow 2</td><td>${lh.inflow2Hrs.total}</td><td>$${lc.inflow2LaborCost.total}</td></tr>`
-  } //inf2
-  labor += `<tr data-id="20" data-parent=""><td>Outflow 1</td><td>${lh.outflow1Hrs.total}</td><td>$${lc.outflow1LaborCost.total}</td></tr>`
+    labor += `<tr data-id="11" data-parent=""><td>Inflow 2</td><td>${rg.inflow2Hrs}</td><td>$${rg.inflow2LaborCost}</td></tr>`
+  }
+  labor += `<tr data-id="20" data-parent=""><td>Outflow 1</td><td>${rg.outflow1Hrs}</td><td>$${rg.outflow1LaborCost}</td></tr>`
 
   if (rg.outNum == 2) {
-    labor += `<tr data-id="21" data-parent=""><td>Outflow 2</td><td>${lh.outflow2Hrs.total}</td><td>$${lc.outflow2LaborCost.total}</td></tr>`
-  } //out2
+    labor += `<tr data-id="21" data-parent=""><td>Outflow 2</td><td>${rg.outflow2Hrs}</td><td>$${rg.outflow2LaborCost}</td></tr>`
+  }
 
   labor += `
-    <tr data-id="30" data-parent=""><td>Dispersion</td><td>${lh.dispersionHrs.total}</td><td>$${lc.dispersionLaborCost.total}</td></tr>
+    <tr data-id="30" data-parent=""><td>Dispersion</td><td>${rg.dispersionHrs}</td><td>$${rg.dispersionLaborCost}</td></tr>
     <tr data-id="40" data-parent=""><td>Total</td><td>${rg.totals.laborHrsTotal}</td><td>$${rg.totals.laborCostTotal}</td></tr>
     `
   return labor
 }
 
 rgView.makeMaterials = (rg) => {
-  let mat = rg.totals.materialSummary
+  let mat = rg.materialSummary
   let materials = ''
   materials += `
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
-  <tr><td>Planting</td><td>n/a</td><td>$${mat.plantCost}</td></tr>
+  <tr><td>Planting</td><td></td><td>$${mat.plantCost}</td></tr>
   <tr><td>Bioretention</td><td>${mat.bio} yd</td><td>$${mat.bioCost}</td></tr>
   <tr><td>Mulch</td><td>${rg.baseMaterials.bioretention} yd</td><td>$${rg.baseMaterialCost.mulchCost}</td></tr>
   <tr><td>Drain rock</td><td>${mat.rock} yd</td><td>$${mat.rockCost}</td></tr>
@@ -293,9 +290,12 @@ rgView.makeMaterials = (rg) => {
   if (rg.outType1 === 'pipe' || rg.outType2 === 'pipe') {
     materials += `<tr><td>4" PVC</td><td>${mat.pvc4In} ft</td><td>$${mat.pvc4InCost}</td></tr>`
   }
-  materials += `<tr><td>Sod removal - ${rg.sodRmMethod}</td><td>${rg.baseMaterials.sodVolume} yd</td><td>$${mat.sodCost}</td></tr>`
+  materials += `<tr><td>Sod removal</td><td>${rg.baseMaterials.sodVolume} yd</td><td>$${mat.sodDumpCost}</td></tr>`
+  if (rg.sodRmMethod === 'cutter') {
+    materials += `<tr><td>Sod cutter</td><td></td><td>$${rg.cutterCost}</td></tr>`
+  }
   if (rg.dumpTruck) {
-    materials += `<tr><td>Dump truck</td><td>n/a</td><td>$${rg.baseMaterialCost.truckCost}</td></tr>`
+    materials += `<tr><td>Dump truck</td><td></td><td>$${rg.truckCost}</td></tr>`
   }
   materials += `<tr><td>Total</td><td></td><td>$${rg.totals.materialsCostTotal}</td></tr>`
   return materials

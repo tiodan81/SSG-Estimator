@@ -65,11 +65,14 @@ rg.allCalcs = (cur, mult) => {
   cur.area = rg.getArea(cur, mult)
   cur.baseMaterials = rg.baseMaterials(cur)
   cur.baseMaterialCost = rg.baseMaterialCost(cur)
+  cur.truckCost = cur.dumpTruck ? materials.fees.dumpTruck : 0
+  cur.cutterCost = cur.sodRmMethod === 'cutter' ? materials.fees.sodCutter : 0
   cur.plumbingMaterials = rg.plumbingMaterials(cur)
   cur.plumbingMaterialCost = rg.plumbingMaterialCost(cur)
-  cur.laborHrs = rg.laborHrs(cur)
-  cur.laborCost = rg.laborCost(cur)
+  rg.laborHrs(cur)
+  rg.laborCost(cur)
   cur.totals = rg.totals(cur)
+  cur.materialSummary = rg.materialSummary(cur)
 }
 
 rg.getArea = (c, m) => {
@@ -95,9 +98,7 @@ rg.baseMaterialCost = (c) => {
   let bmc = {
     sodDumpCost:        rg.calcSodDumpCost(c, m),
     bioretentionCost:   util.round('round', m.bioretention * materials.bulk.bioretention, 0.01),
-    mulchCost:          util.round('round', m.mulchVolume * materials.bulk.mulch, 0.01),
-    cutterCost:         c.sodRmMethod === 'cutter' ? materials.fees.sodCutter : 0,
-    truckCost:          c.dumpTruck ? materials.fees.dumpTruck : 0
+    mulchCost:          util.round('round', m.mulchVolume * materials.bulk.mulch, 0.01)
   }
   bmc.total = util.sumObject(bmc)
   return bmc
@@ -179,14 +180,12 @@ rg.pipeMaterialCost = (m) => {
 rg.laborHrs = (c) => {
   let m = c.plumbingMaterials
 
-  return {
-    baseHrs:        rg.baseHrs(c),
-    dispersionHrs:  rg.channelHrs(m.dispersionChannelMaterials, 3, false),
-    inflow1Hrs:     c.infType1 === 'channel' ? rg.channelHrs(m.inflow1Materials, c.infLen1, c.infVeg1) : rg.pipeHrs(c.infLen1),
-    inflow2Hrs:     c.infNum === 2 ? c.infType2 === 'channel' ? rg.channelHrs(m.inflow2Materials, c.infLen2, c.infVeg2) : rg.pipeHrs(c.infLen2) : {total: 0},
-    outflow1Hrs:    c.outType1 === 'channel' ? rg.channelHrs(m.outflow1Materials, c.outLen1, c.outVeg1) : rg.pipeHrs(c.outLen1),
-    outflow2Hrs:    c.outNum === 2 ? c.outType2 === 'channel' ? rg.channelHrs(m.outflow2Materials, c.outLen2, c.outVeg2) : rg.pipeHrs(c.outLen2) : {total: 0}
-  }
+  c.baseHrs = rg.baseHrs(c)
+  c.dispersionHrs = rg.channelHrs(m.dispersionChannelMaterials, 3, false)
+  c.inflow1Hrs = c.infType1 === 'channel' ? rg.channelHrs(m.inflow1Materials, c.infLen1, c.infVeg1) : rg.pipeHrs(c.infLen1)
+  c.inflow2Hrs = c.infNum === 2 ? c.infType2 === 'channel' ? rg.channelHrs(m.inflow2Materials, c.infLen2, c.infVeg2) : rg.pipeHrs(c.infLen2) : 0
+  c.outflow1Hrs = c.outType1 === 'channel' ? rg.channelHrs(m.outflow1Materials, c.outLen1, c.outVeg1) : rg.pipeHrs(c.outLen1)
+  c.outflow2Hrs = c.outNum === 2 ? c.outType2 === 'channel' ? rg.channelHrs(m.outflow2Materials, c.outLen2, c.outVeg2) : rg.pipeHrs(c.outLen2) : 0
 }
 
 rg.baseHrs = (c) => {
@@ -222,37 +221,23 @@ rg.channelHrs = (mat, len, veg) => {
   let plantingHrs = veg ? len / 4 : 0
   let rockHrs = mat.drainageRock + 1
 
-  return {
-    excavationHrs:  excavationHrs,
-    bioretenHrs:    bioretenHrs,
-    plantingHrs:    plantingHrs,
-    rockHrs:        rockHrs,
-    total:          util.round('ceil', excavationHrs + bioretenHrs + plantingHrs + rockHrs, 0.25)
-  }
+  return util.round('ceil', excavationHrs + bioretenHrs + plantingHrs + rockHrs, 0.25)
 }
 
-rg.pipeHrs = (len) => ({
-  pipeHrs:  len / 4,
-  total:    len / 4
-})
+rg.pipeHrs = (len) => {
+  return util.round('ceil', len / 4, 0.25)
+}
 
 rg.laborCost = (c) => {
-  let base = c.laborHrs.baseHrs
-  let disp = c.laborHrs.dispersionHrs
-  let inf1 = c.laborHrs.inflow1Hrs
-  let inf2 = c.infNum === 2 ? c.laborHrs.inflow2Hrs : 0
-  let out1 = c.laborHrs.outflow1Hrs
-  let out2 = c.outNum === 2 ? c.laborHrs.outflow2Hrs : 0
+  let inf2 = c.infNum === 2 ? c.inflow2Hrs : 0
+  let out2 = c.outNum === 2 ? c.outflow2Hrs : 0
 
-  let lc = {
-    baseLaborCost:          rg.baseLaborCost(base),
-    dispersionLaborCost:    rg.channelLaborCost(disp),
-    inflow1LaborCost:       c.infType1 === 'channel' ? rg.channelLaborCost(inf1) : rg.pipeLaborCost(inf1),
-    inflow2LaborCost:       inf2 != 0 ? c.infType2 === 'channel' ? rg.channelLaborCost(inf2) : rg.pipeLaborCost(inf2) : {total: 0},
-    outflow1LaborCost:      c.outType1 === 'channel' ? rg.channelLaborCost(out1) : rg.pipeLaborCost(out1),
-    outflow2LaborCost:      out2 != 0 ? c.outType2 === 'channel' ? rg.channelLaborCost(out2) : rg.pipeLaborCost(out2) : {total: 0}
-  }
-  return lc
+  c.baseLaborCost = rg.baseLaborCost(c.baseHrs)
+  c.dispersionLaborCost = util.laborCost(c.dispersionHrs)
+  c.inflow1LaborCost = util.laborCost(c.inflow1Hrs)
+  c.inflow2LaborCost = inf2 != 0 ? util.laborCost(inf2) : 0
+  c.outflow1LaborCost = util.laborCost(c.outflow1Hrs)
+  c.outflow2LaborCost = out2 != 0 ? util.laborCost(out2) : 0
 }
 
 rg.baseLaborCost = (base) => {
@@ -267,34 +252,18 @@ rg.baseLaborCost = (base) => {
   return blc
 }
 
-rg.channelLaborCost = (channel) => {
-  let clc = {
-    excavationLaborCost:    util.laborCost(channel.excavationHrs),
-    bioretentionLaborCost:  util.laborCost(channel.bioretenHrs),
-    plantingLaborCost:      util.laborCost(channel.plantingHrs),
-    rockLaborCost:          util.laborCost(channel.rockHrs)
-  }
-  clc.total = util.sumObject(clc)
-  return clc
-}
-
-rg.pipeLaborCost = (pipe) => ({
-  total:          util.laborCost(pipe.pipeHrs)
-})
-
 rg.totals = (c) => {
   let lc = c.laborCost
   let lh = c.laborHrs
 
-  let materialsCost = util.round('round', c.baseMaterialCost.total + c.plumbingMaterialCost.total + c.plantCost, 0.01)
-  let laborCost = util.round('round', lc.baseLaborCost.total + lc.dispersionLaborCost.total + lc.inflow1LaborCost.total + lc.inflow2LaborCost.total + lc.outflow1LaborCost.total + lc.outflow2LaborCost.total, 0.01)
-  let laborHrs = util.round('ceil', lh.baseHrs.total + lh.dispersionHrs.total + lh.inflow1Hrs.total + lh.inflow2Hrs.total + lh.outflow1Hrs.total + lh.outflow2Hrs.total, 0.25)
+  let materialsCost = util.round('round', c.baseMaterialCost.total + c.plumbingMaterialCost.total + c.plantCost + c.truckCost + c.cutterCost, 0.01)
+  let laborCost = util.round('round', c.baseLaborCost.total + c.dispersionLaborCost + c.inflow1LaborCost + c.inflow2LaborCost + c.outflow1LaborCost + c.outflow2LaborCost, 0.01)
+  let laborHrs = util.round('ceil', c.baseHrs.total + c.dispersionHrs + c.inflow1Hrs + c.inflow2Hrs + c.outflow1Hrs + c.outflow2Hrs, 0.25)
   let subtotal = util.round('round', materialsCost + laborCost, 0.01)
   let tax = util.round('round', util.salesTax(subtotal), 0.01)
   let total = util.round('round', subtotal + tax, 0.01)
 
   return {
-    materialSummary:      rg.materialSummary(c),
     materialsCostTotal:   materialsCost,
     laborCostTotal:       laborCost,
     laborHrsTotal:        laborHrs,
@@ -304,22 +273,22 @@ rg.totals = (c) => {
   }
 }
 
-rg.materialSummary = (c) => {
-  return {
-    bio: util.round('round', util.plucky('bioretention', c), 0.25),
-    rock: util.round('round', util.plucky('drainageRock', c), 0.25),
-    pond: util.round('round', util.plucky('pondliner', c), 1),
-    bioCost: util.round('round', util.plucky('bioretentionCost', c), 0.01),
-    rockCost: util.round('round', util.plucky('drainageRockCost', c), 0.01),
-    pondCost: util.round('round', util.plucky('pondlinerCost', c), 0.01),
-    sodCost: util.round('round', c.baseMaterialCost.cutterCost + c.baseMaterialCost.sodDumpCost, 0.01),
-    pvc3In: util.round('round', util.plucky('pvc3In', c), 1),
-    pvc4In: util.round('round', util.plucky('pvc4In', c), 1),
-    pvc3InCost: util.round('round', util.plucky('pvc3InCost', c), 0.01),
-    pvc4InCost: util.round('round', util.plucky('pvc4InCost', c), 0.01),
-    plantCost:  util.round('round', util.plucky('plantCost', c), 0.01)
-  }
-}
+rg.materialSummary = (c) => ({
+  bio:          util.round('round', util.plucky('bioretention', c), 0.25),
+  rock:         util.round('round', util.plucky('drainageRock', c), 0.25),
+  pond:         util.round('round', util.plucky('pondliner', c), 1),
+  bioCost:      util.round('round', util.plucky('bioretentionCost', c), 0.01),
+  rockCost:     util.round('round', util.plucky('drainageRockCost', c), 0.01),
+  pondCost:     util.round('round', util.plucky('pondlinerCost', c), 0.01),
+  sodDumpCost:  c.baseMaterialCost.sodDumpCost,
+  cutterCost:   c.cutterCost,
+  truckCost:    c.truckCost,
+  pvc3In:       util.round('round', util.plucky('pvc3In', c), 1),
+  pvc4In:       util.round('round', util.plucky('pvc4In', c), 1),
+  pvc3InCost:   util.round('round', util.plucky('pvc3InCost', c), 0.01),
+  pvc4InCost:   util.round('round', util.plucky('pvc4InCost', c), 0.01),
+  plantCost:    util.round('round', util.plucky('plantCost', c), 0.01)
+})
 
 rg.preventDuplicates = () => {
   let $id = $('#rgID').val()
@@ -352,10 +321,59 @@ rg.storeLocally = (newRG) => {
   } else {
     cur.push(newRG)
   }
-  //rg.updateUberRG(newRG)
+  rg.updateUberRG(newRG)
   rg.current = newRG
 }
 
-rg.updateUberRG = (rg) => {
+rg.updateUberRG = () => {
+  let rgs = project.current.rainGardens
+  let uber = rg.makeUberRG(rgs.allRGs)
+  rgs.uberRG = uber
+  if (rgs.allRGs.length > 1) {
+    rgView.populateSelector(uber)
+  }
+}
 
+rg.makeUberRG = (all) => {
+  const picked = util.objectStripper(all, ['totals', 'materialSummary', 'baseHrs', 'dispersionHrs', 'inflow1Hrs', 'inflow2Hrs', 'outflow1Hrs', 'outflow2Hrs', 'baseLaborCost', 'dispersionLaborCost', 'inflow1LaborCost', 'inflow2LaborCost', 'outflow1LaborCost', 'outflow2LaborCost', 'baseMaterials', 'baseMaterialCost'])
+  let uber = rg.merger(picked)
+  uber.id = 'All rain gardens'
+  uber.dumpTruck = util.picker(all, 'dumpTruck').indexOf(true) >= 0 ? true : false
+  uber.sodRmMethod = rg.getUberSodRmMethod(all)
+  if (uber.dumpTruck) { uber.truckCost = materials.fees.dumpTruck }
+  if (uber.sodRmMethod === 'cutter') { uber.cutterCost = materials.fees.sodCutter }
+  if (uber.inflow2Hrs > 0) { uber.infNum = 2 }
+  if (uber.outflow2Hrs > 0) { uber.outNum = 2 }
+  return uber
+}
+
+rg.getUberSodRmMethod = function(arr) {
+  let method = util.picker(arr, 'sodRmMethod')
+
+  if (method.indexOf('cutter') >= 0) {
+    return 'cutter'
+  } else if (method.indexOf('manual') >= 0) {
+    return 'manual'
+  } else {
+    return 'none'
+  }
+}
+
+rg.merger = function(arr) {
+  let merged = $.extend(true, {}, arr[0])
+
+  for (let i = 1; i < arr.length; i++) {
+    for (let prop in arr[i]) {
+      if (typeof(merged[prop]) === 'number') {
+        merged[prop] += arr[i][prop]
+      } else if (Object.prototype.toString.call(merged[prop]) === '[object Object]') {
+        for (let nestprop in merged[prop]) {
+          if (typeof(merged[prop][nestprop]) === 'number') {
+            merged[prop][nestprop] += arr[i][prop][nestprop]
+          }
+        }
+      }
+    }
+  }
+  return merged
 }

@@ -31,6 +31,7 @@ util.sumObject = (obj) => {
                 }, 0)
 }
 
+//sums all values of key in obj
 util.plucky = function (key, obj) {
   var sum = 0
   for (var prop in obj) {
@@ -41,4 +42,19 @@ util.plucky = function (key, obj) {
     }
   }
   return sum
+}
+
+//returns array of objects with desired props
+util.objectStripper = function(arr, props) {
+  var newarr = []
+  arr.forEach(function(e) {
+    newarr.push(_.pick(e, props))
+  })
+  return newarr
+}
+
+//returns de-duped array of desired property values from array of objects
+util.picker = function(arr, prop) {
+  return arr.map((obj) => obj[prop])
+            .filter((v, i, a) => a.indexOf(v) == i)
 }

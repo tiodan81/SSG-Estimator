@@ -1,29 +1,3 @@
-var controller = {}
-
-controller.checkLogin = () => {
-  let auth = user.isLoggedIn()
-  if (auth) {
-    user.uid = auth.uid
-    user.getProjectList()
-  } else {
-    loginView.init()
-  }
-}
-
-controller.loginInit = () => {
-  loginView.init()
-}
-
-controller.logout = () => {
-  user.logout()
-  project.clear()
-  viewUtil.clear(loginView.init)
-}
-
-controller.rainwiseInit = () => {
-  rainwiseView.init()
-}
-
 var rgController = {}
 
 rgController.init = () => {
@@ -37,7 +11,7 @@ rgController.save = () => {
     let newRG = rg.buildRG()
     let m = rg.getMultiplier(newRG)
     rg.allCalcs(newRG, m)
-    console.log(newRG);
+    console.log(newRG)
     rg.saveToProject(newRG)
     rgView.render(newRG)
   } else {
@@ -53,15 +27,3 @@ rgController.save = () => {
     //render low somehow?
   }
 }
-
-controller.mulchInit = () => {
-  mulchView.init()
-}
-
-controller.cisternInit = () => {
-  cisternView.init()
-}
-
-$(function() {
-  controller.checkLogin()
-})
