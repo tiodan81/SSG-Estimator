@@ -89,9 +89,9 @@ cisternView.populateSelector = function(cur) {
 }
 
 cisternView.showSummary = function() {
-  let $selected = $('.button-primary').attr('id').split('-')[2]
+  let $selected = $('#cistern-nav .button-primary').attr('id')
   if ($selected != 'summary') {
-    $('#cistern-nav-summary').addClass('button-primary')
+    $('#cistern-nav > #summary').addClass('button-primary')
       .siblings().removeClass('button-primary')
     $('#cistern-table-summary').show()
       .siblings().hide()
@@ -116,9 +116,8 @@ cisternView.handleSelector = function() {
 
 cisternView.handleNav = function() {
   $('#cistern-nav > button').off('click').on('click', function() {
-    let $curNav = $('.button-primary').attr('id').split('-')[2]   //may be rg-summary
-    let $nextNav = $(this).attr('id').split('-')[2]
-    console.log($curNav, $nextNav);
+    let $curNav = $('#cistern-nav > .button-primary').attr('id')
+    let $nextNav = $(this).attr('id')
     $(this).addClass('button-primary')
       .siblings().removeClass('button-primary')
     if ($curNav != $nextNav) {

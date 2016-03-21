@@ -113,8 +113,8 @@ rgView.handleSelector = function() {
 
 rgView.handleNav = function() {
   $('#rg-nav > button').off('click').on('click', function() {
-    let $curNav = $('.button-primary').attr('id').split('-')[2]
-    let $nextNav = $(this).attr('id').split('-')[2]
+    let $curNav = $('#rg-nav > .button-primary').attr('id')
+    let $nextNav = $(this).attr('id')
     $(this).addClass('button-primary')
       .siblings().removeClass('button-primary')
     if ($curNav != $nextNav) {
@@ -128,9 +128,9 @@ rgView.handleNav = function() {
 }
 
 rgView.showSummary = function() {
-  let $selected = $('.button-primary').attr('id').split('-')[2]
+  let $selected = $('#rg-nav .button-primary').attr('id')
   if ($selected != 'summary') {
-    $('#rg-nav-summary').addClass('button-primary')
+    $('#rg-nav > #summary').addClass('button-primary')
     .siblings().removeClass('button-primary')
     $('#rg-table-summary').show()
     .siblings().hide()
