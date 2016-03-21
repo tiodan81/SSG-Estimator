@@ -43,17 +43,9 @@ project.exists = function(newProject) {
       alert('Cannot save. Project with name ' + newProject.client + ' already exists.')
       return false
     } else {
-      project.create(newProject)
+      project.saveNew(newProject)
     }
   })
-}
-
-project.create = function(newProject) {
-  project.saveNew(newProject)
-  user.setProjectOwner(newProject)
-  project.allProjects.push(newProject)
-  project.current = newProject
-  indexView.render(newProject)
 }
 
 project.saveNew = function(newProject) {
@@ -91,16 +83,15 @@ project.addOwner = function() {
 }
 
 project.populate = function(cur) {
-  if (typeof(cur.cisterns) != 'undefined') {        //change this
-    cistern.allCisterns = cur.cisterns.allCisterns
-    cistern.uberTank = cur.cisterns.uberTank
-    cistern.current = cistern.allCisterns[0]
+  if (cur.cisterns === undefined) {
+    cur.cisterns = { allCisterns: [], uberTank: {} }
+  }
+  if (cur.rainGardens === undefined) {
+    cur.rainGardens = { allRGs: [], uberRG: {} }
   }
 }
 
 project.clear = function() {
   project.allProjects = []
   project.current = {}
-  cistern.allCisterns = []
-  cistern.current = {}
 }

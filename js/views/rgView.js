@@ -77,7 +77,7 @@ rgView.handleSave = () => {
 
 rgView.render = (cur) => {
   rgView.populateSelector(cur)
-  $('#rg-selector').val(rg.current.id)
+  $('#rg-selector').val(cur.id)
   rgView.makeTables(cur)
   rgView.handleCollapse()
   if ($('#rg-display').css('display') === 'none') {
@@ -169,7 +169,7 @@ rgView.handleDelete = function() {
       rgView.editButtons()
     } else {
       rg.current = {}
-      project.current.rainGardens = { allRGs: [], uberRG:{} }
+      project.current.rainGardens = { allRGs: [], uberRG: {} }
       $('#rg-display').hide()
     }
     project.updateComponent(project.current, 'rainGardens')
