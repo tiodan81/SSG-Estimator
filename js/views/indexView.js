@@ -13,24 +13,33 @@ indexView.handleCreateButton = function() {
     $('#project-select-container').hide()
     $('#projectForm').show()
     indexView.handleProjectForm()
+    indexView.handleProjectCancel()
   })
 }
 
 indexView.handleProjectForm = function() {
   $('#projectForm').off('submit').on('submit', function(e) {
     e.preventDefault()
-    let newProject = project.build()
-    project.exists(newProject)
+    projectController.create()
   })
 }
 
-indexView.render = function(project) {
-  $('#projectForm').hide()
-    .siblings().show()
+indexView.handleProjectCancel = function() {
+  $('#project-cancel').off('click').on('click', function(e) {
+    viewUtil.clearForm()
+    $('#projectForm').hide()
+      .siblings().show()
+  })
+}
+
+indexView.clearHideForm = function(newProject) {
   viewUtil.clearForm()
-  indexView.populateSelector(project)
-  $('#project-selector').val(project.client)
-  $('#project-summary').html(indexView.makeTable(project))
+  $('#projectForm').hide()
+  $('#project-selector').val(newProject.client)
+}
+
+indexView.render = function(project) {
+  $('#project-summary').show().html(indexView.makeTable(project))
 }
 
 indexView.populateSelector = function(project) {
@@ -45,7 +54,8 @@ indexView.handleSelector = function() {
   $('#project-selector').off('change').on('change', function() {
     let id = $(this).val()
     if (id === 'default') {
-      return      //if other project already selected, will this leave that displayed but show 'default' in selector?
+      $('#project-summary').empty()
+      return
     } else {
       let curProject = util.findObjInArray(id, project.allProjects, 'client')
       project.current = curProject[0]

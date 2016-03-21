@@ -43,17 +43,9 @@ project.exists = function(newProject) {
       alert('Cannot save. Project with name ' + newProject.client + ' already exists.')
       return false
     } else {
-      project.create(newProject)
+      project.saveNew(newProject)
     }
   })
-}
-
-project.create = function(newProject) {
-  project.saveNew(newProject)
-  user.setProjectOwner(newProject)
-  project.allProjects.push(newProject)
-  project.current = newProject
-  indexView.render(newProject)
 }
 
 project.saveNew = function(newProject) {

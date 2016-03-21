@@ -43,6 +43,7 @@
 
       <section id="home-content">
         <h1>Stone Soup Project Planner</h1>
+
         <div id="project-select-container" class="row">
           <div class="six columns">
             <select id="project-selector">
@@ -53,6 +54,7 @@
             <button id="project-create-button" type="button">Create a new project</button>
           </div>
         </div>
+
         <form id="projectForm">
           <div class="fe">
             <label class="fieldname">Client:</label>
@@ -79,9 +81,12 @@
             </select>
           </div>
           <div class="submit">
-            <input type="submit" value="Create project" />
+            <input type="submit" value="Create project">
+            <input type="button" id="project-cancel" value="cancel">
+
           </div>
         </form>
+
         <section id="project-summary">
 
         </section>
@@ -428,6 +433,7 @@
     <script type="text/javascript" src="/js/models/user.js"></script>
     <!-- CONTROLLERS -->
     <script type="text/javascript" src="/js/controllers/userController.js"></script>
+    <script type="text/javascript" src="/js/controllers/projectController.js"></script>
     <script type="text/javascript" src="/js/controllers/rainwiseController.js"></script>
     <script type="text/javascript" src="/js/controllers/rgController.js"></script>
     <script type="text/javascript" src="/js/controllers/mulchController.js"></script>
