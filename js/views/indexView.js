@@ -3,9 +3,6 @@ var indexView = {}
 indexView.init = function () {
   $('#home-content').show()
     .siblings().hide()
-  // if (Object.keys(project.current).length) {
-  //   indexView.render(project.current);
-  // }
   indexView.handleCreateButton()
   indexView.handleSelector()
 }
@@ -48,7 +45,7 @@ indexView.handleSelector = function() {
   $('#project-selector').off('change').on('change', function() {
     let id = $(this).val()
     if (id === 'default') {
-      return
+      return      //if other project already selected, will this leave that displayed but show 'default' in selector?
     } else {
       let curProject = util.findObjInArray(id, project.allProjects, 'client')
       project.current = curProject[0]

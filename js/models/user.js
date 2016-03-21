@@ -47,7 +47,7 @@ user.authenticate = function(pwd) {
   }, function(error, authData) {
     if (error) {
       console.log('Login failed', error)
-      alert('Login failed. Please try again or create an account.')
+      alert('Login failed. Please try again or create a new account.')
     } else {
       console.log('Authenticated successfully with payload: ', authData)
       user.uid = authData.uid
@@ -92,13 +92,6 @@ user.getProjectList = function() {
     })
 
     return Promise.all(loadingProjects)
-  }).then(function() {
-    if (project.allProjects.length) {
-      project.current = project.allProjects[0]
-      project.populate(project.current)
-    }
-    project.getJSON()
-    indexView.init()
-    loginView.showLogoutNav()
   })
+  .then(userController.userInit())
 }

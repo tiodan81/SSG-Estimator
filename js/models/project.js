@@ -91,16 +91,15 @@ project.addOwner = function() {
 }
 
 project.populate = function(cur) {
-  if (typeof(cur.cisterns) != 'undefined') {        //change this
-    cistern.allCisterns = cur.cisterns.allCisterns
-    cistern.uberTank = cur.cisterns.uberTank
-    cistern.current = project.current.cisterns.allCisterns[0]
+  if (cur.cisterns === undefined) {
+    cur.cisterns = { allCisterns: [], uberTank: {} }
+  }
+  if (cur.rainGardens === undefined) {
+    cur.rainGardens = { allRGs: [], uberRG: {} }
   }
 }
 
 project.clear = function() {
   project.allProjects = []
   project.current = {}
-  cistern.allCisterns = []
-  cistern.current = {}
 }

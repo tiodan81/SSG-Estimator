@@ -20,6 +20,14 @@ userController.logout = () => {
   viewUtil.clear(loginView.init)
 }
 
+userController.userInit = () => {
+  project.getJSON()
+  indexView.init()
+  $('#project-selector').val('default')
+  loginView.showLogoutNav()
+}
+
+
 $(function() {
   userController.checkLogin()
 })
