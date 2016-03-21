@@ -329,7 +329,7 @@
         <form id="cisternForm">
           <div class="fe">
             <label class="fieldname">ID:</label>
-            <input type="text" id="cistern" placeholder="tank ID" required="required" />
+            <input type="text" id="cisternID" placeholder="tank ID" required="required" />
           </div>
           <div class="fe">
             <label class="fieldname">Model:</label>
@@ -390,11 +390,7 @@
               <option value="gauge">Gauge</option>
             </select>
           </div>
-          <div class="submit">
-            <input id="cistern-add" class="button" type="submit" value="Submit">
-            <!-- <button id="cistern-add">Add Tank</button> -->
-            <button id="cistern-update">Update Tank</button>
-          </div>
+          <input id="cistern-save" type="submit" value="save">
         </form>
 
         <section id="cistern-display">
@@ -424,13 +420,13 @@
     <script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.6.1/lodash.min.js"></script>
     <script type="text/javascript" src="/js/vendor/page.js"></script>
-    <!-- MODELS -->
     <script type="text/javascript" src="/js/util.js"></script>
-    <script type="text/javascript" src="/js/project.js"></script>
-    <script type="text/javascript" src="/js/rg.js"></script>
-    <script type="text/javascript" src="/js/mulch.js"></script>
-    <script type="text/javascript" src="/js/cistern.js"></script>
-    <script type="text/javascript" src="/js/user.js"></script>
+    <!-- MODELS -->
+    <script type="text/javascript" src="/js/models/project.js"></script>
+    <script type="text/javascript" src="/js/models/rg.js"></script>
+    <script type="text/javascript" src="/js/models/mulch.js"></script>
+    <script type="text/javascript" src="/js/models/cistern.js"></script>
+    <script type="text/javascript" src="/js/models/user.js"></script>
     <!-- CONTROLLERS -->
     <script type="text/javascript" src="/js/controllers/userController.js"></script>
     <script type="text/javascript" src="/js/controllers/rainwiseController.js"></script>

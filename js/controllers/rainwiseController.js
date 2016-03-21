@@ -1,5 +1,5 @@
 var rainwiseController = {}
 
-mulchController.init = () => {
+rainwiseController.init = () => {
   rainwiseView.init()
 }

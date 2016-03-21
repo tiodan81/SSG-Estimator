@@ -1,12 +1,10 @@
 var cistern = {
-  uberTank: {},
-  allCisterns: [],
   tankModels: [],
   current: {}
 }
 
 function cisternMaker (ci, m, h, g, inf, out, al) {
-  this.cisternId = ci || ''
+  this.id = ci || ''
   this.model = m || ''
   this.baseHeight = h || 0
   this.gutter = g || 0
@@ -52,7 +50,7 @@ function cisternMaker (ci, m, h, g, inf, out, al) {
 }
 
 cistern.buildCistern = function() {
-  var $id = $('#cistern').val()
+  var $id = $('#cisternID').val()
   var $m = $('#cisternModel').val()
   var $bh = +($('#cisternBase').val())
   var $g = +($('#gutterFt').val())
@@ -175,6 +173,53 @@ cistern.allCalcs = function(cur) {
   cistern.calculateTotals(cur)
 }
 
+cistern.preventDuplicates = () => {
+  let $id = $('#cisternID').val()
+  let $exists = util.findObjInArray($id, project.current.cisterns.allCisterns, 'id').length
+  if ($exists) {
+    return true
+  } else {
+    return false
+  }
+}
+
+cistern.saveToProject = function(newCistern) {
+  if(user.uid && project.current.client) {
+    cistern.storeLocally(newCistern)
+    project.updateComponent(project.current, 'cisterns')
+  } else {
+    console.log('Either you\'re not signed in or haven\'t initiated a project!')
+  }
+}
+
+cistern.storeLocally = (newCistern) => {
+  let cur = project.current.cisterns.allCisterns
+  let $exists = util.findObjInArray(newCistern.id, cur, 'id')
+
+  if ($exists.length) {
+    cur.forEach((c,i) => {
+      if (newCistern.id === c.id) {
+        cur[i] = newCistern
+      }
+    })
+  } else {
+    cur.push(newCistern)
+  }
+
+  cistern.updateUberTank(newCistern)
+  cistern.current = newCistern
+}
+
+
+cistern.updateUberTank = function() {
+  let cisterns = project.current.cisterns
+  let uber = cistern.makeUberTank(cisterns.allCisterns)
+  cisterns.uberTank = uber
+  if (cisterns.allCisterns.length > 1) {
+    cisternView.populateSelector(uber)
+  }
+}
+
 cistern.makeUberTank = function(arr) {
   let obj = new cisternMaker()
   arr.forEach(function(e) {
@@ -186,26 +231,6 @@ cistern.makeUberTank = function(arr) {
       }
     }, obj)
   })
-  obj.cisternId = 'All tanks'
+  obj.id = 'All tanks'
   return obj
-}
-
-cistern.updateUberTank = function() {
-  let uber = cistern.makeUberTank(cistern.allCisterns)
-  cistern.uberTank = uber
-  if (cistern.allCisterns.length > 1) {
-    cisternView.populateSelector(uber)
-  }
-}
-
-cistern.saveToProject = function() {
-  if(user.uid && project.current.client) {
-    project.current.cisterns = {
-      allCisterns:  cistern.allCisterns,
-      uberTank:     cistern.uberTank
-    }
-    project.updateComponent(project.current, 'cisterns')
-  } else {
-    console.log('Either you\'re not signed in or haven\'t initiated a project!')
-  }
 }

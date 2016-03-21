@@ -94,7 +94,7 @@ project.populate = function(cur) {
   if (typeof(cur.cisterns) != 'undefined') {        //change this
     cistern.allCisterns = cur.cisterns.allCisterns
     cistern.uberTank = cur.cisterns.uberTank
-    cistern.current = cistern.allCisterns[0]
+    cistern.current = project.current.cisterns.allCisterns[0]
   }
 }
 

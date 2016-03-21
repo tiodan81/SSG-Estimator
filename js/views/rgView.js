@@ -169,7 +169,7 @@ rgView.handleDelete = function() {
       rgView.editButtons()
     } else {
       rg.current = {}
-      project.current.rainGardens = { allRGs: [], uberRG:{} }
+      project.current.rainGardens = { allRGs: [], uberRG: {} }
       $('#rg-display').hide()
     }
     project.updateComponent(project.current, 'rainGardens')
