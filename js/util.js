@@ -24,6 +24,7 @@ util.findObjInArray = (id, arr, selector) => {
   })
 }
 
+//sum values of all properties in an object
 util.sumObject = (obj) => {
   return Object.keys(obj)
                 .reduce((sum, key) => {
@@ -33,8 +34,8 @@ util.sumObject = (obj) => {
 
 //sums all values of key in obj
 util.plucky = function (key, obj) {
-  var sum = 0
-  for (var prop in obj) {
+  let sum = 0
+  for (let prop in obj) {
     if (obj.hasOwnProperty(prop) && key === prop) {
       sum += obj[prop]
     } else if (Object.prototype.toString.call(obj[prop]) === '[object Object]') {

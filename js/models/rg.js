@@ -292,7 +292,7 @@ rg.materialSummary = (c) => ({
 
 rg.preventDuplicates = () => {
   let $id = $('#rgID').val()
-  let $exists = util.findObjInArray($id, project.current.rainGardens.allRGs, 'id').length
+  let $exists = util.findObjInArray($id, project.current.rainGardens.all, 'id').length
   if ($exists) {
     return true
   } else {
@@ -310,7 +310,7 @@ rg.saveToProject = (newRG) => {
 }
 
 rg.storeLocally = (newRG) => {
-  let cur = project.current.rainGardens.allRGs
+  let cur = project.current.rainGardens.all
   let $exists = util.findObjInArray(newRG.id, cur, 'id')
   if($exists.length) {
     cur.forEach((c,i) => {
@@ -327,9 +327,9 @@ rg.storeLocally = (newRG) => {
 
 rg.updateUberRG = () => {
   let rgs = project.current.rainGardens
-  let uber = rg.makeUberRG(rgs.allRGs)
-  rgs.uberRG = uber
-  if (rgs.allRGs.length > 1) {
+  let uber = rg.makeUberRG(rgs.all)
+  rgs.uber = uber
+  if (rgs.all.length > 1) {
     rgView.populateSelector(uber)
   }
 }

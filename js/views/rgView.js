@@ -15,13 +15,13 @@ rgView.init = () => {
 
 rgView.displayExisting = () => {
   let $existing = project.current.rainGardens
-  if ($existing.allRGs.length) {
+  if ($existing.all.length) {
     $('#rg-selector').empty()
-    $existing.allRGs.forEach((e) => {
+    $existing.all.forEach((e) => {
       rgView.populateSelector(e)
     })
-    rgView.populateSelector($existing.uberRG)
-    rg.current = $existing.allRGs[0]    //handle on project load? like this it won't save state on nav within session
+    rgView.populateSelector($existing.uber)
+    rg.current = $existing.all[0]    //handle on project load? like this it won't save state on nav within session
     rgView.render(rg.current)
   } else {
     return
@@ -99,10 +99,10 @@ rgView.handleSelector = function() {
   $('#rg-selector').off('change').on('change', function() {
     let id = $('#rg-selector').val()
     if (id === 'All rain gardens') {
-      rgView.makeTables(project.current.rainGardens.uberRG)
+      rgView.makeTables(project.current.rainGardens.uber)
       $('#rg-edit-buttons').hide()
     } else {
-      let curRG = util.findObjInArray(id, project.current.rainGardens.allRGs, 'id')
+      let curRG = util.findObjInArray(id, project.current.rainGardens.all, 'id')
       rgView.makeTables(curRG[0])
       rg.current = curRG[0]
       $('#rg-edit-buttons').show()
@@ -153,7 +153,7 @@ rgView.handleEdit = function() {
 rgView.handleDelete = function() {
   $('#rg-edit-buttons .icon-bin2').off('click').on('click', function() {
     let old = rg.current
-    let all = project.current.rainGardens.allRGs
+    let all = project.current.rainGardens.all
     all.forEach((e, i) => {
       if (e.id === old.id) {
         all.splice(i, 1)
@@ -169,7 +169,7 @@ rgView.handleDelete = function() {
       rgView.editButtons()
     } else {
       rg.current = {}
-      project.current.rainGardens = { allRGs: [], uberRG: {} }
+      project.current.rainGardens = { all: [], uber: {} }
       $('#rg-display').hide()
     }
     project.updateComponent(project.current, 'rainGardens')

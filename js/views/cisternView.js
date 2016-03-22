@@ -13,13 +13,13 @@ cisternView.init = function() {
 
 cisternView.displayExisting = function() {
   let $existing = project.current.cisterns
-  if ($existing.allCisterns.length) {
+  if ($existing.all.length) {
     $('#cistern-selector').empty()
-    $existing.allCisterns.forEach(function(e) {
+    $existing.all.forEach(function(e) {
       cisternView.populateSelector(e)
     })
-    cisternView.populateSelector($existing.uberTank)
-    cistern.current = $existing.allCisterns[0]
+    cisternView.populateSelector($existing.uber)
+    cistern.current = $existing.all[0]
     cisternView.render(cistern.current)
   } else {
     return
@@ -102,10 +102,10 @@ cisternView.handleSelector = function() {
   $('#cistern-selector').off('change').on('change', function() {
     let id = $('#cistern-selector').val()
     if (id === 'All tanks') {
-      cisternView.makeTables(project.current.cisterns.uberTank)
+      cisternView.makeTables(project.current.cisterns.uber)
       $('#cistern-edit-buttons').hide()
     } else {
-      let curCistern = util.findObjInArray(id, project.current.cisterns.allCisterns, 'id')
+      let curCistern = util.findObjInArray(id, project.current.cisterns.all, 'id')
       cisternView.makeTables(curCistern[0])
       cistern.current = curCistern[0]
       $('#cistern-edit-buttons').show()
@@ -141,9 +141,9 @@ cisternView.makeSummary = function(cur) {
   summary += `
   <tr><th>Item</th><th>Cost</th></tr>
   <tr><td>Model</td><td>${cur.model}</td></tr>
-  <tr><td>Labor hours</td><td>${cur.totalHr}</td></tr>
-  <tr><td>Labor cost</td><td>$${cur.laborTotal}</td></tr>
-  <tr><td>Materials cost</td><td>$${cur.materialsTotal}</td></tr>
+  <tr><td>Labor hours</td><td>${cur.laborHrsTotal}</td></tr>
+  <tr><td>Labor cost</td><td>$${cur.laborCostTotal}</td></tr>
+  <tr><td>Materials cost</td><td>$${cur.materialsCostTotal}</td></tr>
   <tr><td>Tax</td><td>$${cur.tax}</td></tr>
   <tr><td>Total</td><td>$${cur.total}</td></tr>
   `
@@ -161,7 +161,7 @@ cisternView.makeLabor = function(cur) {
   if (cur.additionalLaborHr) {
     labor += `<tr><td>Additional</td><td>${cur.additionalLaborHr}</td><td>$${cur.additionalLaborCost}</td></tr>`
   }
-  labor += `<tr><td>Total</td><td>${cur.totalHr}</td><td>$${cur.laborTotal}</td></tr>`
+  labor += `<tr><td>Total</td><td>${cur.laborHrsTotal}</td><td>$${cur.laborCostTotal}</td></tr>`
   return labor
 }
 
@@ -195,7 +195,7 @@ cisternView.makeMaterials = function(cur) {
   }
   materials += `
   <tr><td>Low-flow kit</td><td>1</td><td>$75.00</td></tr>
-  <tr><td>Total</td><td></td><td>$${cur.materialsTotal}</td></tr>
+  <tr><td>Total</td><td></td><td>$${cur.materialsCostTotal}</td></tr>
   `
   return materials
 }
@@ -220,7 +220,7 @@ cisternView.handleEdit = function() {
 cisternView.handleDelete = function() {
   $('#cistern-edit-buttons .icon-bin2').off('click').on('click', function(e) {
     let old = cistern.current
-    let all = project.current.cisterns.allCisterns
+    let all = project.current.cisterns.all
     all.forEach(function(e, i) {
       if (e.id === old.id) {
         all.splice(i, 1)
@@ -236,7 +236,7 @@ cisternView.handleDelete = function() {
       cisternView.editButtons()
     } else {
       cistern.current = {}
-      project.current.cisterns = { allCisterns: [], uberTank: {} }
+      project.current.cisterns = { all: [], uber: {} }
       $('#cistern-display').hide()
     }
     project.updateComponent(project.current, 'cisterns')
