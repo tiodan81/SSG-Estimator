@@ -327,14 +327,22 @@ rg.storeLocally = (newRG) => {
 
 rg.updateUberRG = () => {
   let rgs = project.current.rainGardens
-  let uber = rg.makeUberRG(rgs.all)
+  let uber = rg.makeUberRG(rg.excludeLowEst(rgs.all))
   rgs.uber = uber
   if (rgs.all.length > 1) {
     rgView.populateSelector(uber)
   }
 }
 
+rg.excludeLowEst = (arr) => {
+  const re = /(low estimate)/
+  return arr.filter((e) => {
+    return re.test(e.id) == false
+  })
+}
+
 rg.makeUberRG = (all) => {
+
   const picked = util.objectStripper(all, ['totals', 'materialSummary', 'baseHrs', 'dispersionHrs', 'inflow1Hrs', 'inflow2Hrs', 'outflow1Hrs', 'outflow2Hrs', 'baseLaborCost', 'dispersionLaborCost', 'inflow1LaborCost', 'inflow2LaborCost', 'outflow1LaborCost', 'outflow2LaborCost', 'baseMaterials', 'baseMaterialCost'])
   let uber = rg.merger(picked)
   uber.id = 'All rain gardens'
