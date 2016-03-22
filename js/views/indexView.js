@@ -3,6 +3,9 @@ var indexView = {}
 indexView.init = function () {
   $('#home-content').show()
     .siblings().hide()
+  if (project.current.client) {
+    indexView.render(project.current)
+  }
   indexView.handleCreateButton()
   indexView.handleSelector()
 }
@@ -66,7 +69,6 @@ indexView.handleSelector = function() {
 }
 
 indexView.makeTable = function(cur) {
-  console.log(cur);
   let html = `
     <h2>${cur.client}</h2>
     <table id="project-table">
@@ -86,7 +88,7 @@ indexView.makeTable = function(cur) {
     let rgs = cur.rainGardens.uber.totals
     totals.laborHours += rgs.laborHrsTotal
     totals.laborCost += rgs.laborCostTotal
-    totals.materialsCost += rgs.laborCostTotal
+    totals.materialsCost += rgs.materialsCostTotal
     totals.subtotal += rgs.subtotal
     totals.tax += rgs.tax
     totals.total += rgs.total
@@ -96,7 +98,7 @@ indexView.makeTable = function(cur) {
     let cisterns = cur.cisterns.uber
     totals.laborHours += cisterns.laborHrsTotal
     totals.laborCost += cisterns.laborCostTotal
-    totals.materialsCost += cisterns.laborCostTotal
+    totals.materialsCost += cisterns.materialsCostTotal
     totals.subtotal += cisterns.subtotal
     totals.tax += cisterns.tax
     totals.total += cisterns.total
