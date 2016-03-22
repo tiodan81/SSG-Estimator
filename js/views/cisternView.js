@@ -139,7 +139,7 @@ cisternView.makeTables = function(cur) {
 cisternView.makeSummary = function(cur) {
   let summary = ''
   summary += `
-  <tr><th>Item</th><th>Cost</th></tr>
+  <tr><th>Item</th><th>Amount</th></tr>
   <tr><td>Model</td><td>${cur.model}</td></tr>
   <tr><td>Labor hours</td><td>${cur.laborHrsTotal}</td></tr>
   <tr><td>Labor cost</td><td>$${cur.laborCostTotal}</td></tr>
@@ -166,9 +166,6 @@ cisternView.makeLabor = function(cur) {
 }
 
 cisternView.makeMaterials = function(cur) {
-  // Object.keys(cur).forEach(function(e) {
-  //   if key is number, toFixed(2)
-  // })
   let materials = ''
   materials += `
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>

@@ -235,7 +235,7 @@ rgView.makeTables = (rg) => {
 rgView.makeSummary = (rg) => {
   let summary = ''
   summary += `
-  <tr><th>Item</th><th>Cost</th></tr>
+  <tr><th>Item</th><th>Amount</th></tr>
   <tr><td>Labor hours</td><td>${rg.totals.laborHrsTotal}</td></tr>
   <tr><td>Labor cost</td><td>$${rg.totals.laborCostTotal}</td></tr>
   <tr><td>Materials cost</td><td>$${rg.totals.materialsCostTotal}</td></tr>
