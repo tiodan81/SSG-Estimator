@@ -25,7 +25,7 @@ function cisternMaker (ci, m, h, g, inf, out, al) {
   this.baseLaborHr = 0
   this.inflowLaborHr = 0
   this.outflowLaborHr = 0
-  this.totalHr = 0
+  this.laborHrsTotal = 0
   this.baseLaborCost = 0
   this.inflowLaborCost = 0
   this.outflowLaborCost = 0
@@ -42,8 +42,8 @@ function cisternMaker (ci, m, h, g, inf, out, al) {
   this.baseMaterialsCost = 0
   this.inflowMaterialsCost = 0
   this.outflowMaterialsCost = 0
-  this.laborTotal = 0
-  this.materialsTotal = 0
+  this.laborCostTotal = 0
+  this.materialsCostTotal = 0
   this.subtotal = 0
   this.tax = 0
   this.total = 0
@@ -139,29 +139,29 @@ cistern.calculateLabor = function (c) {
   c.baseLaborHr = cistern.calcBaseLabor(c)
   c.inflowLaborHr = util.round('ceil', (c.inflow / 2), 0.5)
   c.outflowLaborHr = util.round('ceil', (c.outflow / 4), 0.5)
-  c.totalHr = c.baseLaborHr + c.inflowLaborHr + c.outflowLaborHr + c.additionalLaborHr
+  c.laborHrsTotal = c.baseLaborHr + c.inflowLaborHr + c.outflowLaborHr + c.additionalLaborHr
   c.baseLaborCost = util.laborCost(c.baseLaborHr)
   c.inflowLaborCost = util.laborCost(c.inflowLaborHr)
   c.outflowLaborCost = util.laborCost(c.outflowLaborHr)
   c.additionalLaborCost = util.laborCost(c.additionalLaborHr)
 }
 
-cistern.calculateMaterialsTotal = function(c) {
+cistern.calculateMaterialsCostTotal = function(c) {
   return c.salePrice + c.gutterCost + c.baseMaterialsCost + c.inflowMaterialsCost + c.outflowMaterialsCost
 }
 
-cistern.calculateLaborTotal = function(c) {
+cistern.calculateLaborCostTotal = function(c) {
   return c.baseLaborCost + c.inflowLaborCost + c.outflowLaborCost + c.additionalLaborCost
 }
 
 cistern.calcSubTotal = function(c) {
-  return util.round('round', c.laborTotal + c.materialsTotal, 0.01)
+  return util.round('round', c.laborCostTotal + c.materialsCostTotal, 0.01)
 }
 
 cistern.calculateTotals = function(c) {
-  c.materialsTotal = cistern.calculateMaterialsTotal(c)
-  c.laborTotal = cistern.calculateLaborTotal(c)
-  c.subtotal = c.materialsTotal + c.laborTotal
+  c.materialsCostTotal = cistern.calculateMaterialsCostTotal(c)
+  c.laborCostTotal = cistern.calculateLaborCostTotal(c)
+  c.subtotal = c.materialsCostTotal + c.laborCostTotal
   c.tax = util.salesTax(c.subtotal)
   c.total = util.round('round', c.subtotal + c.tax, 0.01)
 }
@@ -175,7 +175,7 @@ cistern.allCalcs = function(cur) {
 
 cistern.preventDuplicates = () => {
   let $id = $('#cisternID').val()
-  let $exists = util.findObjInArray($id, project.current.cisterns.allCisterns, 'id').length
+  let $exists = util.findObjInArray($id, project.current.cisterns.all, 'id').length
   if ($exists) {
     return true
   } else {
@@ -193,7 +193,7 @@ cistern.saveToProject = function(newCistern) {
 }
 
 cistern.storeLocally = (newCistern) => {
-  let cur = project.current.cisterns.allCisterns
+  let cur = project.current.cisterns.all
   let $exists = util.findObjInArray(newCistern.id, cur, 'id')
 
   if ($exists.length) {
@@ -213,9 +213,9 @@ cistern.storeLocally = (newCistern) => {
 
 cistern.updateUberTank = function() {
   let cisterns = project.current.cisterns
-  let uber = cistern.makeUberTank(cisterns.allCisterns)
-  cisterns.uberTank = uber
-  if (cisterns.allCisterns.length > 1) {
+  let uber = cistern.makeUberTank(cisterns.all)
+  cisterns.uber = uber
+  if (cisterns.all.length > 1) {
     cisternView.populateSelector(uber)
   }
 }

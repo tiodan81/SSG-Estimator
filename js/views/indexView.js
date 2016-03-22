@@ -3,6 +3,9 @@ var indexView = {}
 indexView.init = function () {
   $('#home-content').show()
     .siblings().hide()
+  if (project.current.client) {
+    indexView.render(project.current)
+  }
   indexView.handleCreateButton()
   indexView.handleSelector()
 }
@@ -66,29 +69,45 @@ indexView.handleSelector = function() {
 }
 
 indexView.makeTable = function(cur) {
-  console.log(cur);
-  let html = ''
-  html += `
-  <h2>${cur.client}</h2>
-  <table id="project-table">
-  <tr><th>Item</th><th>Labor Hours</th><th>Labor Cost</th><th>Materials Cost</th><th>Subtotal</th><th>Tax</th><th>Total</th></tr>
+  let html = `
+    <h2>${cur.client}</h2>
+    <table id="project-table">
+    <tr><th>Item</th><th>Labor Hours</th><th>Labor Cost</th><th>Materials Cost</th><th>Subtotal</th><th>Tax</th><th>Total</th></tr>
   `
-  if (cur.rainGardens.allRGs.length) {
-    let rgs = cur.rainGardens.uberRG
-    html += `<tr><td>Rain gardens</td><td>${rgs.totals.laborHrsTotal}</td><td>${rgs.totals.laborCostTotal}</td><td>${rgs.totals.materialsCostTotal}</td><td>${rgs.totals.subtotal}</td><td>${rgs.totals.tax}</td><td>${rgs.totals.total}</td></tr>`
+
+  let totals = {
+    laborHours: 0,
+    laborCost: 0,
+    materialsCost: 0,
+    subtotal: 0,
+    tax: 0,
+    total: 0
   }
-  if (cur.cisterns.allCisterns.length) {
-    let cisterns = cur.cisterns.uberTank
-    html += `<tr><td>Cisterns</td><td>${cisterns.totalHr}</td><td>${cisterns.laborTotal}</td><td>${cisterns.materialsTotal}</td><td>${cisterns.subtotal}</td><td>${cisterns.tax}</td><td>${cisterns.total}</td></tr>`
+
+  if (cur.rainGardens.all.length) {
+    let rgs = cur.rainGardens.uber.totals
+    totals.laborHours += rgs.laborHrsTotal
+    totals.laborCost += rgs.laborCostTotal
+    totals.materialsCost += rgs.materialsCostTotal
+    totals.subtotal += rgs.subtotal
+    totals.tax += rgs.tax
+    totals.total += rgs.total
+    html += `<tr><td>Rain gardens</td><td>${rgs.laborHrsTotal}</td><td>${rgs.laborCostTotal}</td><td>${rgs.materialsCostTotal}</td><td>${rgs.subtotal}</td><td>${rgs.tax}</td><td>${rgs.total}</td></tr>`
+  }
+  if (cur.cisterns.all.length) {
+    let cisterns = cur.cisterns.uber
+    totals.laborHours += cisterns.laborHrsTotal
+    totals.laborCost += cisterns.laborCostTotal
+    totals.materialsCost += cisterns.materialsCostTotal
+    totals.subtotal += cisterns.subtotal
+    totals.tax += cisterns.tax
+    totals.total += cisterns.total
+    html += `<tr><td>Cisterns</td><td>${cisterns.laborHrsTotal}</td><td>${cisterns.laborCostTotal}</td><td>${cisterns.materialsCostTotal}</td><td>${cisterns.subtotal}</td><td>${cisterns.tax}</td><td>${cisterns.total}</td></tr>`
   }
   //<tr><td>Mulch</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
   html +=`
-  <tr><td>Total</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  <tr><td>Total</td><td>${totals.laborHours}</td><td>${totals.laborCost}</td><td>${totals.materialsCost}</td><td>${totals.subtotal}</td><td>${totals.tax}</td><td>${totals.total}</td></tr>
   </table>
   `
   return html
-}
-
-indexView.updateProjectSummary = function() {
-
 }

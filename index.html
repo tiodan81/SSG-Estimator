@@ -241,24 +241,29 @@
 
         <section id="rg-display">
           <h3>Rain Gardens</h3>
+
           <div>
             <select id="rg-selector">
             </select>
           </div>
+
           <div id="rg-edit-buttons">
             <span class="icon-pencil2"></span>
             <span class="icon-bin2"></span>
           </div>
+
           <ul id="rg-nav">
-            <button id="rg-nav-summary" class="button-primary">Summary</button>
-            <button id="rg-nav-labor">Labor</button>
-            <button id="rg-nav-materials">Materials</button>
+            <button id="summary" class="button-primary">Summary</button>
+            <button id="labor">Labor</button>
+            <button id="materials">Materials</button>
           </ul>
+
           <div id="rg-tables">
             <table id="rg-table-summary"></table>
             <table id="rg-table-labor" class="collaptable"></table>
             <table id="rg-table-materials" class="collaptable"></table>
           </div>
+
         </section>
       </section>
 
@@ -330,11 +335,14 @@
 
       <section id="cistern-content">
         <h3>Add a cistern</h3>
+
         <form id="cisternForm">
+
           <div class="fe">
             <label class="fieldname">ID:</label>
             <input type="text" id="cisternID" placeholder="tank ID" required="required" />
           </div>
+
           <div class="fe">
             <label class="fieldname">Model:</label>
             <select id="cisternModel">
@@ -362,6 +370,7 @@
               <option value="P410">Premier 410 slimline</option>
             </select>
           </div>
+
           <div class="fe">
             <label class="fieldname">Base height:</label>
             <select id="cisternBase">
@@ -370,22 +379,22 @@
               <option value="2">2 tiers</option>
             </select>
           </div>
-          <!-- <div class="fe">
-            <label class="fieldname">Gutter regrade:</label>
-            <input type="number" id="gutterFt" placeholder="ft" required="required" />
-          </div> -->
+
           <div class="fe">
             <label class="fieldname">3" inflow pipe:</label>
             <input type="number" id="cisternInflow" placeholder="ft" required="required" />
           </div>
+
           <div class="fe">
             <label class="fieldname">3" outflow pipe:</label>
             <input type="number" id="cisternOutflow" placeholder="ft" required="required" />
           </div>
+
           <div class="fe">
             <label class="fieldname">Additional labor:</label>
             <input type="number" id="cisternAddLabor" placeholder="hours (optional)">
           </div>
+
           <div class="fe">
             <label class="fieldname">Add-ons:</label>
             <select id="cisternAddOns">
@@ -394,26 +403,31 @@
               <option value="gauge">Gauge</option>
             </select>
           </div>
+
           <input id="cistern-save" type="submit" value="save">
         </form>
 
         <section id="cistern-display">
           <h3>Cisterns</h3>
+
           <div class="fe">
             <label class="fieldname">Tank ID:</label>
             <select id="cistern-selector"></select>
             <div id="cistern-edit-buttons"></div>
           </div>
+
           <ul id="cistern-nav">
-            <button id="cistern-nav-summary" class="button-primary">Summary</button>
-            <button id="cistern-nav-labor">Labor</button>
-            <button id="cistern-nav-materials">Materials</button>
+            <button id="summary" class="button-primary">Summary</button>
+            <button id="labor">Labor</button>
+            <button id="materials">Materials</button>
           </ul>
+
           <div id="cistern-tables">
             <table id="cistern-table-summary"></table>
             <table id="cistern-table-labor"></table>
             <table id="cistern-table-materials"></table>
           </div>
+
         </section>
       </section>
 
