@@ -14,18 +14,19 @@ rgController.save = () => {
     rg.saveToProject(newRG)
     rgView.render(newRG)
   } else {
-    let high = rg.buildRG()
-    let mHigh = rg.getMultiplier(high, 1)
-    rg.allCalcs(high, mHigh)
-    rg.saveToProject(high)
-
     let low = rg.buildRG()
     let mLow = rg.getMultiplier(low, 0.25)
+    let high = rg.buildRG()
+    let mHigh = rg.getMultiplier(high, 1)
+
     rg.allCalcs(low, mLow)
     low.id += ' - low estimate'
     rg.saveToProject(low)
 
-    rgView.render(high)
+    rg.allCalcs(high, mHigh)
+    rg.saveToProject(high)
+
     rgView.render(low)
+    rgView.render(high)
   }
 }
