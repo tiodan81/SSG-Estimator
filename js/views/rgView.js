@@ -97,7 +97,9 @@ rgView.populateSelector = (cur) => {
 
 rgView.handleSelector = function() {
   $('#rg-selector').off('change').on('change', function() {
-    let id = $('#rg-selector').val()
+    const id = $('#rg-selector').val()
+    const re = /(low estimate)/
+
     if (id === 'All rain gardens') {
       rgView.makeTables(project.current.rainGardens.uber)
       $('#rg-edit-buttons').hide()
@@ -105,7 +107,12 @@ rgView.handleSelector = function() {
       let curRG = util.findObjInArray(id, project.current.rainGardens.all, 'id')
       rgView.makeTables(curRG[0])
       rg.current = curRG[0]
-      $('#rg-edit-buttons').show()
+
+      if (re.test(id)) {
+        $('#rg-edit-buttons').hide()
+      } else {
+        $('#rg-edit-buttons').show()
+      }
     }
     rgView.showSummary()
   })
@@ -152,15 +159,18 @@ rgView.handleEdit = function() {
 
 rgView.handleDelete = function() {
   $('#rg-edit-buttons .icon-bin2').off('click').on('click', function() {
-    let old = rg.current
+    let old = rg.current.id
+    let low = old + ' - low estimate'
     let all = project.current.rainGardens.all
-    all.forEach((e, i) => {
-      if (e.id === old.id) {
-        all.splice(i, 1)
-      }
+
+    _.remove(all, (e) => {
+      return e.id ==  old || e.id === low
     })
-    $('#rg-selector > option[value="' + old.id + '"]').remove()
+
+    $('#rg-selector > option[value="' + old + '"]').remove()
+    $('#rg-selector > option[value="' + low + '"]').remove()
     rg.updateUberRG()
+
     if (all.length) {
       rg.current = all[0]
       $('#rg-selector').val(rg.current.id)
