@@ -10,9 +10,9 @@ function cisternMaker (ci, m, h, inf, out, al, pump, div, gauge) {
   this.inflow = inf || 0
   this.outflow = out || 0
   this.additionalLaborHr = al || 0
-  this.pump = pump || false
-  this.diverter = div || false
-  this.gauge = gauge || false
+  this.pump = pump || 0
+  this.diverter = div || 0
+  this.gauge = gauge || 0
   this.paverbase = 0
   this.stoneType = ''
   this.manorStones = 0
@@ -63,9 +63,9 @@ cistern.buildCistern = function() {
   let $inf = +($('#cisternInflow').val())
   let $out = +($('#cisternOutflow').val())
   let $al = +($('#cisternAddLabor').val()) || 0
-  let $pump = $('#cistern-pump:checked').length ? true : false
-  let $div = $('#cistern-diverter:checked').length ? true : false
-  let $gauge = $('#cistern-gauge:checked').length ? true : false
+  let $pump = $('#cistern-pump:checked').length ? 1 : 0
+  let $div = $('#cistern-diverter:checked').length ? 1 : 0
+  let $gauge = $('#cistern-gauge:checked').length ? 1 : 0
   return new cisternMaker($id, $m, $bh, $inf, $out, $al, $pump, $div, $gauge)
 }
 
@@ -251,3 +251,6 @@ cistern.makeUberTank = function(arr) {
   obj.id = 'All tanks'
   return obj
 }
+
+// function(arr, prop) {
+//   return arr.map((obj) => obj[prop])
