@@ -3,35 +3,40 @@ var cistern = {
   current: {}
 }
 
-function cisternMaker (ci, m, h, g, inf, out, al) {
+function cisternMaker (ci, r, m, h, inf, out, al, pump, div, gauge) {
   this.id = ci || ''
+  this.roofArea = r || 0
   this.model = m || ''
   this.baseHeight = h || 0
-  this.gutter = g || 0
   this.inflow = inf || 0
   this.outflow = out || 0
   this.additionalLaborHr = al || 0
+  this.pump = pump || 0
+  this.diverter = div || 0
+  this.gauge = gauge || 0
   this.paverbase = 0
   this.stoneType = ''
   this.manorStones = 0
   this.cinderBlocks = 0
   this.slimlineRestraints = 0
   this.bulkheadKit = 0
-  // this.pump
-  // this.diverter
-  // this.gauge
   this.inflowHardware = 0
   this.outflowHardware = 0
   this.baseLaborHr = 0
   this.inflowLaborHr = 0
   this.outflowLaborHr = 0
+  this.pumpLaborHr = 0
+  this.diverterLaborHr = 0
+  this.gaugeLaborHr = 0
   this.laborHrsTotal = 0
   this.baseLaborCost = 0
   this.inflowLaborCost = 0
   this.outflowLaborCost = 0
+  this.pumpLaborCost = 0
+  this.diverterLaborCost = 0
+  this.gaugeLaborCost = 0
   this.additionalLaborCost = 0
   this.salePrice = 0
-  this.gutterCost = 0
   this.paverbaseCost = 0
   this.manorStoneCost = 0
   this.cinderBlockCost = 0
@@ -42,6 +47,9 @@ function cisternMaker (ci, m, h, g, inf, out, al) {
   this.baseMaterialsCost = 0
   this.inflowMaterialsCost = 0
   this.outflowMaterialsCost = 0
+  this.pumpCost = 0
+  this.diverterCost = 0
+  this.gaugeCost = 0
   this.laborCostTotal = 0
   this.materialsCostTotal = 0
   this.subtotal = 0
@@ -50,14 +58,17 @@ function cisternMaker (ci, m, h, g, inf, out, al) {
 }
 
 cistern.buildCistern = function() {
-  var $id = $('#cisternID').val()
-  var $m = $('#cisternModel').val()
-  var $bh = +($('#cisternBase').val())
-  var $g = +($('#gutterFt').val())
-  var $inf = +($('#cisternInflow').val())
-  var $out = +($('#cisternOutflow').val())
-  var $al = +($('#cisternAddLabor').val()) || 0
-  return new cisternMaker($id, $m, $bh, $g, $inf, $out, $al)
+  let $id =     $('#cisternID').val()
+  let $roof =   +($('#cistern-roofArea').val())
+  let $m =      $('#cisternModel').val()
+  let $bh =     +($('#cisternBase').val())
+  let $inf =    +($('#cisternInflow').val())
+  let $out =    +($('#cisternOutflow').val())
+  let $al =     +($('#cisternAddLabor').val()) || 0
+  let $pump =   $('#cistern-pump:checked').length ? 1 : 0
+  let $div =    $('#cistern-diverter:checked').length ? 1 : 0
+  let $gauge =  $('#cistern-gauge:checked').length ? 1 : 0
+  return new cisternMaker($id, $roof, $m, $bh, $inf, $out, $al, $pump, $div, $gauge)
 }
 
 cistern.volumeCyl = function(d, h) {
@@ -123,13 +134,16 @@ cistern.calculateBaseMaterials = function (c) {
 }
 
 cistern.calculatePlumbingMaterials = function(c) {
-  c.gutterCost = util.materialCost(c.gutter, materials.plumbing.gutter)
+  let pipeType = c.roof
   c.inflowPipeCost = util.round('round', util.materialCost(c.inflow, materials.plumbing.pvc3In), 0.01)
   c.outflowPipeCost = util.round('round', util.materialCost(c.outflow, materials.plumbing.pvc3In), 0.01)
   c.inflowHardware = cistern.calculateHardware(c.inflow)
   c.outflowHardware = cistern.calculateHardware(c.outflow)
   c.inflowHdwCost = util.round('round', util.materialCost(c.inflowHardware, materials.plumbing.hardware), 0.01)
   c.outflowHdwCost = util.round('round', util.materialCost(c.outflowHardware, materials.plumbing.hardware), 0.01)
+  c.pumpCost = c.pump ? materials.plumbing.cisternPump : 0
+  c.diverterCost = c.diverter ? materials.plumbing.firstFlushDiverter : 0
+  c.gaugeCost = c.gauge ? materials.plumbing.cisternGauge : 0
 
   c.inflowMaterialsCost = util.round('round', c.inflowPipeCost + c.inflowHdwCost, 0.01)
   c.outflowMaterialsCost = util.round('round', c.outflowPipeCost + c.outflowHdwCost + materials.plumbing.lowFlowKit, 0.01)
@@ -137,9 +151,15 @@ cistern.calculatePlumbingMaterials = function(c) {
 
 cistern.calculateLabor = function (c) {
   c.baseLaborHr = cistern.calcBaseLabor(c)
-  c.inflowLaborHr = util.round('ceil', (c.inflow / 2), 0.5)
-  c.outflowLaborHr = util.round('ceil', (c.outflow / 4), 0.5)
+  c.pumpLaborHr = c.pump ? 6.5 : 0
+  c.diverterLaborHr = c.diverter ? 2 : 0
+  c.gaugeLaborHr = c.gauge ? 2 : 0
+  c.inflowLaborHr = util.round('ceil', (c.inflow / 2) + c.diverterLaborHr, 0.5)
+  c.outflowLaborHr = util.round('ceil', (c.outflow / 4) + c.pumpLaborHr + c.gaugeLaborHr, 0.5)
   c.laborHrsTotal = c.baseLaborHr + c.inflowLaborHr + c.outflowLaborHr + c.additionalLaborHr
+  c.pumpLaborCost = util.laborCost(c.pumpLaborHr)
+  c.diverterLaborCost = util.laborCost(c.diverterLaborHr)
+  c.gaugeLaborCost = util.laborCost(c.gaugeLaborHr)
   c.baseLaborCost = util.laborCost(c.baseLaborHr)
   c.inflowLaborCost = util.laborCost(c.inflowLaborHr)
   c.outflowLaborCost = util.laborCost(c.outflowLaborHr)
@@ -147,11 +167,11 @@ cistern.calculateLabor = function (c) {
 }
 
 cistern.calculateMaterialsCostTotal = function(c) {
-  return c.salePrice + c.gutterCost + c.baseMaterialsCost + c.inflowMaterialsCost + c.outflowMaterialsCost
+  return util.round('round', c.salePrice + c.baseMaterialsCost + c.inflowMaterialsCost + c.outflowMaterialsCost, 0.01)
 }
 
 cistern.calculateLaborCostTotal = function(c) {
-  return c.baseLaborCost + c.inflowLaborCost + c.outflowLaborCost + c.additionalLaborCost
+  return util.round('round', c.baseLaborCost + c.inflowLaborCost + c.outflowLaborCost + c.additionalLaborCost, 0.01)
 }
 
 cistern.calcSubTotal = function(c) {
@@ -173,7 +193,7 @@ cistern.allCalcs = function(cur) {
   cistern.calculateTotals(cur)
 }
 
-cistern.preventDuplicates = () => {
+cistern.preventDuplicates = function() {
   let $id = $('#cisternID').val()
   let $exists = util.findObjInArray($id, project.current.cisterns.all, 'id').length
   if ($exists) {
@@ -192,7 +212,7 @@ cistern.saveToProject = function(newCistern) {
   }
 }
 
-cistern.storeLocally = (newCistern) => {
+cistern.storeLocally = function(newCistern) {
   let cur = project.current.cisterns.all
   let $exists = util.findObjInArray(newCistern.id, cur, 'id')
 
@@ -234,3 +254,6 @@ cistern.makeUberTank = function(arr) {
   obj.id = 'All tanks'
   return obj
 }
+
+// function(arr, prop) {
+//   return arr.map((obj) => obj[prop])

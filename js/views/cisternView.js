@@ -5,9 +5,9 @@ cisternView.init = function() {
     .siblings().hide()
   cisternView.displayExisting()
   cisternView.handleSave()
-  //cisternView.handleAddOns()
   cisternView.handleSelector()
   cisternView.handleNav()
+  cisternView.handleEdit()
   cisternView.handleDelete()    //see rgVIew.editButtons
 }
 
@@ -26,31 +26,8 @@ cisternView.displayExisting = function() {
   }
 }
 
-cisternView.handleAddOns = function() {
-  $('#cisternAddOns').on('change', function() {
-    let addOn = $(this).val()
-    let count = $("'#" + addOn + "'").data('count')
-    count = count != 0 ? count : 1
-    //let count = $("'#" + addOn + "'").length ? cisternView.getAddOnCount(addOn) + 1 : 1
-    $(this).parent().after(cisternView.makeAddOn(addOn, count))
-  })
-}
-
-cisternView.getAddOnCount = function(a) {
-  return $("'#" + a + "'").data('count')
-}
-
-cisternView.makeAddOn = function(addOn, count) {
-  let html = ''
-  html += `<div class="fe">
-  <label id="${addOn}" data-count="${count} class="fieldname">${count} -</label>
-  <p>${addOn}</p>
-  `
-  return html
-}
-
 cisternView.handleSave = function() {
-  $('#cistern-save').off('click').on('click', function(e) {
+  $('#cisternForm').off('submit').on('submit', function(e) {
     e.preventDefault()
     let $val = $('#cistern-save').val()
     if ($val === 'save') {
@@ -60,10 +37,10 @@ cisternView.handleSave = function() {
         return false
       }
       cisternController.save()
-      viewUtil.clearForm()
+      cisternView.clearForm()
     } else if ($val === 'update') {
       cisternController.save()
-      viewUtil.clearForm()
+      cisternView.clearForm()
       $('#cistern-save').val('save')
     }
   })
@@ -141,6 +118,7 @@ cisternView.makeSummary = function(cur) {
   summary += `
   <tr><th>Item</th><th>Amount</th></tr>
   <tr><td>Model</td><td>${cur.model}</td></tr>
+  <tr><td>Roof area</td><td>${cur.roofArea} ft²</td></tr>
   <tr><td>Labor hours</td><td>${cur.laborHrsTotal}</td></tr>
   <tr><td>Labor cost</td><td>$${cur.laborCostTotal}</td></tr>
   <tr><td>Materials cost</td><td>$${cur.materialsCostTotal}</td></tr>
@@ -186,6 +164,15 @@ cisternView.makeMaterials = function(cur) {
   `
   if (cur.slimlineRestraints) {
     materials += `<tr><td>Slimeline restraints</td><td>1</td><td>$${cur.slimlineRestraints}</td></tr>`
+  }
+  if (cur.pump) {
+    materials += `<tr><td>Pump</td><td>${cur.pump}</td><td>$${cur.pumpCost}</td></tr>`
+  }
+  if (cur.diverter) {
+    materials += `<tr><td>Diverter</td><td>${cur.diverter}</td><td>$${cur.diverterCost}</td></tr>`
+  }
+  if (cur.gauge) {
+    materials += `<tr><td>Gauge</td><td>${cur.gauge}</td><td>$${cur.gaugeCost}</td></tr>`
   }
   if (cur.bulkheadKit) {
     materials += `<tr><td>Bulkhead kit</td><td>1</td><td>$${cur.bulkheadKit}</td></tr>`
@@ -241,11 +228,22 @@ cisternView.handleDelete = function() {
 }
 
 cisternView.populateForm = function(cur) {
-  $('#cistern').val(cur.id)
+  $('#cisternID').val(cur.id)
   $('#cisternModel').val(cur.model)
   $('#cisternBase').val(cur.baseHeight)
   $('#gutterFt').val(cur.gutter)
   $('#cisternInflow').val(cur.inflow)
   $('#cisternOutflow').val(cur.outflow)
   $('#cisternAddLabor').val(cur.additionalLaborHr)
+  $('#cistern-pump').prop('checked', cur.pump)
+  $('#cistern-diverter').prop('checked', cur.diverter)
+  $('#cistern-gauge').prop('checked', cur.gauge)
+}
+
+cisternView.clearForm = function() {
+  $('#cisternForm input[type="text"]').val('')
+  $('#cisternModel').val('B420')
+  $('#cisternBase').val('1')
+  $('#cisternForm input[type="number"]').val('')
+  $('#cisternForm input[type="checkbox"]').prop('checked', false)
 }

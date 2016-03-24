@@ -11,7 +11,3 @@ viewUtil.clear = function(callback) {
   viewUtil.clearForm()
   callback()
 }
-
-viewUtil.clearForm = function() {
-  $('.fe input').val('')
-}
