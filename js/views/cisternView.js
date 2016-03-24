@@ -118,6 +118,7 @@ cisternView.makeSummary = function(cur) {
   summary += `
   <tr><th>Item</th><th>Amount</th></tr>
   <tr><td>Model</td><td>${cur.model}</td></tr>
+  <tr><td>Roof area</td><td>${cur.roofArea} ft²</td></tr>
   <tr><td>Labor hours</td><td>${cur.laborHrsTotal}</td></tr>
   <tr><td>Labor cost</td><td>$${cur.laborCostTotal}</td></tr>
   <tr><td>Materials cost</td><td>$${cur.materialsCostTotal}</td></tr>

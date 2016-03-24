@@ -189,7 +189,7 @@ rgView.handleDelete = function() {
 rgView.populateForm = function(cur) {
   //need to show/display appropriate fields for infilt, inout2
   $('#rgID').val(cur.id)
-  $('#roofArea').val(cur.roof)
+  $('#rg-roofArea').val(cur.roof)
   $('#infiltKnown').prop('checked', cur.infKnown)
   $('#rgInfiltRate').val(cur.infRate)
   $('#rgPlantBudget').val(cur.plantCost)

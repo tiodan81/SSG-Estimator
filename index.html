@@ -128,7 +128,7 @@
           <input type="text" id="rgID" placeholder="rain garden name" required>
 
           <label>Roof area:</label>
-          <input type="number" id="roofArea" placeholder="ft²" required>
+          <input type="number" id="rg-roofArea" placeholder="ft²" required>
 
           <label>
             <input id="infiltKnown" type="checkbox">
@@ -344,7 +344,10 @@
         <form id="cisternForm">
 
           <label>ID:</label>
-          <input type="text" id="cisternID" placeholder="tank ID" required="required" />
+          <input type="text" id="cisternID" placeholder="tank ID" required>
+
+          <label>Roof area:</label>
+          <input type="number" id="cistern-roofArea" placeholder="ft²" required>
 
           <label>Model:</label>
           <select id="cisternModel">
@@ -380,10 +383,10 @@
           </select>
 
           <label>3" inflow pipe:</label>
-          <input type="number" id="cisternInflow" placeholder="ft" required="required" />
+          <input type="number" id="cisternInflow" placeholder="ft" required>
 
           <label>3" outflow pipe:</label>
-          <input type="number" id="cisternOutflow" placeholder="ft" required="required" />
+          <input type="number" id="cisternOutflow" placeholder="ft" required>
 
           <label>Additional labor:</label>
           <input type="number" id="cisternAddLabor" placeholder="hours (optional)">

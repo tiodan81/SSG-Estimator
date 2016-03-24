@@ -3,8 +3,9 @@ var cistern = {
   current: {}
 }
 
-function cisternMaker (ci, m, h, inf, out, al, pump, div, gauge) {
+function cisternMaker (ci, r, m, h, inf, out, al, pump, div, gauge) {
   this.id = ci || ''
+  this.roofArea = r || 0
   this.model = m || ''
   this.baseHeight = h || 0
   this.inflow = inf || 0
@@ -57,16 +58,17 @@ function cisternMaker (ci, m, h, inf, out, al, pump, div, gauge) {
 }
 
 cistern.buildCistern = function() {
-  let $id = $('#cisternID').val()
-  let $m = $('#cisternModel').val()
-  let $bh = +($('#cisternBase').val())
-  let $inf = +($('#cisternInflow').val())
-  let $out = +($('#cisternOutflow').val())
-  let $al = +($('#cisternAddLabor').val()) || 0
-  let $pump = $('#cistern-pump:checked').length ? 1 : 0
-  let $div = $('#cistern-diverter:checked').length ? 1 : 0
-  let $gauge = $('#cistern-gauge:checked').length ? 1 : 0
-  return new cisternMaker($id, $m, $bh, $inf, $out, $al, $pump, $div, $gauge)
+  let $id =     $('#cisternID').val()
+  let $roof =   +($('#cistern-roofArea').val())
+  let $m =      $('#cisternModel').val()
+  let $bh =     +($('#cisternBase').val())
+  let $inf =    +($('#cisternInflow').val())
+  let $out =    +($('#cisternOutflow').val())
+  let $al =     +($('#cisternAddLabor').val()) || 0
+  let $pump =   $('#cistern-pump:checked').length ? 1 : 0
+  let $div =    $('#cistern-diverter:checked').length ? 1 : 0
+  let $gauge =  $('#cistern-gauge:checked').length ? 1 : 0
+  return new cisternMaker($id, $roof, $m, $bh, $inf, $out, $al, $pump, $div, $gauge)
 }
 
 cistern.volumeCyl = function(d, h) {
@@ -132,6 +134,7 @@ cistern.calculateBaseMaterials = function (c) {
 }
 
 cistern.calculatePlumbingMaterials = function(c) {
+  let pipeType = c.roof
   c.inflowPipeCost = util.round('round', util.materialCost(c.inflow, materials.plumbing.pvc3In), 0.01)
   c.outflowPipeCost = util.round('round', util.materialCost(c.outflow, materials.plumbing.pvc3In), 0.01)
   c.inflowHardware = cistern.calculateHardware(c.inflow)

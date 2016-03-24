@@ -14,7 +14,7 @@ rg.buildRG = () => {
 
   return new rg.rgMaker({
     id:           $('#rgID').val(),
-    roof:         +($('#roofArea').val()),
+    roof:         +($('#rg-roofArea').val()),
     infKnown:     $('#infiltKnown:checked').length ? true : false,
     infRate:      +($('#rgInfiltRate').val()),
     plantCost:    +($('#rgPlantBudget').val()),
