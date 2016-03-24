@@ -187,6 +187,15 @@ cisternView.makeMaterials = function(cur) {
   if (cur.slimlineRestraints) {
     materials += `<tr><td>Slimeline restraints</td><td>1</td><td>$${cur.slimlineRestraints}</td></tr>`
   }
+  if (cur.pump) {
+    materials += `<tr><td>Pump</td><td>1</td><td>$${cur.pumpCost}</td></tr>`
+  }
+  if (cur.diverter) {
+    materials += `<tr><td>Diverter</td><td>1</td><td>$${cur.diverterCost}</td></tr>`
+  }
+  if (cur.gauge) {
+    materials += `<tr><td>Gauge</td><td>1</td><td>$${cur.gaugeCost}</td></tr>`
+  }
   if (cur.bulkheadKit) {
     materials += `<tr><td>Bulkhead kit</td><td>1</td><td>$${cur.bulkheadKit}</td></tr>`
   }
