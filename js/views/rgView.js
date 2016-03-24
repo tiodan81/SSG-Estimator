@@ -75,7 +75,7 @@ rgView.handleSave = () => {
   })
 }
 
-rgView.render = (cur) => {
+rgView.render = function(cur) {
   rgView.populateSelector(cur)
   $('#rg-selector').val(cur.id)
   rgView.makeTables(cur)
