@@ -1,5 +1,5 @@
 var mulchController = {}
 
-mulchController.init = () => {
+mulchController.init = function() {
   mulchView.init()
 }

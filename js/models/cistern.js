@@ -254,6 +254,3 @@ cistern.makeUberTank = function(arr) {
   obj.id = 'All tanks'
   return obj
 }
-
-// function(arr, prop) {
-//   return arr.map((obj) => obj[prop])

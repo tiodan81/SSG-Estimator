@@ -1,6 +1,6 @@
 var indexView = {}
 
-indexView.init = function () {
+indexView.init = function() {
   $('#home-content').show()
     .siblings().hide()
   if (project.current.client) {
