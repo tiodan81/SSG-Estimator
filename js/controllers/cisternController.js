@@ -1,12 +1,12 @@
 var cisternController = {}
 
-cisternController.init = () => {
+cisternController.init = function() {
   cisternView.init()
 }
 
-cisternController.save = () => {
+cisternController.save = function() {
   let newCistern = cistern.buildCistern()
   cistern.allCalcs(newCistern)
   cistern.saveToProject(newCistern)
-  cisternView.render(newCistern)  
+  cisternView.render(newCistern)
 }

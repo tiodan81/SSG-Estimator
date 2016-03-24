@@ -1,5 +1,5 @@
 var rainwiseController = {}
 
-rainwiseController.init = () => {
+rainwiseController.init = function() {
   rainwiseView.init()
 }

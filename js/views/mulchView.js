@@ -70,18 +70,23 @@ mulchView.handleSave = function() {
       mulch.mulchZones.push(newMulchZone)
       mulch.zoneId += 1
       mulch.listen()
-      viewUtil.clearForm()
+      mulchView.clearForm()
     } else if ($val === 'update') {
       let curId = parseInt($(this).data('id'))
       let updated = mulch.buildMulch(curId)
       mulch.findReplace(updated)
       mulch.listen()
-      viewUtil.clearForm()
+      mulchView.clearForm()
       $val = 'save'
     } else {
       console.log('error: no mulch match.')
     }
   })
+}
+
+mulchView.clearForm = function() {
+  $('#mulchForm input[type="text"]').val('')
+  $('#mulchForm input[type="number"]').val('')
 }
 
 // mulchView.handleUpdate = function() {
@@ -91,7 +96,7 @@ mulchView.handleSave = function() {
 //     var updated = mulch.buildMulch(curId);
 //     mulch.findReplace(updated);
 //     mulch.listen();
-//     viewUtil.clearForm();
+//     mulchView.clearForm();
 //     $('#mulch-update').hide();
 //     $('#mulch-add').show();
 //   });

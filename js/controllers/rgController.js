@@ -1,10 +1,10 @@
 var rgController = {}
 
-rgController.init = () => {
+rgController.init = function() {
   rgView.init()
 }
 
-rgController.save = () => {
+rgController.save = function() {
   let $infKnown = $('#infiltKnown:checked').length ? true : false
 
   if ($infKnown) {

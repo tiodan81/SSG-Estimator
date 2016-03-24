@@ -59,6 +59,8 @@ project.saveNew = function(newProject) {
       console.log('Project failed to save. ' + error)
     } else {
       console.log('Saved new project ' + newProject.client)
+      project.allProjects.push(newProject)
+      project.current = newProject
     }
   })
 }

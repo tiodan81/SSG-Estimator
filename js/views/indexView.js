@@ -1,6 +1,6 @@
 var indexView = {}
 
-indexView.init = function () {
+indexView.init = function() {
   $('#home-content').show()
     .siblings().hide()
   if (project.current.client) {
@@ -29,20 +29,21 @@ indexView.handleProjectForm = function() {
 
 indexView.handleProjectCancel = function() {
   $('#project-cancel').off('click').on('click', function(e) {
-    viewUtil.clearForm()
+    indexView.clearForm()
     $('#projectForm').hide()
       .siblings().show()
   })
 }
 
-indexView.clearHideForm = function(newProject) {
-  viewUtil.clearForm()
-  $('#projectForm').hide()
-  $('#project-selector').val(newProject.client)
-}
-
 indexView.render = function(project) {
   $('#project-summary').show().html(indexView.makeTable(project))
+}
+
+indexView.clearForm = function() {
+  $('#project-client').val('')
+  $('#project-city').val('Seattle')
+  $('#project-labor-rate').val('45')
+  $('#project-markup-rate').val('35')
 }
 
 indexView.populateSelector = function(project) {
@@ -63,6 +64,7 @@ indexView.handleSelector = function() {
       let curProject = util.findObjInArray(id, project.allProjects, 'client')
       project.current = curProject[0]
       project.populate(project.current)
+      projectView.clearDisplays()
       indexView.render(project.current)
     }
   })

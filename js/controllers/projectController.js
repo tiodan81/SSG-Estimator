@@ -5,9 +5,11 @@ projectController.create = function() {
 
   project.exists(newProject)
   user.setProjectOwner(newProject)
-  project.allProjects.push(newProject)
-  project.current = newProject
-  indexView.clearHideForm(newProject)
+  indexView.clearForm()
+  projectView.clearDisplays()
   indexView.populateSelector(newProject)
+  $('#project-selector').val(newProject.client)
+  $('#projectForm').hide()
+    .siblings().show()
   indexView.render(newProject)
 }

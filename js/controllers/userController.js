@@ -1,6 +1,6 @@
 var userController = {}
 
-userController.checkLogin = () => {
+userController.checkLogin = function() {
   let auth = user.isLoggedIn()
   if (auth) {
     user.uid = auth.uid
@@ -10,17 +10,22 @@ userController.checkLogin = () => {
   }
 }
 
-userController.loginInit = () => {
+userController.loginInit = function() {
   loginView.init()
 }
 
-userController.logout = () => {
+userController.logout = function() {
   user.logout()
   project.clear()
-  viewUtil.clear(loginView.init)
+  $('#logout').hide()
+  $('#login').show()
+  $('#project-selector').html('<option value="default">Select a Project</option>')
+  $('#project-summary').html('')
+  projectView.clearDisplays()
+  loginView.init()
 }
 
-userController.userInit = () => {
+userController.userInit = function() {
   project.getJSON()
   indexView.init()
   $('#project-selector').val('default')
