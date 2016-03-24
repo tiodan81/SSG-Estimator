@@ -5,9 +5,9 @@ cisternView.init = function() {
     .siblings().hide()
   cisternView.displayExisting()
   cisternView.handleSave()
-  //cisternView.handleAddOns()
   cisternView.handleSelector()
   cisternView.handleNav()
+  cisternView.handleEdit()
   cisternView.handleDelete()    //see rgVIew.editButtons
 }
 
@@ -24,29 +24,6 @@ cisternView.displayExisting = function() {
   } else {
     return
   }
-}
-
-cisternView.handleAddOns = function() {
-  $('#cisternAddOns').on('change', function() {
-    let addOn = $(this).val()
-    let count = $("'#" + addOn + "'").data('count')
-    count = count != 0 ? count : 1
-    //let count = $("'#" + addOn + "'").length ? cisternView.getAddOnCount(addOn) + 1 : 1
-    $(this).parent().after(cisternView.makeAddOn(addOn, count))
-  })
-}
-
-cisternView.getAddOnCount = function(a) {
-  return $("'#" + a + "'").data('count')
-}
-
-cisternView.makeAddOn = function(addOn, count) {
-  let html = ''
-  html += `<div class="fe">
-  <label id="${addOn}" data-count="${count} >${count} -</label>
-  <p>${addOn}</p>
-  `
-  return html
 }
 
 cisternView.handleSave = function() {
@@ -250,13 +227,16 @@ cisternView.handleDelete = function() {
 }
 
 cisternView.populateForm = function(cur) {
-  $('#cistern').val(cur.id)
+  $('#cisternID').val(cur.id)
   $('#cisternModel').val(cur.model)
   $('#cisternBase').val(cur.baseHeight)
   $('#gutterFt').val(cur.gutter)
   $('#cisternInflow').val(cur.inflow)
   $('#cisternOutflow').val(cur.outflow)
   $('#cisternAddLabor').val(cur.additionalLaborHr)
+  $('#cistern-pump').prop('checked', cur.pump)
+  $('#cistern-diverter').prop('checked', cur.diverter)
+  $('#cistern-gauge').prop('checked', cur.gauge)
 }
 
 cisternView.clearForm = function() {
