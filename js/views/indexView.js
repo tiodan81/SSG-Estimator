@@ -64,6 +64,7 @@ indexView.handleSelector = function() {
       let curProject = util.findObjInArray(id, project.allProjects, 'client')
       project.current = curProject[0]
       project.populate(project.current)
+      projectView.clearDisplays()
       indexView.render(project.current)
     }
   })

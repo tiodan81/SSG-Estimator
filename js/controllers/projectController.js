@@ -6,6 +6,7 @@ projectController.create = function() {
   project.exists(newProject)
   user.setProjectOwner(newProject)
   indexView.clearForm()
+  projectView.clearDisplays()
   indexView.populateSelector(newProject)
   $('#project-selector').val(newProject.client)
   $('#projectForm').hide()
