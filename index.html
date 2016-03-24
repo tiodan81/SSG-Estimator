@@ -28,15 +28,15 @@
 
         <h2>Create an Account</h2>
         <form id="new-user-form">
-          <input id="new-user" type="email" placeholder="user@email.com" />
-          <input id="new-password" type="password" placeholder="password" />
+          <input id="new-user" type="email" placeholder="user@email.com">
+          <input id="new-password" type="password" placeholder="password">
           <input id="new-user-submit" type="submit" value="Submit">
         </form>
 
         <h2>Login</h2>
         <form id="login-form">
-          <input id="username" type="email" placeholder="user@email.com" />
-          <input id="password" type="password" placeholder="password" />
+          <input id="username" type="email" placeholder="user@email.com">
+          <input id="password" type="password" placeholder="password">
           <input id="login-submit" type="submit" value="Login">
         </form>
       </section>
@@ -45,45 +45,52 @@
         <h1>Stone Soup Project Planner</h1>
 
         <div id="project-select-container" class="row">
+
           <div class="six columns">
             <select id="project-selector">
               <option value="default">Select a Project</option>
             </select>
           </div>
+
           <div class="six columns">
             <button id="project-create-button" type="button">Create a new project</button>
           </div>
+
         </div>
 
         <form id="projectForm">
-          <div class="fe">
-            <label class="fieldname">Client:</label>
-            <input id="project-client" type="text" required="required"></input>
+
+          <div>
+            <label>Client:</label>
+            <input id="project-client" type="text" required="required">
           </div>
-          <div class="fe">
-            <label class="fieldname">City:</label>
+
+          <div>
+            <label>City:</label>
             <select id="project-city">
               <option value="Seattle">Seattle</option>
               <option value="Renton">Renton</option>
             </select>
           </div>
-          <div class="fe">
-            <label class="fieldname">Labor Rate:</label>
+
+          <div>
+            <label>Labor Rate:</label>
             <select id="project-labor-rate">
               <option value="45">$45/hr</option>
               <option value="40">$40/hr</option>
             </select>
           </div>
-          <div class="fe">
-            <label class="fieldname">Markup:</label>
+
+          <div>
+            <label>Markup:</label>
             <select id="project-markup-rate">
               <option value="35">35%</option>
             </select>
           </div>
+
           <div class="submit">
             <input type="submit" value="Create project">
             <input type="button" id="project-cancel" value="cancel">
-
           </div>
         </form>
 
@@ -94,15 +101,20 @@
 
       <section id="rainwise-content">
         <h3>Rainwise elements</h3>
+
         <form id="rainwiseForm">
-          <label class="fieldname">Gutter regrade:</label>
+
+          <label>Gutter regrade:</label>
           <input type="number" id="gutterFt" placeholder="ft" required>
-          <label class="fieldname">
+
+          <label>
             <input type="checkbox">
             <span class="label-body">Pre/post inspections (2hrs @ $75/hr)</span>
           </label>
+
           <button id="rainwise-add">Save</button>
           <button id="rainwise-update">Update</button>
+
         </form>
       </section>
 
@@ -112,23 +124,23 @@
 
         <form id="rg-form">
 
-          <label class="fieldname">ID:</label>
+          <label>ID:</label>
           <input type="text" id="rgID" placeholder="rain garden name" required>
 
-          <label class="fieldname">Roof area:</label>
+          <label>Roof area:</label>
           <input type="number" id="roofArea" placeholder="ft²" required>
 
-          <label class="fieldname">
+          <label>
             <input id="infiltKnown" type="checkbox">
             <span class="label-body">Infiltration rate known</span>
           </label>
 
           <div id="rgInfiltContainer">
-            <label class="fieldname">Infiltration rate:</label>
+            <label>Infiltration rate:</label>
             <input type="number" id="rgInfiltRate" step="0.01" placeholder="in/hr">
           </div>
 
-          <label class="fieldname">Plant budget:</label>
+          <label>Plant budget:</label>
           <input type="number" id="rgPlantBudget" placeholder="$$$" required>
 
           <div id="rg-inflows">
@@ -143,6 +155,7 @@
               <label class="label-body">Inflow 1
                 <input class="rgflowtype" type="radio" name="rgInflow1" value="channel" required>
                 <span class="label-body">channel</span>
+
                 <input class="rgflowtype" type="radio" name="rgInflow1" value="pipe">
                 <span class="label-body">pipe</span>
               </label>
@@ -152,7 +165,7 @@
                 <span class="label-body">Vegetated inflow</span>
               </label>
 
-              <label class="fieldname">Inflow 1 length:</label>
+              <label>Inflow 1 length:</label>
               <input type="number" id="rgInfLength1" placeholder="ft" required>
             </div>
 
@@ -169,7 +182,7 @@
                 <span class="label-body">Vegetated inflow</span>
               </label>
 
-              <label class="fieldname">Inflow 2 length:</label>
+              <label>Inflow 2 length:</label>
               <input type="number" id="rgInfLength2" placeholder="ft">
             </div>
 
@@ -194,7 +207,7 @@
                 <span class="label-body">Vegetated outflow</span>
               </label>
 
-              <label class="fieldname">Outflow 1 length:</label>
+              <label>Outflow 1 length:</label>
               <input type="number" id="rgOutLength1" placeholder="ft" required>
             </div>
 
@@ -211,7 +224,7 @@
                 <span class="label-body">Vegetated outflow</span>
               </label>
 
-              <label class="fieldname">Outflow 2 length:</label>
+              <label>Outflow 2 length:</label>
               <input type="number" id="rgOutLength2" placeholder="ft">
             </div>
           </div>
@@ -225,12 +238,12 @@
             <span class="label-body">none</span>
           </label>
 
-          <label class="fieldname">
+          <label>
             <input id="fedByCistern" type="checkbox">
             <span class="label-body">Fed by cistern</span>
           </label>
 
-          <label class="fieldname">
+          <label>
             <input id="rgDumpTruck" type="checkbox">
             <span class="label-body">Dump truck</span>
           </label>
@@ -271,36 +284,28 @@
         <h1>Mulch Calculator</h1>
         <h3>Add a mulch zone</h3>
         <form id="mulchForm">
-          <div class="fe">
-            <label class="fieldname">Zone:</label>
-            <input type="text" id="zone" placeholder="area name" required>
-          </div>
-          <div class="fe">
-            <label class="fieldname">Material Type:</label>
-            <select id="type">
-              <option value="bark">Bark</option>
-              <option value="chips">Play Chips</option>
-              <option value="GroCo">GroCo</option>
-            </select>
-          </div>
-          <div class="fe">
-            <label class="fieldname">Width:</label>
-            <input type="number" id="width-ft" class="dimension" placeholder="feet" required>
-            <input type="number" id="width-in" class="dimension" min="0" max="11" placeholder="inches (optional)">
-          </div>
-          <div class="fe">
-            <label class="fieldname">Length:</label>
-            <input type="number" id="length-ft" class="dimension" placeholder="feet" required>
-            <input type="number" id="length-in" class="dimension" min="0" max="11" placeholder="inches (optional)">
-          </div>
-          <div class="fe">
-            <label class="fieldname">Depth:</label>
-            <input type="number" id="depth" class="dimension" placeholder="inches" required>
-          </div>
-          <div class="submit">
-            <input id="mulch-save" type="submit" value="save">
-            <!-- <button id="mulch-update">Update Zone</button> -->
-          </div>
+          <label>Zone:</label>
+          <input type="text" id="zone" placeholder="area name" required>
+
+          <label>Material Type:</label>
+          <select id="type">
+            <option value="bark">Bark</option>
+            <option value="chips">Play Chips</option>
+            <option value="GroCo">GroCo</option>
+          </select>
+
+          <label>Width:</label>
+          <input type="number" id="width-ft" class="dimension" placeholder="feet" required>
+          <input type="number" id="width-in" class="dimension" min="0" max="11" placeholder="inches (optional)">
+
+          <label>Length:</label>
+          <input type="number" id="length-ft" class="dimension" placeholder="feet" required>
+          <input type="number" id="length-in" class="dimension" min="0" max="11" placeholder="inches (optional)">
+
+          <label>Depth:</label>
+          <input type="number" id="depth" class="dimension" placeholder="inches" required>
+
+          <input id="mulch-save" type="submit" value="save">
         </form>
 
         <section id="mulch-display">
@@ -338,71 +343,67 @@
 
         <form id="cisternForm">
 
-          <div class="fe">
-            <label class="fieldname">ID:</label>
-            <input type="text" id="cisternID" placeholder="tank ID" required="required" />
-          </div>
+          <label>ID:</label>
+          <input type="text" id="cisternID" placeholder="tank ID" required="required" />
 
-          <div class="fe">
-            <label class="fieldname">Model:</label>
-            <select id="cisternModel">
-              <option value="B420">Bushman 420</option>
-              <option value="B660">Bushman 660</option>
-              <option value="B865">Bushman 865</option>
-              <option value="B1110">Bushman 1110</option>
-              <option value="B1320">Bushman 1320</option>
-              <option value="B2825">Bushman 2825</option>
-              <option value="B265">Bushman 265 slimline</option>
-              <option value="B530">Bushman 530 slimline</option>
-              <option value="P480">Premier 480</option>
-              <option value="P575">Premier 575</option>
-              <option value="P625">Premier 625</option>
-              <option value="P795">Premier 795</option>
-              <option value="P840">Premier 840</option>
-              <option value="P960">Premier 960</option>
-              <option value="P1150">Premier 1150</option>
-              <option value="P1440">Premier 1440</option>
-              <option value="P1535">Premier 1535</option>
-              <option value="P2000">Premier 2000</option>
-              <option value="P2340">Premier 2340</option>
-              <option value="P3000">Premier 3000</option>
-              <option value="P4000">Premier 4000</option>
-              <option value="P410">Premier 410 slimline</option>
-            </select>
-          </div>
+          <label>Model:</label>
+          <select id="cisternModel">
+            <option value="B420">Bushman 420</option>
+            <option value="B660">Bushman 660</option>
+            <option value="B865">Bushman 865</option>
+            <option value="B1110">Bushman 1110</option>
+            <option value="B1320">Bushman 1320</option>
+            <option value="B2825">Bushman 2825</option>
+            <option value="B265">Bushman 265 slimline</option>
+            <option value="B530">Bushman 530 slimline</option>
+            <option value="P480">Premier 480</option>
+            <option value="P575">Premier 575</option>
+            <option value="P625">Premier 625</option>
+            <option value="P795">Premier 795</option>
+            <option value="P840">Premier 840</option>
+            <option value="P960">Premier 960</option>
+            <option value="P1150">Premier 1150</option>
+            <option value="P1440">Premier 1440</option>
+            <option value="P1535">Premier 1535</option>
+            <option value="P2000">Premier 2000</option>
+            <option value="P2340">Premier 2340</option>
+            <option value="P3000">Premier 3000</option>
+            <option value="P4000">Premier 4000</option>
+            <option value="P410">Premier 410 slimline</option>
+          </select>
 
-          <div class="fe">
-            <label class="fieldname">Base height:</label>
-            <select id="cisternBase">
-              <option value="0">0 tiers</option>
-              <option value="1" selected="selected">1 tier</option>
-              <option value="2">2 tiers</option>
-            </select>
-          </div>
+          <label>Base height:</label>
+          <select id="cisternBase">
+            <option value="0">0 tiers</option>
+            <option value="1" selected="selected">1 tier</option>
+            <option value="2">2 tiers</option>
+          </select>
 
-          <div class="fe">
-            <label class="fieldname">3" inflow pipe:</label>
-            <input type="number" id="cisternInflow" placeholder="ft" required="required" />
-          </div>
+          <label>3" inflow pipe:</label>
+          <input type="number" id="cisternInflow" placeholder="ft" required="required" />
 
-          <div class="fe">
-            <label class="fieldname">3" outflow pipe:</label>
-            <input type="number" id="cisternOutflow" placeholder="ft" required="required" />
-          </div>
+          <label>3" outflow pipe:</label>
+          <input type="number" id="cisternOutflow" placeholder="ft" required="required" />
 
-          <div class="fe">
-            <label class="fieldname">Additional labor:</label>
-            <input type="number" id="cisternAddLabor" placeholder="hours (optional)">
-          </div>
+          <label>Additional labor:</label>
+          <input type="number" id="cisternAddLabor" placeholder="hours (optional)">
 
-          <div class="fe">
-            <label class="fieldname">Add-ons:</label>
-            <select id="cisternAddOns">
-              <option value="pump">Pump</option>
-              <option value="diverter">First-flush diverter</option>
-              <option value="gauge">Gauge</option>
-            </select>
-          </div>
+          <label>Add-ons:</label>
+
+          <label>
+            <input id="cistern-pump" type="checkbox">
+            <span class="label-body">Pump</span>
+          </label>
+
+          <label>
+            <input id="cistern-diverter" type="checkbox">
+            <span class="label-body">First-flush diverter</span>
+          </label>
+
+          <label>
+            <input id="cistern-gauge" type="checkbox">
+            <span class="label-body">Gauge</span>
+          </label>
 
           <input id="cistern-save" type="submit" value="save">
         </form>
@@ -410,11 +411,9 @@
         <section id="cistern-display">
           <h3>Cisterns</h3>
 
-          <div class="fe">
-            <label class="fieldname">Tank ID:</label>
-            <select id="cistern-selector"></select>
-            <div id="cistern-edit-buttons"></div>
-          </div>
+          <label >Tank ID:</label>
+          <select id="cistern-selector"></select>
+          <div id="cistern-edit-buttons"></div>
 
           <ul id="cistern-nav">
             <button id="summary" class="button-primary">Summary</button>

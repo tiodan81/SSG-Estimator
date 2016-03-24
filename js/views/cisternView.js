@@ -43,14 +43,14 @@ cisternView.getAddOnCount = function(a) {
 cisternView.makeAddOn = function(addOn, count) {
   let html = ''
   html += `<div class="fe">
-  <label id="${addOn}" data-count="${count} class="fieldname">${count} -</label>
+  <label id="${addOn}" data-count="${count} >${count} -</label>
   <p>${addOn}</p>
   `
   return html
 }
 
 cisternView.handleSave = function() {
-  $('#cistern-save').off('click').on('click', function(e) {
+  $('#cisternForm').off('submit').on('submit', function(e) {
     e.preventDefault()
     let $val = $('#cistern-save').val()
     if ($val === 'save') {
@@ -60,10 +60,10 @@ cisternView.handleSave = function() {
         return false
       }
       cisternController.save()
-      viewUtil.clearForm()
+      cisternView.clearForm()
     } else if ($val === 'update') {
       cisternController.save()
-      viewUtil.clearForm()
+      cisternView.clearForm()
       $('#cistern-save').val('save')
     }
   })
@@ -248,4 +248,12 @@ cisternView.populateForm = function(cur) {
   $('#cisternInflow').val(cur.inflow)
   $('#cisternOutflow').val(cur.outflow)
   $('#cisternAddLabor').val(cur.additionalLaborHr)
+}
+
+cisternView.clearForm = function() {
+  $('#cisternForm input[type="text"]').val('')
+  $('#cisternModel').val('B420')
+  $('#cisternBase').val('1')
+  $('#cisternForm input[type="number"]').val('')
+  $('#cisternForm input[type="checkbox"]').prop('checked', false)
 }

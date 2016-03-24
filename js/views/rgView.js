@@ -164,7 +164,7 @@ rgView.handleDelete = function() {
     let all = project.current.rainGardens.all
 
     _.remove(all, (e) => {
-      return e.id ==  old || e.id === low
+      return e.id == old || e.id === low
     })
 
     $('#rg-selector > option[value="' + old + '"]').remove()
