@@ -65,12 +65,15 @@ nav {
   display: none;
 }
 
+#bulk-display {
+	display: none;
+}
 
-#mulch-update {
+#bulk-update {
   display: none;
 }
 
-#mulch-totalrow {
+#bulk-totalrow {
   display: none;
 }
 

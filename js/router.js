@@ -10,7 +10,7 @@ page(
 
 page(
   '/rainwise',
-  mulchController.init
+  rainwiseController.init
 )
 
 page(
@@ -19,8 +19,8 @@ page(
 )
 
 page(
-  '/mulch',
-  mulchController.init
+  '/bulk',
+  bulkController.init
 )
 
 page(

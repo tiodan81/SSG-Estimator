@@ -1,14 +1,14 @@
-var mulchView = {}
+var bulkView = {}
 
-mulchView.init = function() {
-  $('#mulch-content').show()
+bulkView.init = function() {
+  $('#bulk-content').show()
     .siblings().hide()
-  mulchView.handleSave()
-  //mulchView.handleUpdate()
-  mulchView.showTotal()
+  bulkView.handleSave()
+  //bulkView.handleUpdate()
+  bulkView.showTotal()
 }
 
-mulchView.makeTable = function() {
+bulkView.makeTable = function() {
   $('#mulch-table-body').empty()
   mulch.mulchZones.forEach(function(zone) {
     var html = ''
@@ -29,7 +29,7 @@ mulchView.makeTable = function() {
   })
 }
 
-mulchView.showTotal = function() {
+bulkView.showTotal = function() {
   if (mulch.mulchZones.length === 0) {
     $('#mulch-totalrow').hide()
     $('#save-mulch').hide()
@@ -39,12 +39,12 @@ mulchView.showTotal = function() {
   }
 }
 
-mulchView.editZone = function() {
+bulkView.editZone = function() {
   $('#mulch-table-body .icon-pencil2').off('click').on('click', function() {
     var curId = $(this).attr('id')
     mulch.mulchZones.forEach(function(zone) {
       if (zone.id === parseInt(curId)) {
-        mulchView.populateForm(zone)
+        bulkView.populateForm(zone)
         $('mulch-save').val('update').data('id', curId)
         //$('#mulch-update').show().data('id', curId)
       }
@@ -52,8 +52,9 @@ mulchView.editZone = function() {
   })
 }
 
-mulchView.populateForm = function(zone) {
-  $('#zone').val(zone.zone)
+bulkView.populateForm = function(zone) {
+  $('#bulk-zone').val(zone.id)
+  $('#bulk-type').val(zone.type)
   $('#width-ft').val(zone.widFt)
   $('#width-in').val(zone.widIn)
   $('#length-ft').val(zone.lenFt)
@@ -61,8 +62,8 @@ mulchView.populateForm = function(zone) {
   $('#depth').val(zone.depth)
 }
 
-mulchView.handleSave = function() {
-  $('#mulchForm').off('submit').on('submit', function(e) {
+bulkView.handleSave = function() {
+  $('#bulk-form').off('submit').on('submit', function(e) {
     e.preventDefault()
     let $val = $('#mulch-save').val()
     if ($val === 'save') {
@@ -70,13 +71,13 @@ mulchView.handleSave = function() {
       mulch.mulchZones.push(newMulchZone)
       mulch.zoneId += 1
       mulch.listen()
-      mulchView.clearForm()
+      bulkView.clearForm()
     } else if ($val === 'update') {
       let curId = parseInt($(this).data('id'))
       let updated = mulch.buildMulch(curId)
       mulch.findReplace(updated)
       mulch.listen()
-      mulchView.clearForm()
+      bulkView.clearForm()
       $val = 'save'
     } else {
       console.log('error: no mulch match.')
@@ -84,25 +85,25 @@ mulchView.handleSave = function() {
   })
 }
 
-mulchView.clearForm = function() {
-  $('#mulchForm input[type="text"]').val('')
-  $('#mulchForm input[type="number"]').val('')
+bulkView.clearForm = function() {
+  $('#bulk-form input[type="text"]').val('')
+  $('#bulk-form input[type="number"]').val('')
 }
 
-// mulchView.handleUpdate = function() {
+// bulkView.handleUpdate = function() {
 //   $('#mulch-update').off('submit').on('submit', function(e) {
 //     e.preventDefault();
 //     var curId = parseInt($(this).data('id'));
 //     var updated = mulch.buildMulch(curId);
 //     mulch.findReplace(updated);
 //     mulch.listen();
-//     mulchView.clearForm();
+//     bulkView.clearForm();
 //     $('#mulch-update').hide();
 //     $('#mulch-add').show();
 //   });
 // };
 
-mulchView.deleteZone = function() {
+bulkView.deleteZone = function() {
   $('#mulch-table-body .icon-bin2').off('click').on('click', function(e) {
     e.preventDefault()
     var curId = parseInt($(this).attr('id'))

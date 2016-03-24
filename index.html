@@ -16,7 +16,7 @@
         <li><a href="/">Home</a></li>
         <li><a href="/rainwise">Rainwise</a></li>
         <li><a href="/rain-gardens">Rain Gardens</a></li>
-        <li><a href="/mulch">Mulch</a></li>
+        <li><a href="/bulk">Bulk</a></li>
         <li><a href="/cisterns">Cisterns</a></li>
         <li><a href="/login" id="login-nav">Login</a></li>
       </ul>
@@ -280,37 +280,38 @@
         </section>
       </section>
 
-      <section id="mulch-content">
-        <h1>Mulch Calculator</h1>
-        <h3>Add a mulch zone</h3>
-        <form id="mulchForm">
+      <section id="bulk-content">
+        <h3>Add bulk materials</h3>
+
+        <form id="bulk-form">
+
           <label>Zone:</label>
-          <input type="text" id="zone" placeholder="area name" required>
+          <input type="text" id="bulk-zone" placeholder="area name" required>
 
           <label>Material Type:</label>
-          <select id="type">
+          <select id="bulk-type">
             <option value="bark">Bark</option>
             <option value="chips">Play Chips</option>
             <option value="GroCo">GroCo</option>
           </select>
 
           <label>Width:</label>
-          <input type="number" id="width-ft" class="dimension" placeholder="feet" required>
-          <input type="number" id="width-in" class="dimension" min="0" max="11" placeholder="inches (optional)">
+          <input type="number" id="bulk-width-ft" class="dimension" placeholder="feet" required>
+          <input type="number" id="bulk-width-in" class="dimension" min="0" max="11" placeholder="inches (optional)">
 
           <label>Length:</label>
-          <input type="number" id="length-ft" class="dimension" placeholder="feet" required>
-          <input type="number" id="length-in" class="dimension" min="0" max="11" placeholder="inches (optional)">
+          <input type="number" id="bulk-length-ft" class="dimension" placeholder="feet" required>
+          <input type="number" id="bulk-length-in" class="dimension" min="0" max="11" placeholder="inches (optional)">
 
           <label>Depth:</label>
-          <input type="number" id="depth" class="dimension" placeholder="inches" required>
+          <input type="number" id="bulk-depth" class="dimension" placeholder="inches" required>
 
-          <input id="mulch-save" type="submit" value="save">
+          <input id="bulk-save" type="submit" value="save">
         </form>
 
-        <section id="mulch-display">
-          <h3>Mulch</h3>
-          <table id="mulch-table">
+        <section id="bulk-display">
+          <h3>Bulk materials</h3>
+          <table id="bulk-table">
             <thead>
               <tr>
                 <th>Zone</th>
@@ -452,7 +453,7 @@
     <script type="text/javascript" src="/js/controllers/projectController.js"></script>
     <script type="text/javascript" src="/js/controllers/rainwiseController.js"></script>
     <script type="text/javascript" src="/js/controllers/rgController.js"></script>
-    <script type="text/javascript" src="/js/controllers/mulchController.js"></script>
+    <script type="text/javascript" src="/js/controllers/bulkController.js"></script>
     <script type="text/javascript" src="/js/controllers/cisternController.js"></script>
     <!-- VIEWS -->
     <script type="text/javascript" src="/js/views/indexView.js"></script>
@@ -460,7 +461,7 @@
     <script type="text/javascript" src="/js/views/projectView.js"></script>
     <script type="text/javascript" src="/js/views/rainwiseView.js"></script>
     <script type="text/javascript" src="/js/views/rgView.js"></script>
-    <script type="text/javascript" src="/js/views/mulchView.js"></script>
+    <script type="text/javascript" src="/js/views/bulkView.js"></script>
     <script type="text/javascript" src="/js/views/cisternView.js"></script>
     <!-- ROUTER -->
     <script type="text/javascript" src="/js/router.js"></script>
