@@ -286,13 +286,14 @@
         <form id="bulk-form">
 
           <label>Zone:</label>
-          <input type="text" id="bulk-zone" placeholder="area name" required>
+          <input type="text" id="bulk-id" placeholder="area name" required>
 
           <label>Material Type:</label>
           <select id="bulk-type">
-            <option value="bark">Bark</option>
-            <option value="chips">Play Chips</option>
-            <option value="GroCo">GroCo</option>
+            <option value="mulch">Mulch</option>
+            <option value="bioretention">Bioretention</option>
+            <option value="paverbase">Paverbase</option>
+            <option value="drainageRock">Drain rock</option>
           </select>
 
           <label>Width:</label>
@@ -311,31 +312,19 @@
 
         <section id="bulk-display">
           <h3>Bulk materials</h3>
-          <table id="bulk-table">
-            <thead>
-              <tr>
-                <th>Zone</th>
-                <th>Type</th>
-                <th>Width</th>
-                <th>Length</th>
-                <th>Depth</th>
-                <th>Volume</th>
-                <th>Price</th>
-              </tr>
-            </thead>
-            <tbody id="mulch-table-body"></tbody>
-            <tfoot>
-              <tr id="mulch-totalrow">
-                <td>Total</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td id="mulch-total-vol"></td>
-                <td id="mulch-total-price"></td>
-              </tr>
-            </tfoot>
-          </table>
+
+          <ul id="bulk-nav">
+            <button id="summary">Summary</button>
+            <button id="details" class="button-primary">Details</button>
+          </ul>
+
+          <select id="bulk-selector">
+          </select>
+
+          <div id="bulk-tables">
+            <table id="bulk-summary"></table>
+            <table id="bulk-details"></table>
+          </div>
         </section>
       </section>
 

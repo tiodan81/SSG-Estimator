@@ -5,32 +5,82 @@ bulkView.init = function() {
     .siblings().hide()
   bulkView.handleSave()
   //bulkView.handleUpdate()
-  bulkView.showTotal()
+//  bulkView.showTotal()
 }
 
-bulkView.makeTable = function() {
-  $('#mulch-table-body').empty()
-  mulch.mulchZones.forEach(function(zone) {
-    var html = ''
-    html += `
-    <tr>
-    <td class="zone">${zone.zone}</td>
-    <td class="type">${zone.type}</td>
-    <td class="width">${zone.dispWidth}</td>
-    <td class="length">${zone.dispLength}</td>
-    <td class="depth">${zone.depth}"</td>
-    <td class="volume">${zone.volume} yd</td>
-    <td class="price">$${zone.price}</td>
-    <td><span id="${zone.id}" class="icon-pencil2"></span></td>
-    <td><span id="${zone.id}" class="icon-bin2"></span></td>
-    </tr>
-    `
-    $('#mulch-table-body').append(html)
-  })
+bulkView.renderDetails = function(b) {
+  bulkView.populateSelector(b)
+  $('#bulk-selector').val(b.id)
+
+  $('#bulk-details').html(bulkView.makeDetails(b))
+
+  if ($('#bulk-display').css('display') === 'none') {
+    $('#bulk-display').show()
+  }
+  //bulkView.showSummary()
+}
+
+bulkView.populateSelector = function(b) {
+  let cur = b.type
+  if ($('#bulk-selector option[value="' + cur + '"]').length === 0) {
+    let option = '<option value="' + cur + '">' + cur + '</option>'
+    $('#bulk-selector').append(option)
+  }
+}
+
+bulkView.showSummary = function() {
+  let $selected = $('#bulk-nav .button-primary').attr('id')
+  if ($selected != 'summary') {
+    $('#rg-nav > #summary').addClass('button-primary')
+    .siblings().removeClass('button-primary')
+    $('#bulk-summary').show()
+    .siblings().hide()
+  }
+}
+
+bulkView.makeSummary = function(b) {
+  let summary = ''
+  summary +=`
+  <tr><th>Type</th><th>Volume</th><th>Price</th><th>Tax</th><th>Total</th></tr>
+  `
+  return summary
+}
+
+bulkView.makeDetails = function(b) {
+  let details = `<tr><th>ID</th><th>Type</th><th>Width</th><th>Length</th><th>Depth</th><th>Volume</th><th>Price</th><th>Tax</th><th>Total</th></tr>`
+
+  project.current.bulkMaterials.all
+    .filter((bm) => bm.type === b.type)
+    .map((filtered) => {
+      return details += bulkView.makeRow(filtered)
+    })
+
+  //total row
+  return details
+}
+
+bulkView.makeRow = function(b) {
+  let row = ''
+  row += `
+  <tr>
+  <td>${b.id}</td>
+  <td>${b.type}</td>
+  <td>${b.widFt}' ${b.widIn}"</td>
+  <td>${b.lenFt}' ${b.lenIn}"</td>
+  <td>${b.depth}"</td>
+  <td>${b.volume} yd</td>
+  <td>$${b.price}</td>
+  <td>$${b.tax}</td>
+  <td>$${b.total}</td>
+  <td><span id="${b.id}" class="icon-pencil2"></span></td>
+  <td><span id="${b.id}" class="icon-bin2"></span></td>
+  </tr>
+  `
+  return row
 }
 
 bulkView.showTotal = function() {
-  if (mulch.mulchZones.length === 0) {
+  if (project.current.bulkMaterials.all.length === 0) {
     $('#mulch-totalrow').hide()
     $('#save-mulch').hide()
   } else {
@@ -53,7 +103,7 @@ bulkView.editZone = function() {
 }
 
 bulkView.populateForm = function(zone) {
-  $('#bulk-zone').val(zone.id)
+  $('#bulk-id').val(zone.id)
   $('#bulk-type').val(zone.type)
   $('#width-ft').val(zone.widFt)
   $('#width-in').val(zone.widIn)
@@ -65,12 +115,14 @@ bulkView.populateForm = function(zone) {
 bulkView.handleSave = function() {
   $('#bulk-form').off('submit').on('submit', function(e) {
     e.preventDefault()
-    let $val = $('#mulch-save').val()
+    let $val = $('#bulk-save').val()
     if ($val === 'save') {
-      let newMulchZone = mulch.buildMulch(mulch.zoneId)
-      mulch.mulchZones.push(newMulchZone)
-      mulch.zoneId += 1
-      mulch.listen()
+      let dupe = bulk.preventDuplicates()
+      if (dupe) {
+        alert('That id has already been used. Please choose a different id.')
+        return false
+      }
+      bulkController.save()
       bulkView.clearForm()
     } else if ($val === 'update') {
       let curId = parseInt($(this).data('id'))
