@@ -39,6 +39,7 @@ bulk.calcs = function(b) {
 bulk.saveToProject = function(b) {
   if(user.uid && project.current.client) {
     bulk.storeLocally(b)
+    project.current.bulkMaterials.uber = bulk.makeUber(project.current.bulkMaterials.all)
     project.updateComponent(project.current, 'bulkMaterials')
   } else {
     console.log('Either you\'re not signed in or haven\'t initiated a project!')
@@ -46,20 +47,45 @@ bulk.saveToProject = function(b) {
 }
 
 bulk.storeLocally = function(b) {
-  let cur = project.current.bulkMaterials.all
-  let $exists = util.findObjInArray(b.id, cur, 'id')
+  let all = project.current.bulkMaterials.all
+  let $exists = util.findObjInArray(b.id, all, 'id')
 
   if ($exists.length) {
-    cur.forEach((c,i) => {
+    all.forEach((c,i) => {
       if (b.id === c.id) {
-        cur[i] = b
+        all[i] = b
       }
     })
   } else {
-    cur.push(b)
+    all.push(b)
   }
-  //uber??
   bulk.current = b
+}
+
+bulk.makeUber = function(all) {
+  let uber = {
+    mulch: 0,
+    bioretention: 0,
+    groCo: 0,
+    fillSoil: 0,
+    paverbase: 0,
+    drainageRock: 0,
+    fiveEighthsClean: 0,
+    fiveEighthsMinus: 0,
+    playChips: 0,
+    nugget: 0
+  }
+
+  all.forEach((e) => {
+    let curType = e.type
+    if (uber.hasOwnProperty(curType)) {
+      uber[curType] += e.volume
+    } else {
+      console.log('property ' + curType + ' not found in uber');
+    }
+  })
+
+  return uber
 }
 
 bulk.preventDuplicates = function() {
