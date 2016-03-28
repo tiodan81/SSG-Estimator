@@ -8,6 +8,31 @@ bulkView.init = function() {
 //  bulkView.showTotal()
 }
 
+bulkView.handleSave = function() {
+  $('#bulk-form').off('submit').on('submit', function(e) {
+    e.preventDefault()
+    let $val = $('#bulk-save').val()
+    if ($val === 'save') {
+      let dupe = bulk.preventDuplicates()
+      if (dupe) {
+        alert('That id has already been used. Please choose a different id.')
+        return false
+      }
+      bulkController.save()
+      bulkView.clearForm()
+    } else if ($val === 'update') {
+      let curId = parseInt($(this).data('id'))
+      let updated = mulch.buildMulch(curId)
+      mulch.findReplace(updated)
+      mulch.listen()
+      bulkView.clearForm()
+      $val = 'save'
+    } else {
+      console.log('error: no mulch match.')
+    }
+  })
+}
+
 bulkView.renderDetails = function(b) {
   bulkView.populateSelector(b)
   $('#bulk-selector').val(b.id)
@@ -38,24 +63,56 @@ bulkView.showSummary = function() {
   }
 }
 
-bulkView.makeSummary = function(b) {
-  let summary = ''
-  summary +=`
-  <tr><th>Type</th><th>Volume</th><th>Price</th><th>Tax</th><th>Total</th></tr>
-  `
+bulkView.makeSummary = function(bm) {
+  let uber = bm.uber
+  let summary = `<tr><th>Type</th><th>Volume</th><th>Price</th><th>Tax</th><th>Total</th></tr>`
+  let grandTotal = util.objectStripper(bm.all, 'total')
+                    .reduce((sum, obj) => {
+                      return sum + obj.total
+                    }, 0)
+
+  for (let prop in uber) {
+    if (uber[prop] > 0) {
+      summary += bulkView.makeSummaryRow(prop, uber[prop])
+    }
+  }
+
+  summary += `<tr><td>Total</td><td></td><td></td><td></td><td>${grandTotal}</td></tr>`
+
   return summary
 }
 
+bulkView.makeSummaryRow = function(prop, vol) {
+  let price = util.round('round', util.materialCost(vol, materials.bulk[prop]), 0.01)
+  let tax = util.salesTax(price)
+  let total = util.round('round', price + tax, 0.01)
+
+  return `<tr><td>${prop}</td><td>${vol}</td><td>${price}</td><td>${tax}</td><td>${total}</td></tr>`
+}
+
 bulkView.makeDetails = function(b) {
+  let totals = {
+    volume: 0,
+    price: 0,
+    tax: 0,
+    total: 0
+  }
   let details = `<tr><th>ID</th><th>Type</th><th>Width</th><th>Length</th><th>Depth</th><th>Volume</th><th>Price</th><th>Tax</th><th>Total</th></tr>`
+  let filtered = project.current.bulkMaterials.all.filter((bm) => bm.type === b.type)
 
-  project.current.bulkMaterials.all
-    .filter((bm) => bm.type === b.type)
-    .map((filtered) => {
-      return details += bulkView.makeRow(filtered)
-    })
+  filtered.map((f) => {
+    return details += bulkView.makeRow(f)
+  })
 
-  //total row
+  filtered.forEach((e) => {
+    totals.volume += e.volume
+    totals.price += e.price
+    totals.tax += e.tax
+    totals.total += e.total
+  })
+
+  details += `<tr><td>Totals</td><td>${b.type}</td><td></td><td></td><td></td><td>${totals.volume} yd</td><td>$${totals.price}</td><td>$${totals.tax}</td><td>$${totals.total}</td></tr>`
+
   return details
 }
 
@@ -79,16 +136,6 @@ bulkView.makeRow = function(b) {
   return row
 }
 
-bulkView.showTotal = function() {
-  if (project.current.bulkMaterials.all.length === 0) {
-    $('#mulch-totalrow').hide()
-    $('#save-mulch').hide()
-  } else {
-    $('#mulch-totalrow').show()
-    $('#save-mulch').show()
-  }
-}
-
 bulkView.editZone = function() {
   $('#mulch-table-body .icon-pencil2').off('click').on('click', function() {
     var curId = $(this).attr('id')
@@ -110,31 +157,6 @@ bulkView.populateForm = function(zone) {
   $('#length-ft').val(zone.lenFt)
   $('#length-in').val(zone.lenIn)
   $('#depth').val(zone.depth)
-}
-
-bulkView.handleSave = function() {
-  $('#bulk-form').off('submit').on('submit', function(e) {
-    e.preventDefault()
-    let $val = $('#bulk-save').val()
-    if ($val === 'save') {
-      let dupe = bulk.preventDuplicates()
-      if (dupe) {
-        alert('That id has already been used. Please choose a different id.')
-        return false
-      }
-      bulkController.save()
-      bulkView.clearForm()
-    } else if ($val === 'update') {
-      let curId = parseInt($(this).data('id'))
-      let updated = mulch.buildMulch(curId)
-      mulch.findReplace(updated)
-      mulch.listen()
-      bulkView.clearForm()
-      $val = 'save'
-    } else {
-      console.log('error: no mulch match.')
-    }
-  })
 }
 
 bulkView.clearForm = function() {
