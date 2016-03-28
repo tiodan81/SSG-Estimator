@@ -4,8 +4,8 @@ bulkView.init = function() {
   $('#bulk-content').show()
     .siblings().hide()
   bulkView.handleSave()
+  bulkView.handleNav()
   //bulkView.handleUpdate()
-//  bulkView.showTotal()
 }
 
 bulkView.handleSave = function() {
@@ -36,10 +36,9 @@ bulkView.handleSave = function() {
 bulkView.renderDetails = function(b) {
   bulkView.populateSelector(b)
   $('#bulk-selector').val(b.id)
-
-  $('#bulk-details').html(bulkView.makeDetails(b))
-
+  bulkView.makeTables(b, project.current.bulkMaterials)
   if ($('#bulk-display').css('display') === 'none') {
+    $('#bulk-table-summary').hide()
     $('#bulk-display').show()
   }
   //bulkView.showSummary()
@@ -61,6 +60,27 @@ bulkView.showSummary = function() {
     $('#bulk-summary').show()
     .siblings().hide()
   }
+}
+
+bulkView.handleNav = function() {
+  $('#bulk-nav > button').off('click').on('click', function() {
+    let $curNav = $('#bulk-nav > .button-primary').text()
+    let $nextNav = $(this).text()
+    if ($curNav != $nextNav) {
+      $(this).addClass('button-primary')
+        .siblings().removeClass('button-primary')
+      let target = '#bulk-table-' + $nextNav
+      $(target).show()
+        .siblings().hide()
+    } else {
+      return
+    }
+  })
+}
+
+bulkView.makeTables = function(b, all) {
+  $('#bulk-table-details').html(bulkView.makeDetails(b))
+  $('#bulk-table-summary').html(bulkView.makeSummary(all))
 }
 
 bulkView.makeSummary = function(bm) {
