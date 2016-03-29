@@ -3,9 +3,26 @@ var bulkView = {}
 bulkView.init = function() {
   $('#bulk-content').show()
     .siblings().hide()
+  bulkView.displayExisting()
   bulkView.handleSave()
   bulkView.handleNav()
+  bulkView.handleSelector()
   //bulkView.handleUpdate()
+}
+
+bulkView.displayExisting = function() {
+  let $existing = project.current.bulkMaterials
+  console.log($existing);
+  if ($existing.all.length) {
+    $('#bulk-selector').empty()
+    $existing.all.forEach((e) => {
+      bulkView.populateSelector(e)
+    })
+    bulk.current = $existing.all[0]  //do we even need bulk.current?
+    bulkView.renderDetails(bulk.current)
+  } else {
+    return
+  }
 }
 
 bulkView.handleSave = function() {
@@ -41,7 +58,6 @@ bulkView.renderDetails = function(b) {
     $('#bulk-table-summary').hide()
     $('#bulk-display').show()
   }
-  //bulkView.showSummary()
 }
 
 bulkView.populateSelector = function(b) {
@@ -62,6 +78,15 @@ bulkView.showSummary = function() {
   }
 }
 
+bulkView.handleSelector = function() {
+  $('#bulk-selector').off('change').on('change', function() {
+    let type = $('#bulk-selector').val()
+    let curBulk = util.findObjInArray(type, project.current.bulkMaterials.all, 'type')[0]
+    bulkView.makeTables(curBulk)
+    bulk.current = curBulk
+  })
+}
+
 bulkView.handleNav = function() {
   $('#bulk-nav > button').off('click').on('click', function() {
     let $curNav = $('#bulk-nav > .button-primary').text()
@@ -69,9 +94,17 @@ bulkView.handleNav = function() {
     if ($curNav != $nextNav) {
       $(this).addClass('button-primary')
         .siblings().removeClass('button-primary')
+
+      if ($nextNav === 'summary') {
+        $('#bulk-selector').hide()
+      } else if ($nextNav === 'details') {
+        $('#bulk-selector').show()
+      }
+
       let target = '#bulk-table-' + $nextNav
       $(target).show()
         .siblings().hide()
+
     } else {
       return
     }
@@ -97,7 +130,7 @@ bulkView.makeSummary = function(bm) {
     }
   }
 
-  summary += `<tr><td>Total</td><td></td><td></td><td></td><td>${grandTotal}</td></tr>`
+  summary += `<tr><td>Total</td><td></td><td></td><td></td><td>$${grandTotal}</td></tr>`
 
   return summary
 }
@@ -107,7 +140,7 @@ bulkView.makeSummaryRow = function(prop, vol) {
   let tax = util.salesTax(price)
   let total = util.round('round', price + tax, 0.01)
 
-  return `<tr><td>${prop}</td><td>${vol}</td><td>${price}</td><td>${tax}</td><td>${total}</td></tr>`
+  return `<tr><td>${prop}</td><td>${vol} yd</td><td>$${price}</td><td>$${tax}</td><td>$${total}</td></tr>`
 }
 
 bulkView.makeDetails = function(b) {
@@ -156,19 +189,6 @@ bulkView.makeRow = function(b) {
   return row
 }
 
-bulkView.editZone = function() {
-  $('#mulch-table-body .icon-pencil2').off('click').on('click', function() {
-    var curId = $(this).attr('id')
-    mulch.mulchZones.forEach(function(zone) {
-      if (zone.id === parseInt(curId)) {
-        bulkView.populateForm(zone)
-        $('mulch-save').val('update').data('id', curId)
-        //$('#mulch-update').show().data('id', curId)
-      }
-    })
-  })
-}
-
 bulkView.populateForm = function(zone) {
   $('#bulk-id').val(zone.id)
   $('#bulk-type').val(zone.type)
@@ -197,15 +217,28 @@ bulkView.clearForm = function() {
 //   });
 // };
 
-bulkView.deleteZone = function() {
-  $('#mulch-table-body .icon-bin2').off('click').on('click', function(e) {
-    e.preventDefault()
-    var curId = parseInt($(this).attr('id'))
-    mulch.mulchZones.forEach(function(zone, i) {
-      if (zone.id === curId) {
-        mulch.mulchZones.splice(i, 1)
-      }
-    })
-    mulch.listen()
-  })
-}
+// bulkView.editZone = function() {
+//   $('#mulch-table-body .icon-pencil2').off('click').on('click', function() {
+//     var curId = $(this).attr('id')
+//     mulch.mulchZones.forEach(function(zone) {
+//       if (zone.id === parseInt(curId)) {
+//         bulkView.populateForm(zone)
+//         $('mulch-save').val('update').data('id', curId)
+//         //$('#mulch-update').show().data('id', curId)
+//       }
+//     })
+//   })
+// }
+//
+// bulkView.deleteZone = function() {
+//   $('#mulch-table-body .icon-bin2').off('click').on('click', function(e) {
+//     e.preventDefault()
+//     var curId = parseInt($(this).attr('id'))
+//     mulch.mulchZones.forEach(function(zone, i) {
+//       if (zone.id === curId) {
+//         mulch.mulchZones.splice(i, 1)
+//       }
+//     })
+//     mulch.listen()
+//   })
+// }
