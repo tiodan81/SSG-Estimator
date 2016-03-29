@@ -7,17 +7,18 @@ bulkView.init = function() {
   bulkView.handleSave()
   bulkView.handleNav()
   bulkView.handleSelector()
-  //bulkView.handleUpdate()
 }
 
 bulkView.displayExisting = function() {
   let $existing = project.current.bulkMaterials
-  console.log($existing);
+
   if ($existing.all.length) {
     $('#bulk-selector').empty()
+
     $existing.all.forEach((e) => {
       bulkView.populateSelector(e)
     })
+
     bulk.current = $existing.all[0]  //do we even need bulk.current?
     bulkView.renderDetails(bulk.current)
   } else {
@@ -38,14 +39,9 @@ bulkView.handleSave = function() {
       bulkController.save()
       bulkView.clearForm()
     } else if ($val === 'update') {
-      let curId = parseInt($(this).data('id'))
-      let updated = mulch.buildMulch(curId)
-      mulch.findReplace(updated)
-      mulch.listen()
+      bulkController.save()
       bulkView.clearForm()
-      $val = 'save'
-    } else {
-      console.log('error: no mulch match.')
+      $('#bulk-save').val('save')
     }
   })
 }
@@ -58,6 +54,8 @@ bulkView.renderDetails = function(b) {
     $('#bulk-table-summary').hide()
     $('#bulk-display').show()
   }
+  bulkView.handleEdit()
+  //bulkView.handleDelete()
 }
 
 bulkView.populateSelector = function(b) {
@@ -68,21 +66,21 @@ bulkView.populateSelector = function(b) {
   }
 }
 
-bulkView.showSummary = function() {
-  let $selected = $('#bulk-nav .button-primary').attr('id')
-  if ($selected != 'summary') {
-    $('#rg-nav > #summary').addClass('button-primary')
-    .siblings().removeClass('button-primary')
-    $('#bulk-summary').show()
-    .siblings().hide()
-  }
-}
-
+// bulkView.showSummary = function() {
+//   let $selected = $('#bulk-nav .button-primary').attr('id')
+//   if ($selected != 'summary') {
+//     $('#rg-nav > #summary').addClass('button-primary')
+//     .siblings().removeClass('button-primary')
+//     $('#bulk-summary').show()
+//     .siblings().hide()
+//   }
+// }
+//
 bulkView.handleSelector = function() {
   $('#bulk-selector').off('change').on('change', function() {
     let type = $('#bulk-selector').val()
     let curBulk = util.findObjInArray(type, project.current.bulkMaterials.all, 'type')[0]
-    bulkView.makeTables(curBulk)
+    bulkView.makeTables(curBulk, project.current.bulkMaterials)
     bulk.current = curBulk
   })
 }
@@ -111,6 +109,20 @@ bulkView.handleNav = function() {
   })
 }
 
+bulkView.handleEdit = function() {
+  $('#bulk-tables .icon-pencil2').off('click').on('click', function() {
+    var curId = $(this).attr('id')
+    console.log(curId);
+    project.current.bulkMaterials.all.forEach((bm) => {
+      console.log(bm.id === curId);
+      if (bm.id === curId) {
+        bulkView.populateForm(bm)
+        $('#bulk-save').val('update')
+      }
+    })
+  })
+}
+
 bulkView.makeTables = function(b, all) {
   $('#bulk-table-details').html(bulkView.makeDetails(b))
   $('#bulk-table-summary').html(bulkView.makeSummary(all))
@@ -130,7 +142,7 @@ bulkView.makeSummary = function(bm) {
     }
   }
 
-  summary += `<tr><td>Total</td><td></td><td></td><td></td><td>$${grandTotal}</td></tr>`
+  summary += `<tr class="total-row"><td>Total</td><td></td><td></td><td></td><td>$${grandTotal}</td></tr>`
 
   return summary
 }
@@ -164,7 +176,7 @@ bulkView.makeDetails = function(b) {
     totals.total += e.total
   })
 
-  details += `<tr><td>Totals</td><td>${b.type}</td><td></td><td></td><td></td><td>${totals.volume} yd</td><td>$${totals.price}</td><td>$${totals.tax}</td><td>$${totals.total}</td></tr>`
+  details += `<tr class="total-row"><td>Totals</td><td>${b.type}</td><td></td><td></td><td></td><td>${totals.volume} yd</td><td>$${totals.price}</td><td>$${totals.tax}</td><td>$${totals.total}</td></tr>`
 
   return details
 }
@@ -189,14 +201,14 @@ bulkView.makeRow = function(b) {
   return row
 }
 
-bulkView.populateForm = function(zone) {
-  $('#bulk-id').val(zone.id)
-  $('#bulk-type').val(zone.type)
-  $('#width-ft').val(zone.widFt)
-  $('#width-in').val(zone.widIn)
-  $('#length-ft').val(zone.lenFt)
-  $('#length-in').val(zone.lenIn)
-  $('#depth').val(zone.depth)
+bulkView.populateForm = function(bm) {
+  $('#bulk-id').val(bm.id)
+  $('#bulk-type').val(bm.type)
+  $('#bulk-width-ft').val(bm.widFt)
+  $('#bulk-width-in').val(bm.widIn)
+  $('#bulk-length-ft').val(bm.lenFt)
+  $('#bulk-length-in').val(bm.lenIn)
+  $('#bulk-depth').val(bm.depth)
 }
 
 bulkView.clearForm = function() {
@@ -217,19 +229,7 @@ bulkView.clearForm = function() {
 //   });
 // };
 
-// bulkView.editZone = function() {
-//   $('#mulch-table-body .icon-pencil2').off('click').on('click', function() {
-//     var curId = $(this).attr('id')
-//     mulch.mulchZones.forEach(function(zone) {
-//       if (zone.id === parseInt(curId)) {
-//         bulkView.populateForm(zone)
-//         $('mulch-save').val('update').data('id', curId)
-//         //$('#mulch-update').show().data('id', curId)
-//       }
-//     })
-//   })
-// }
-//
+
 // bulkView.deleteZone = function() {
 //   $('#mulch-table-body .icon-bin2').off('click').on('click', function(e) {
 //     e.preventDefault()

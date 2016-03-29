@@ -17,8 +17,8 @@ nav {
 	font-size: 1.5em;
 }
 
-.dimension {
-  width: 9em;
+.total-row {
+	font-weight: bold;
 }
 
 #projectForm {

@@ -108,7 +108,7 @@ indexView.makeTable = function(cur) {
   }
   //<tr><td>Bulk materials</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
   html +=`
-  <tr><td>Total</td><td>${totals.laborHours}</td><td>${totals.laborCost}</td><td>${totals.materialsCost}</td><td>${totals.subtotal}</td><td>${totals.tax}</td><td>${totals.total}</td></tr>
+  <tr class="total-row"><td>Total</td><td>${totals.laborHours} hrs</td><td>$${totals.laborCost}</td><td>$${totals.materialsCost}</td><td>$${totals.subtotal}</td><td>$${totals.tax}</td><td>$${totals.total}</td></tr>
   </table>
   `
   return html

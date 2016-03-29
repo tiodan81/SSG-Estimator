@@ -123,7 +123,7 @@ cisternView.makeSummary = function(cur) {
   <tr><td>Labor cost</td><td>$${cur.laborCostTotal}</td></tr>
   <tr><td>Materials cost</td><td>$${cur.materialsCostTotal}</td></tr>
   <tr><td>Tax</td><td>$${cur.tax}</td></tr>
-  <tr><td>Total</td><td>$${cur.total}</td></tr>
+  <tr class="total-row"><td>Total</td><td>$${cur.total}</td></tr>
   `
   return summary
 }
@@ -139,7 +139,7 @@ cisternView.makeLabor = function(cur) {
   if (cur.additionalLaborHr) {
     labor += `<tr><td>Additional</td><td>${cur.additionalLaborHr}</td><td>$${cur.additionalLaborCost}</td></tr>`
   }
-  labor += `<tr><td>Total</td><td>${cur.laborHrsTotal}</td><td>$${cur.laborCostTotal}</td></tr>`
+  labor += `<tr class="total-row"><td>Total</td><td>${cur.laborHrsTotal}</td><td>$${cur.laborCostTotal}</td></tr>`
   return labor
 }
 
@@ -179,7 +179,7 @@ cisternView.makeMaterials = function(cur) {
   }
   materials += `
   <tr><td>Low-flow kit</td><td>1</td><td>$75.00</td></tr>
-  <tr><td>Total</td><td></td><td>$${cur.materialsCostTotal}</td></tr>
+  <tr class="total-row"><td>Total</td><td></td><td>$${cur.materialsCostTotal}</td></tr>
   `
   return materials
 }
