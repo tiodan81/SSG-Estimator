@@ -106,7 +106,15 @@ indexView.makeTable = function(cur) {
     totals.total += cisterns.total
     html += `<tr><td>Cisterns</td><td>${cisterns.laborHrsTotal}</td><td>${cisterns.laborCostTotal}</td><td>${cisterns.materialsCostTotal}</td><td>${cisterns.subtotal}</td><td>${cisterns.tax}</td><td>${cisterns.total}</td></tr>`
   }
-  //<tr><td>Bulk materials</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+
+  if (cur.bulkMaterials.all.length) {
+    let bulkTotals = util.sumStrippedProps(cur.bulkMaterials.all, ['price', 'tax', 'total'])
+    totals.materialsCost += bulkTotals[0]
+    totals.subtotal += bulkTotals[0]
+    totals.tax += bulkTotals[1]
+    totals.total += bulkTotals[2]
+    html += `<tr><td>Bulk materials</td><td>n/a</td><td>n/a</td><td>$${bulkTotals[0]}</td><td>$${bulkTotals[0]}</td><td>$${bulkTotals[1]}</td><td>$${bulkTotals[2]}</td></tr>`
+  }
   html +=`
   <tr class="total-row"><td>Total</td><td>${totals.laborHours} hrs</td><td>$${totals.laborCost}</td><td>$${totals.materialsCost}</td><td>$${totals.subtotal}</td><td>$${totals.tax}</td><td>$${totals.total}</td></tr>
   </table>

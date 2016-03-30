@@ -54,6 +54,18 @@ util.objectStripper = function(arr, props) {
   return newarr
 }
 
+// returns array of summed values of props from all objects in arr
+util.sumStrippedProps = function (arr, props) {
+  return props.map((prop) => {
+
+    return util.objectStripper(arr, prop)
+      .reduce((sum, obj) => {
+        return sum + obj[prop]
+      }, 0)
+
+  })
+}
+
 //returns de-duped array of desired property values from array of objects
 util.picker = function(arr, prop) {
   return arr.map((obj) => obj[prop])
