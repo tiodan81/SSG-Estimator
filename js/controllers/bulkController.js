@@ -9,4 +9,6 @@ bulkController.save = function() {
   bulk.calcs(newBulk)
   bulk.saveToProject(newBulk)
   bulkView.renderDetails(newBulk)
+  bulkView.populateSelector(newBulk)
+  $('#bulk-selector').val(newBulk.type)
 }

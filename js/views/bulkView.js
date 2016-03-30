@@ -5,8 +5,6 @@ bulkView.init = function() {
     .siblings().hide()
   bulkView.displayExisting()
   bulkView.handleSave()
-  bulkView.handleNav()
-  bulkView.handleSelector()
 }
 
 bulkView.displayExisting = function() {
@@ -18,9 +16,9 @@ bulkView.displayExisting = function() {
     $existing.all.forEach((e) => {
       bulkView.populateSelector(e)
     })
-
-    bulk.current = $existing.all[0]  //do we even need bulk.current?
-    bulkView.renderDetails(bulk.current)
+    $('#bulk-selector').hide()
+    bulkView.renderSummary()
+    bulkView.handleNav()
   } else {
     return
   }
@@ -46,16 +44,21 @@ bulkView.handleSave = function() {
   })
 }
 
-bulkView.renderDetails = function(b) {
-  bulkView.populateSelector(b)
-  $('#bulk-selector').val(b.id)
-  bulkView.makeTables(b, project.current.bulkMaterials)
+bulkView.renderSummary = function() {
+  $('#bulk-table').html(bulkView.makeSummary(project.current.bulkMaterials))
+  $('#bulk-selector').hide()
   if ($('#bulk-display').css('display') === 'none') {
-    $('#bulk-table-summary').hide()
     $('#bulk-display').show()
   }
-  bulkView.handleEdit()
-  //bulkView.handleDelete()
+}
+
+bulkView.renderDetails = function(b = project.current.bulkMaterials.all[0]) {
+  $('#bulk-table').html(bulkView.makeDetails(b))
+  if ($('#bulk-display').css('display') === 'none') {
+    $('#bulk-display').show()
+  }
+  $('#bulk-selector').show()
+  bulkView.handleSelector()
 }
 
 bulkView.populateSelector = function(b) {
@@ -66,22 +69,13 @@ bulkView.populateSelector = function(b) {
   }
 }
 
-// bulkView.showSummary = function() {
-//   let $selected = $('#bulk-nav .button-primary').attr('id')
-//   if ($selected != 'summary') {
-//     $('#rg-nav > #summary').addClass('button-primary')
-//     .siblings().removeClass('button-primary')
-//     $('#bulk-summary').show()
-//     .siblings().hide()
-//   }
-// }
-//
 bulkView.handleSelector = function() {
   $('#bulk-selector').off('change').on('change', function() {
     let type = $('#bulk-selector').val()
     let curBulk = util.findObjInArray(type, project.current.bulkMaterials.all, 'type')[0]
-    bulkView.makeTables(curBulk, project.current.bulkMaterials)
-    bulk.current = curBulk
+    bulkView.renderDetails(curBulk)
+    bulkView.handleEdit()
+    bulkView.handleDelete()
   })
 }
 
@@ -89,19 +83,18 @@ bulkView.handleNav = function() {
   $('#bulk-nav > button').off('click').on('click', function() {
     let $curNav = $('#bulk-nav > .button-primary').text()
     let $nextNav = $(this).text()
+
     if ($curNav != $nextNav) {
       $(this).addClass('button-primary')
         .siblings().removeClass('button-primary')
 
       if ($nextNav === 'summary') {
-        $('#bulk-selector').hide()
+        bulkView.renderSummary()
       } else if ($nextNav === 'details') {
-        $('#bulk-selector').show()
+        bulkView.renderDetails()
+        bulkView.handleEdit()
+        bulkView.handleDelete()
       }
-
-      let target = '#bulk-table-' + $nextNav
-      $(target).show()
-        .siblings().hide()
 
     } else {
       return
@@ -110,11 +103,9 @@ bulkView.handleNav = function() {
 }
 
 bulkView.handleEdit = function() {
-  $('#bulk-tables .icon-pencil2').off('click').on('click', function() {
-    var curId = $(this).attr('id')
-    console.log(curId);
+  $('#bulk-table .icon-pencil2').off('click').on('click', function() {
+    let curId = $(this).data('id')
     project.current.bulkMaterials.all.forEach((bm) => {
-      console.log(bm.id === curId);
       if (bm.id === curId) {
         bulkView.populateForm(bm)
         $('#bulk-save').val('update')
@@ -123,9 +114,37 @@ bulkView.handleEdit = function() {
   })
 }
 
-bulkView.makeTables = function(b, all) {
-  $('#bulk-table-details').html(bulkView.makeDetails(b))
-  $('#bulk-table-summary').html(bulkView.makeSummary(all))
+bulkView.handleDelete = function() {
+  $('#bulk-table .icon-bin2').off('click').on('click', function(e) {
+    let curId = $(this).data('id')
+    let curType = $(this).data('type')
+    let all = project.current.bulkMaterials.all
+
+    all.forEach((bm, i) => {
+      if (bm.id === curId) {
+        all.splice(i, 1)
+      }
+    })
+
+    project.current.bulkMaterials.uber = bulk.makeUber(all)
+
+    if (all.length) {
+      if (util.picker(all, 'type').indexOf(curType) === -1) {
+        let firstRemaining = all[0]
+        $('#bulk-selector > option[value="' + curType + '"]').remove()
+        $('#bulk-selector').val(firstRemaining.type)
+        bulkView.renderDetails(firstRemaining)
+      } else {
+        //re-renderDetails for type of the deleted zone
+      }
+
+    } else {
+      project.current.bulkMaterials = { all: [], uber: {} }
+      $('#bulk-display').hide()
+    }
+
+
+  })
 }
 
 bulkView.makeSummary = function(bm) {
@@ -194,8 +213,8 @@ bulkView.makeRow = function(b) {
   <td>$${b.price}</td>
   <td>$${b.tax}</td>
   <td>$${b.total}</td>
-  <td><span id="${b.id}" class="icon-pencil2"></span></td>
-  <td><span id="${b.id}" class="icon-bin2"></span></td>
+  <td><span data-id="${b.id}" class="icon-pencil2"></span></td>
+  <td><span data-id="${b.id}" data-type="${b.type}" class="icon-bin2"></span></td>
   </tr>
   `
   return row
@@ -215,30 +234,3 @@ bulkView.clearForm = function() {
   $('#bulk-form input[type="text"]').val('')
   $('#bulk-form input[type="number"]').val('')
 }
-
-// bulkView.handleUpdate = function() {
-//   $('#mulch-update').off('submit').on('submit', function(e) {
-//     e.preventDefault();
-//     var curId = parseInt($(this).data('id'));
-//     var updated = mulch.buildMulch(curId);
-//     mulch.findReplace(updated);
-//     mulch.listen();
-//     bulkView.clearForm();
-//     $('#mulch-update').hide();
-//     $('#mulch-add').show();
-//   });
-// };
-
-
-// bulkView.deleteZone = function() {
-//   $('#mulch-table-body .icon-bin2').off('click').on('click', function(e) {
-//     e.preventDefault()
-//     var curId = parseInt($(this).attr('id'))
-//     mulch.mulchZones.forEach(function(zone, i) {
-//       if (zone.id === curId) {
-//         mulch.mulchZones.splice(i, 1)
-//       }
-//     })
-//     mulch.listen()
-//   })
-// }
