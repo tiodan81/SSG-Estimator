@@ -250,7 +250,7 @@ rgView.makeSummary = (rg) => {
   <tr><td>Labor cost</td><td>$${rg.totals.laborCostTotal}</td></tr>
   <tr><td>Materials cost</td><td>$${rg.totals.materialsCostTotal}</td></tr>
   <tr><td>Tax</td><td>$${rg.totals.tax}</td></tr>
-  <tr><td>Total</td><td>$${rg.totals.total}</td></tr>
+  <tr class="total-row"><td>Total</td><td>$${rg.totals.total}</td></tr>
   `
   return summary
 }
@@ -278,7 +278,7 @@ rgView.makeLabor = (rg) => {
 
   labor += `
     <tr data-id="30" data-parent=""><td>Dispersion</td><td>${rg.dispersionHrs}</td><td>$${rg.dispersionLaborCost}</td></tr>
-    <tr data-id="40" data-parent=""><td>Total</td><td>${rg.totals.laborHrsTotal}</td><td>$${rg.totals.laborCostTotal}</td></tr>
+    <tr  class="total-row" data-id="40" data-parent=""><td>Total</td><td>${rg.totals.laborHrsTotal}</td><td>$${rg.totals.laborCostTotal}</td></tr>
     `
   return labor
 }
@@ -307,6 +307,6 @@ rgView.makeMaterials = (rg) => {
   if (rg.dumpTruck) {
     materials += `<tr><td>Dump truck</td><td></td><td>$${rg.truckCost}</td></tr>`
   }
-  materials += `<tr><td>Total</td><td></td><td>$${rg.totals.materialsCostTotal}</td></tr>`
+  materials += `<tr class="total-row"><td>Total</td><td></td><td>$${rg.totals.materialsCostTotal}</td></tr>`
   return materials
 }
