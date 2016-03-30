@@ -241,7 +241,7 @@ cistern.updateUberTank = function() {
 }
 
 cistern.makeUberTank = function(arr) {
-  let obj = new cisternMaker()
+  let obj = new cistern.cisternMaker()
   arr.forEach(function(e) {
     Object.keys(e).forEach(function(prop) {
       if (typeof(e[prop]) === 'number') {

@@ -86,6 +86,15 @@ indexView.makeTable = function(cur) {
     total: 0
   }
 
+  if (Object.keys(cur.rainwise.uber).length) {
+    let rw = cur.rainwise.uber
+    totals.materialsCost += rw.subtotal
+    totals.subtotal += rw.subtotal
+    totals.tax += rw.tax
+    totals.total += rw.total
+    html += `<tr><td>Rainwise</td><td></td><td></td><td>$${rw.subtotal}</td><td>$${rw.subtotal}</td><td>$${rw.tax}</td><td>$${rw.total}</td></tr>`
+  }
+
   if (cur.rainGardens.all.length) {
     let rgs = cur.rainGardens.uber.totals
     totals.laborHours += rgs.laborHrsTotal

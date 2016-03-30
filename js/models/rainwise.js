@@ -15,11 +15,11 @@ rainwise.build = function() {
 
 rainwise.calcs = function(rw) {
   rw.gutterCost = util.round('round', util.materialCost(rw.gutterLength, materials.plumbing.gutter), 0.01)
-  rw.gutterTax = util.salesTax(rw.gutterCost)
-  rw.gutterTotal = util.round('round', rw.gutterCost + rw.gutterTax, 0.01)
+  rw.tax = util.salesTax(rw.gutterCost)
+  rw.gutterTotal = util.round('round', rw.gutterCost + rw.tax, 0.01)
   rw.inspectionCost = rw.inspection ? materials.fees.rainwiseInspection : 0
   rw.subtotal = util.round('round', rw.gutterCost + rw.inspectionCost, 0.01)
-  rw.total = util.round('round', rw.subtotal + rw.gutterTax, 0.01)
+  rw.total = util.round('round', rw.subtotal + rw.tax, 0.01)
 }
 
 rainwise.saveToProject = function(rw) {
