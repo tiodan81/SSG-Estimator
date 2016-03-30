@@ -52,8 +52,8 @@ bulkView.renderSummary = function() {
   }
 }
 
-bulkView.renderDetails = function(b = project.current.bulkMaterials.all[0]) {
-  $('#bulk-table').html(bulkView.makeDetails(b))
+bulkView.renderDetails = function(t) {
+  $('#bulk-table').html(bulkView.makeDetails(t))
   if ($('#bulk-display').css('display') === 'none') {
     $('#bulk-display').show()
   }
@@ -73,7 +73,7 @@ bulkView.handleSelector = function() {
   $('#bulk-selector').off('change').on('change', function() {
     let type = $('#bulk-selector').val()
     let curBulk = util.findObjInArray(type, project.current.bulkMaterials.all, 'type')[0]
-    bulkView.renderDetails(curBulk)
+    bulkView.renderDetails(curBulk.type)
     bulkView.handleEdit()
     bulkView.handleDelete()
   })
@@ -91,7 +91,8 @@ bulkView.handleNav = function() {
       if ($nextNav === 'summary') {
         bulkView.renderSummary()
       } else if ($nextNav === 'details') {
-        bulkView.renderDetails()
+        let $type = $('#bulk-selector > option').val()
+        bulkView.renderDetails($type)
         bulkView.handleEdit()
         bulkView.handleDelete()
       }
@@ -116,26 +117,28 @@ bulkView.handleEdit = function() {
 
 bulkView.handleDelete = function() {
   $('#bulk-table .icon-bin2').off('click').on('click', function(e) {
-    let curId = $(this).data('id')
-    let curType = $(this).data('type')
+    let $curId = $(this).data('id')
+    let $curType = $(this).data('type')
     let all = project.current.bulkMaterials.all
 
     all.forEach((bm, i) => {
-      if (bm.id === curId) {
+      if (bm.id === $curId) {
         all.splice(i, 1)
       }
     })
 
-    project.current.bulkMaterials.uber = bulk.makeUber(all)
-
     if (all.length) {
-      if (util.picker(all, 'type').indexOf(curType) === -1) {
-        let firstRemaining = all[0]
-        $('#bulk-selector > option[value="' + curType + '"]').remove()
-        $('#bulk-selector').val(firstRemaining.type)
-        bulkView.renderDetails(firstRemaining)
+      if (util.picker(all, 'type').indexOf($curType) === -1) {
+        let firstRemainingType = all[0].type
+        $('#bulk-selector > option[value="' + $curType + '"]').remove()
+        $('#bulk-selector').val(firstRemainingType)
+        bulkView.renderDetails(firstRemainingType)
+        bulkView.handleEdit()
+        bulkView.handleDelete()
       } else {
-        //re-renderDetails for type of the deleted zone
+        bulkView.renderDetails($curType)
+        bulkView.handleEdit()
+        bulkView.handleDelete()
       }
 
     } else {
@@ -143,7 +146,8 @@ bulkView.handleDelete = function() {
       $('#bulk-display').hide()
     }
 
-
+    project.current.bulkMaterials.uber = bulk.makeUber(all)
+    project.updateComponent(project.current, 'bulkMaterials')
   })
 }
 
@@ -174,7 +178,7 @@ bulkView.makeSummaryRow = function(prop, vol) {
   return `<tr><td>${prop}</td><td>${vol} yd</td><td>$${price}</td><td>$${tax}</td><td>$${total}</td></tr>`
 }
 
-bulkView.makeDetails = function(b) {
+bulkView.makeDetails = function(curType) {
   let totals = {
     volume: 0,
     price: 0,
@@ -182,7 +186,7 @@ bulkView.makeDetails = function(b) {
     total: 0
   }
   let details = `<tr><th>ID</th><th>Type</th><th>Width</th><th>Length</th><th>Depth</th><th>Volume</th><th>Price</th><th>Tax</th><th>Total</th></tr>`
-  let filtered = project.current.bulkMaterials.all.filter((bm) => bm.type === b.type)
+  let filtered = project.current.bulkMaterials.all.filter((bm) => bm.type === curType)
 
   filtered.map((f) => {
     return details += bulkView.makeRow(f)
@@ -195,7 +199,7 @@ bulkView.makeDetails = function(b) {
     totals.total += e.total
   })
 
-  details += `<tr class="total-row"><td>Totals</td><td>${b.type}</td><td></td><td></td><td></td><td>${totals.volume} yd</td><td>$${totals.price}</td><td>$${totals.tax}</td><td>$${totals.total}</td></tr>`
+  details += `<tr class="total-row"><td>Totals</td><td>${curType}</td><td></td><td></td><td></td><td>${totals.volume} yd</td><td>$${totals.price}</td><td>$${totals.tax}</td><td>$${totals.total}</td></tr>`
 
   return details
 }

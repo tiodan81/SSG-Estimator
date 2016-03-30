@@ -76,8 +76,13 @@ bulk.makeUber = function(all) {
     nugget: 0
   }
 
+  if (!all.length) {
+    return {}
+  }
+
   all.forEach((e) => {
     let curType = e.type
+
     if (uber.hasOwnProperty(curType)) {
       uber[curType] += e.volume
     } else {
