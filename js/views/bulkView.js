@@ -17,6 +17,8 @@ bulkView.displayExisting = function() {
       bulkView.populateSelector(e)
     })
     $('#bulk-selector').hide()
+    $('#bulk-nav > button:first-child').addClass('button-primary')
+      .siblings().removeClass('button-primary')
     bulkView.renderSummary()
     bulkView.handleNav()
   } else {
