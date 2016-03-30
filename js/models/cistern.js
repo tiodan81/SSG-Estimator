@@ -3,7 +3,7 @@ var cistern = {
   current: {}
 }
 
-function cisternMaker (ci, r, m, h, inf, out, al, pump, div, gauge) {
+cistern.cisternMaker = function(ci, r, m, h, inf, out, al, pump, div, gauge) {
   this.id = ci || ''
   this.roofArea = r || 0
   this.model = m || ''
@@ -68,7 +68,7 @@ cistern.buildCistern = function() {
   let $pump =   $('#cistern-pump:checked').length ? 1 : 0
   let $div =    $('#cistern-diverter:checked').length ? 1 : 0
   let $gauge =  $('#cistern-gauge:checked').length ? 1 : 0
-  return new cisternMaker($id, $roof, $m, $bh, $inf, $out, $al, $pump, $div, $gauge)
+  return new cistern.cisternMaker($id, $roof, $m, $bh, $inf, $out, $al, $pump, $div, $gauge)
 }
 
 cistern.volumeCyl = function(d, h) {

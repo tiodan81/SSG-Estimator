@@ -2,7 +2,7 @@ var bulk = {
   current: {}
 }
 
-function bulkMaker (i, t, wf, wi, lf, li, d) {
+bulk.bulkMaker = function(i, t, wf, wi, lf, li, d) {
   this.id = i || ''
   this.type = t || ''
   this.widFt = wf || 0
@@ -24,7 +24,7 @@ bulk.build = function() {
   let $lenFt = +($('#bulk-length-ft').val())
   let $lenIn = +($('#bulk-length-in').val()) || 0
   let $depth = +($('#bulk-depth').val())
-  return new bulkMaker($id, $type, $widFt, $widIn, $lenFt, $lenIn, $depth)
+  return new bulk.bulkMaker($id, $type, $widFt, $widIn, $lenFt, $lenIn, $depth)
 }
 
 bulk.calcs = function(b) {
@@ -42,7 +42,7 @@ bulk.saveToProject = function(b) {
     project.current.bulkMaterials.uber = bulk.makeUber(project.current.bulkMaterials.all)
     project.updateComponent(project.current, 'bulkMaterials')
   } else {
-    console.log('Either you\'re not signed in or haven\'t initiated a project!')
+    return new Error('Either you\'re not signed in or haven\'t initiated a project!')
   }
 }
 
@@ -101,12 +101,4 @@ bulk.preventDuplicates = function() {
   } else {
     return false
   }
-}
-
-bulk.listen = function() {
-  bulkView.makeTable()
-  bulk.updateTotals()
-  bulkView.showTotal()
-  bulkView.editZone()
-  bulkView.deleteZone()
 }

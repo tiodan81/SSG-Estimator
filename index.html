@@ -105,17 +105,20 @@
         <form id="rainwiseForm">
 
           <label>Gutter regrade:</label>
-          <input type="number" id="gutterFt" placeholder="ft" required>
+          <input type="number" id="gutterFt" placeholder="ft">
 
           <label>
-            <input type="checkbox">
+            <input id="rw-inspection" type="checkbox">
             <span class="label-body">Pre/post inspections (2hrs @ $75/hr)</span>
           </label>
 
-          <button id="rainwise-add">Save</button>
-          <button id="rainwise-update">Update</button>
+          <input id="rainwise-save" type="submit" value="save">
 
         </form>
+
+        <section id="rainwise-display">
+
+        </section>
       </section>
 
       <section id="rg-content">
@@ -438,6 +441,7 @@
     <script type="text/javascript" src="/js/util.js"></script>
     <!-- MODELS -->
     <script type="text/javascript" src="/js/models/project.js"></script>
+    <script type="text/javascript" src="/js/models/rainwise.js"></script>
     <script type="text/javascript" src="/js/models/rg.js"></script>
     <script type="text/javascript" src="/js/models/bulk.js"></script>
     <script type="text/javascript" src="/js/models/cistern.js"></script>
