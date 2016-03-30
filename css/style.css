@@ -21,6 +21,10 @@ nav {
 	font-weight: bold;
 }
 
+.icon-pencil2 {
+	margin-right: 1em
+}
+
 #projectForm {
   display: none;
 }
@@ -31,6 +35,11 @@ nav {
 
 #rainwise-display {
 	display: none;
+}
+
+#rainwise-edit-buttons, #rg-edit-buttons, #cistern-edit-buttons {
+	display: inline-block;
+	margin-left: 1em;
 }
 
 #rgInfiltContainer {

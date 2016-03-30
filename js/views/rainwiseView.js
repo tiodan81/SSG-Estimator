@@ -3,7 +3,17 @@ var rainwiseView = {}
 rainwiseView.init = function() {
   $('#rainwise-content').show()
     .siblings().hide()
+  rainwiseView.displayExisting()
   rainwiseView.handleSave()
+}
+
+rainwiseView.displayExisting = function() {
+  let $existing = project.current.rainwise.uber
+  if (Object.keys($existing).length) {
+    rainwiseView.render($existing)
+  } else {
+    $('#rainwise-edit-buttons').hide()
+  }
 }
 
 rainwiseView.handleSave = function() {
@@ -12,7 +22,9 @@ rainwiseView.handleSave = function() {
     let $val = $('#rainwise-save').val()
     if ($val === 'save') {
       rainwiseController.save()
-      rainwiseView.clearForm()
+    } else if ($val === 'update') {
+      rainwiseController.save()
+      $('#rainwise-save').val('save')
     }
   })
 }
@@ -22,7 +34,19 @@ rainwiseView.render = function(rw) {
   if ($('#rainwise-display').css('display') === 'none') {
     $('#rainwise-display').show()
   }
-  //edit/delete buttons?
+  rainwiseView.handleEdit()
+}
+
+rainwiseView.handleEdit = function() {
+  $('#rainwise-edit-buttons .icon-pencil2').off('click').on('click', function(e) {
+    rainwiseView.populateForm(project.current.rainwise.uber)
+    $('#rainwise-save').val('update')
+  })
+}
+
+rainwiseView.populateForm = function(rw) {
+  $('#gutterFt').val(rw.gutterLength)
+  $('#rw-inspection').prop('checked', rw.inspection)
 }
 
 rainwiseView.makeTable = function(rw) {

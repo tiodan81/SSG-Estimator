@@ -9,4 +9,6 @@ rainwiseController.save = function() {
   rainwise.calcs(newRW)
   rainwise.saveToProject(newRW)
   rainwiseView.render(newRW)
+  rainwiseView.clearForm()
+  $('#rainwise-edit-buttons').show()
 }
