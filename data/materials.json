@@ -27,7 +27,8 @@
   "fees": {
     "sodDump": 42,
     "sodCutter": 142,
-    "dumpTruck": 350
+    "dumpTruck": 350,
+    "rainwiseInspection": 150
   },
   "misc": {
     "rgChannelPlanting": 5

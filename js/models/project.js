@@ -22,6 +22,7 @@ project.maker = function(client, city, labor, mkup, owner) {
   this.laborRate = labor
   this.markup = mkup
   this.owner = owner
+  this.rainwise = { all: [], uber: {} }
   this.rainGardens = { all: [], uber: {} }
   this.bulkMaterials = { all: [], uber: {} }
   this.cisterns = { all: [], uber: {} }
@@ -86,7 +87,7 @@ project.addOwner = function() {
 }
 
 project.populate = function(cur) {
-  let components = ['cisterns', 'bulkMaterials', 'rainGardens']
+  let components = ['cisterns', 'bulkMaterials', 'rainGardens', 'rainwise']
 
   components.forEach((e) => {
     if (cur[e] === undefined) {
