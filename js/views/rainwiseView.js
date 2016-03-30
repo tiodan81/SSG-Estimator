@@ -35,12 +35,22 @@ rainwiseView.render = function(rw) {
     $('#rainwise-display').show()
   }
   rainwiseView.handleEdit()
+  rainwiseView.handleDelete()
 }
 
 rainwiseView.handleEdit = function() {
   $('#rainwise-edit-buttons .icon-pencil2').off('click').on('click', function(e) {
     rainwiseView.populateForm(project.current.rainwise.uber)
     $('#rainwise-save').val('update')
+  })
+}
+
+rainwiseView.handleDelete = function() {
+  $('#rainwise-edit-buttons .icon-bin2').off('click').on('click', function(e) {
+    project.current.rainwise.uber = {}
+    $('#rainwise-table').empty()
+    $('#rainwise-display').hide()
+    $('#rainwise-edit-buttons').hide()
   })
 }
 
