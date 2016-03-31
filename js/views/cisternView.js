@@ -148,7 +148,7 @@ cisternView.makeMaterials = function(cur) {
   materials += `
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
   <tr><td>Tank</td><td>1</td><td>$${cur.salePrice}</td></tr>
-  <tr><td>Paverbase</td><td>${cur.paverbase}yd</td><td>$${cur.paverbaseCost}</td></tr>
+  <tr><td>Paverbase</td><td>${cur.paverbase} yd</td><td>$${cur.paverbaseCost}</td></tr>
   `
   if (cur.manorStones != 0) {
     materials += `<tr><td>Manor stones</td><td>${cur.manorStones}</td><td>$${cur.manorStoneCost}</td></tr>`
@@ -157,13 +157,13 @@ cisternView.makeMaterials = function(cur) {
     materials += `<tr><td>Cinder blocks</td><td>${cur.cinderBlocks}</td><td>$${cur.cinderBlockCost}</td></tr>`
   }
   materials += `
-  <tr><td>Inflow pipe</td><td>${cur.inflow}ft</td><td>$${cur.inflowPipeCost}</td></tr>
+  <tr><td>Inflow pipe</td><td>${cur.inflow} ft</td><td>$${cur.inflowPipeCost}</td></tr>
   <tr><td>Inflow hardware</td><td>${cur.inflowHardware}</td><td>$${cur.inflowHdwCost}</td></tr>
-  <tr><td>Outflow pipe</td><td>${cur.outflow}ft</td><td>$${cur.outflowPipeCost}</td></tr>
+  <tr><td>Outflow pipe</td><td>${cur.outflow} ft</td><td>$${cur.outflowPipeCost}</td></tr>
   <tr><td>Outflow hardware</td><td>${cur.outflowHardware}</td><td>$${cur.outflowHdwCost}</td></tr>
   `
   if (cur.slimlineRestraints) {
-    materials += `<tr><td>Slimeline restraints</td><td>1</td><td>$${cur.slimlineRestraints}</td></tr>`
+    materials += `<tr><td>Slimline restraints</td><td>1</td><td>$${cur.slimlineRestraints}</td></tr>`
   }
   if (cur.pump) {
     materials += `<tr><td>Pump</td><td>${cur.pump}</td><td>$${cur.pumpCost}</td></tr>`

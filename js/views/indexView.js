@@ -103,7 +103,7 @@ indexView.makeTable = function(cur) {
     totals.subtotal += rgs.subtotal
     totals.tax += rgs.tax
     totals.total += rgs.total
-    html += `<tr><td>Rain gardens</td><td>${rgs.laborHrsTotal}</td><td>${rgs.laborCostTotal}</td><td>${rgs.materialsCostTotal}</td><td>${rgs.subtotal}</td><td>${rgs.tax}</td><td>${rgs.total}</td></tr>`
+    html += `<tr><td>Rain gardens</td><td>${rgs.laborHrsTotal}</td><td>$${rgs.laborCostTotal}</td><td>$${rgs.materialsCostTotal}</td><td>$${rgs.subtotal}</td><td>$${rgs.tax}</td><td>$${rgs.total}</td></tr>`
   }
   if (cur.cisterns.all.length) {
     let cisterns = cur.cisterns.uber
@@ -113,7 +113,7 @@ indexView.makeTable = function(cur) {
     totals.subtotal += cisterns.subtotal
     totals.tax += cisterns.tax
     totals.total += cisterns.total
-    html += `<tr><td>Cisterns</td><td>${cisterns.laborHrsTotal}</td><td>${cisterns.laborCostTotal}</td><td>${cisterns.materialsCostTotal}</td><td>${cisterns.subtotal}</td><td>${cisterns.tax}</td><td>${cisterns.total}</td></tr>`
+    html += `<tr><td>Cisterns</td><td>${cisterns.laborHrsTotal}</td><td>$${cisterns.laborCostTotal}</td><td>$${cisterns.materialsCostTotal}</td><td>$${cisterns.subtotal}</td><td>$${cisterns.tax}</td><td>$${cisterns.total}</td></tr>`
   }
 
   if (cur.bulkMaterials.all.length) {
@@ -122,8 +122,13 @@ indexView.makeTable = function(cur) {
     totals.subtotal += bulkTotals[0]
     totals.tax += bulkTotals[1]
     totals.total += bulkTotals[2]
-    html += `<tr><td>Bulk materials</td><td>n/a</td><td>n/a</td><td>$${bulkTotals[0]}</td><td>$${bulkTotals[0]}</td><td>$${bulkTotals[1]}</td><td>$${bulkTotals[2]}</td></tr>`
+    html += `<tr><td>Bulk materials</td><td></td><td></td><td>$${bulkTotals[0]}</td><td>$${bulkTotals[0]}</td><td>$${bulkTotals[1]}</td><td>$${bulkTotals[2]}</td></tr>`
   }
+
+  for (let prop in totals) {
+    totals[prop] = util.round('round', totals[prop], 0.01)
+  }
+
   html +=`
   <tr class="total-row"><td>Total</td><td>${totals.laborHours} hrs</td><td>$${totals.laborCost}</td><td>$${totals.materialsCost}</td><td>$${totals.subtotal}</td><td>$${totals.tax}</td><td>$${totals.total}</td></tr>
   </table>

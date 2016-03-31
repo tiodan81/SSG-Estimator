@@ -161,6 +161,8 @@ bulkView.makeSummary = function(bm) {
                       return sum + obj.total
                     }, 0)
 
+  grandTotal = util.round('round', grandTotal, 0.01)
+
   for (let prop in uber) {
     if (uber[prop] > 0) {
       summary += bulkView.makeSummaryRow(prop, uber[prop])

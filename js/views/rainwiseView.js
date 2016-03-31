@@ -62,12 +62,12 @@ rainwiseView.populateForm = function(rw) {
 rainwiseView.makeTable = function(rw) {
   let table = `<tr><th>Item</th><th>Amount</th><th>Cost</th><th>Tax</th><th>Total</th></tr>`
   if (rw.gutterLength) {
-    table += `<tr><td>Gutter</td><td>${rw.gutterLength} ft</td><td>$${rw.gutterCost}</td><td>$${rw.tax}</td><td>$${rw.gutterTotal}</td></tr>`
+    table += `<tr><td>Gutter</td><td>${rw.gutterLength} ft</td><td class="money">$${rw.gutterCost}</td><td class="money">$${rw.tax}</td><td class="money">$${rw.gutterTotal}</td></tr>`
   }
   if (rw.inspection) {
-    table += `<tr><td>Inspection</td><td></td><td>$${rw.inspectionCost}</td><td></td><td>$${rw.inspectionCost}</td></tr>`
+    table += `<tr><td>Inspection</td><td></td><td class="money">$${rw.inspectionCost}</td><td></td><td class="money">$${rw.inspectionCost}</td></tr>`
   }
-  table += `<tr class="total-row"><td>Total</td><td></td><td>$${rw.subtotal}</td><td>$${rw.tax}</td><td>$${rw.total}</td></tr>`
+  table += `<tr class="total-row"><td>Total</td><td></td><td class="money">$${rw.subtotal}</td><td class="money">$${rw.tax}</td><td class="money">$${rw.total}</td></tr>`
   return table
 }
 
