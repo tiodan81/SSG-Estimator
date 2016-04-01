@@ -15,3 +15,33 @@ bulkController.save = function() {
   bulkView.populateSelector(newBulk)
   $('#bulk-selector').val(newBulk.type)
 }
+
+bulkController.delete = function(curId, curType) {
+  let all = project.current.bulkMaterials.all
+
+  all.forEach((bm, i) => {
+    if (bm.id === curId) {
+      all.splice(i, 1)
+    }
+  })
+
+  if (all.length) {
+
+    if (util.picker(all, 'type').indexOf(curType) === -1) {
+      let firstRemainingType = all[0].type
+      $('#bulk-selector > option[value="' + curType + '"]').remove()
+      $('#bulk-selector').val(firstRemainingType)
+      bulkView.renderDetails(firstRemainingType)
+    } else {
+      bulkView.renderDetails(curType)
+    }
+
+  } else {
+    project.current.bulkMaterials = { all: [], uber: {} }
+    $('#bulk-display').hide()
+  }
+
+  project.current.bulkMaterials.uber = bulk.makeUber(all)
+  project.updateComponent(project.current, 'bulkMaterials')
+
+}
