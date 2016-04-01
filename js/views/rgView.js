@@ -233,10 +233,10 @@ rgView.makeSummary = (rg) => {
   summary += `
   <tr><th>Item</th><th>Amount</th></tr>
   <tr><td>Labor hours</td><td>${rg.totals.laborHrsTotal}</td></tr>
-  <tr><td>Labor cost</td><td>$${rg.totals.laborCostTotal.toFixed(2)}</td></tr>
-  <tr><td>Materials cost</td><td>$${rg.totals.materialsCostTotal.toFixed(2)}</td></tr>
-  <tr><td>Tax</td><td>$${rg.totals.tax.toFixed(2)}</td></tr>
-  <tr class="total-row"><td>Total</td><td>$${rg.totals.total.toFixed(2)}</td></tr>
+  <tr><td>Labor cost</td><td class="money">$${rg.totals.laborCostTotal.toFixed(2)}</td></tr>
+  <tr><td>Materials cost</td><td class="money">$${rg.totals.materialsCostTotal.toFixed(2)}</td></tr>
+  <tr><td>Tax</td><td class="money">$${rg.totals.tax.toFixed(2)}</td></tr>
+  <tr class="total-row"><td>Total</td><td class="money">$${rg.totals.total.toFixed(2)}</td></tr>
   `
   return summary
 }
@@ -245,25 +245,25 @@ rgView.makeLabor = (rg) => {
   let labor = ''
   labor += `
   <tr><th>Item</th><th>Hours</th><th>Cost</th></tr>
-  <tr><td>Sod Removal</td><td>${rg.baseHrs.sodHrs}</td><td>$${rg.baseLaborCost.sodLaborCost.toFixed(2)}</td></tr>
-  <tr><td>Excavation</td><td>${rg.baseHrs.excavationHrs}</td><td>$${rg.baseLaborCost.excavationLaborCost.toFixed(2)}</td></tr>
-  <tr><td>Bioretention</td><td>${rg.baseHrs.bioretenHrs}</td><td>$${rg.baseLaborCost.bioretentionLaborCost.toFixed(2)}</td></tr>
-  <tr><td>Mulch</td><td>${rg.baseHrs.mulchHrs}</td><td>$${rg.baseLaborCost.mulchLaborCost.toFixed(2)}</td></tr>
-  <tr><td>Planting</td><td>${rg.baseHrs.plantingHrs}</td><td>$${rg.baseLaborCost.plantingLaborCost.toFixed(2)}</td></tr>
-  <tr><td>Inflow 1</td><td>${rg.inflow1Hrs}</td><td>$${rg.inflow1LaborCost.toFixed(2)}</td></tr>
+  <tr><td>Sod Removal</td><td>${rg.baseHrs.sodHrs}</td><td class="money">$${rg.baseLaborCost.sodLaborCost.toFixed(2)}</td></tr>
+  <tr><td>Excavation</td><td>${rg.baseHrs.excavationHrs}</td><td class="money">$${rg.baseLaborCost.excavationLaborCost.toFixed(2)}</td></tr>
+  <tr><td>Bioretention</td><td>${rg.baseHrs.bioretenHrs}</td><td class="money">$${rg.baseLaborCost.bioretentionLaborCost.toFixed(2)}</td></tr>
+  <tr><td>Mulch</td><td>${rg.baseHrs.mulchHrs}</td><td class="money">$${rg.baseLaborCost.mulchLaborCost.toFixed(2)}</td></tr>
+  <tr><td>Planting</td><td>${rg.baseHrs.plantingHrs}</td><td class="money">$${rg.baseLaborCost.plantingLaborCost.toFixed(2)}</td></tr>
+  <tr><td>Inflow 1</td><td>${rg.inflow1Hrs}</td><td class="money">$${rg.inflow1LaborCost.toFixed(2)}</td></tr>
   `
   if (rg.infNum == 2) {
-    labor += `<tr><td>Inflow 2</td><td>${rg.inflow2Hrs}</td><td>$${rg.inflow2LaborCost.toFixed(2)}</td></tr>`
+    labor += `<tr><td>Inflow 2</td><td>${rg.inflow2Hrs}</td><td class="money">$${rg.inflow2LaborCost.toFixed(2)}</td></tr>`
   }
-  labor += `<tr><td>Outflow 1</td><td>${rg.outflow1Hrs}</td><td>$${rg.outflow1LaborCost.toFixed(2)}</td></tr>`
+  labor += `<tr><td>Outflow 1</td><td>${rg.outflow1Hrs}</td><td class="money">$${rg.outflow1LaborCost.toFixed(2)}</td></tr>`
 
   if (rg.outNum == 2) {
-    labor += `<tr><td>Outflow 2</td><td>${rg.outflow2Hrs}</td><td>$${rg.outflow2LaborCost.toFixed(2)}</td></tr>`
+    labor += `<tr><td>Outflow 2</td><td>${rg.outflow2Hrs}</td><td class="money">$${rg.outflow2LaborCost.toFixed(2)}</td></tr>`
   }
 
   labor += `
-    <tr><td>Dispersion</td><td>${rg.dispersionHrs}</td><td>$${rg.dispersionLaborCost.toFixed(2)}</td></tr>
-    <tr  class="total-row"><td>Total</td><td>${rg.totals.laborHrsTotal}</td><td>$${rg.totals.laborCostTotal.toFixed(2)}</td></tr>
+    <tr><td>Dispersion</td><td>${rg.dispersionHrs}</td><td class="money">$${rg.dispersionLaborCost.toFixed(2)}</td></tr>
+    <tr  class="total-row"><td>Total</td><td>${rg.totals.laborHrsTotal}</td><td class="money">$${rg.totals.laborCostTotal.toFixed(2)}</td></tr>
     `
   return labor
 }
@@ -273,25 +273,25 @@ rgView.makeMaterials = (rg) => {
   let materials = ''
   materials += `
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
-  <tr><td>Planting</td><td></td><td>$${mat.plantCost.toFixed(2)}</td></tr>
-  <tr><td>Bioretention</td><td>${mat.bio} yd</td><td>$${mat.bioCost.toFixed(2)}</td></tr>
-  <tr><td>Mulch</td><td>${rg.baseMaterials.bioretention} yd</td><td>$${rg.baseMaterialCost.mulchCost.toFixed(2)}</td></tr>
-  <tr><td>Drain rock</td><td>${mat.rock} yd</td><td>$${mat.rockCost.toFixed(2)}</td></tr>
-  <tr><td>Pond liner</td><td>${mat.pond} ft²</td><td>$${mat.pondCost.toFixed(2)}</td></tr>
+  <tr><td>Planting</td><td></td><td class="money">$${mat.plantCost.toFixed(2)}</td></tr>
+  <tr><td>Bioretention</td><td>${mat.bio} yd</td><td class="money">$${mat.bioCost.toFixed(2)}</td></tr>
+  <tr><td>Mulch</td><td>${rg.baseMaterials.bioretention} yd</td><td class="money">$${rg.baseMaterialCost.mulchCost.toFixed(2)}</td></tr>
+  <tr><td>Drain rock</td><td>${mat.rock} yd</td><td class="money">$${mat.rockCost.toFixed(2)}</td></tr>
+  <tr><td>Pond liner</td><td>${mat.pond} ft²</td><td class="money">$${mat.pondCost.toFixed(2)}</td></tr>
   `
   if (rg.infType1 === 'pipe' || rg.infType2 === 'pipe') {
-    materials += `<tr><td>3" PVC</td><td>${mat.pvc3In} ft</td><td>$${mat.pvc3InCost.toFixed(2)}</td></tr>`
+    materials += `<tr><td>3" PVC</td><td>${mat.pvc3In} ft</td><td class="money">$${mat.pvc3InCost.toFixed(2)}</td></tr>`
   }
   if (rg.outType1 === 'pipe' || rg.outType2 === 'pipe') {
-    materials += `<tr><td>4" PVC</td><td>${mat.pvc4In} ft</td><td>$${mat.pvc4InCost.toFixed(2)}</td></tr>`
+    materials += `<tr><td>4" PVC</td><td>${mat.pvc4In} ft</td><td class="money">$${mat.pvc4InCost.toFixed(2)}</td></tr>`
   }
-  materials += `<tr><td>Sod removal</td><td>${rg.baseMaterials.sodVolume} yd</td><td>$${mat.sodDumpCost.toFixed(2)}</td></tr>`
+  materials += `<tr><td>Sod removal</td><td>${rg.baseMaterials.sodVolume} yd</td><td class="money">$${mat.sodDumpCost.toFixed(2)}</td></tr>`
   if (rg.sodRmMethod === 'cutter') {
-    materials += `<tr><td>Sod cutter</td><td></td><td>$${rg.cutterCost.toFixed(2)}</td></tr>`
+    materials += `<tr><td>Sod cutter</td><td></td><td class="money">$${rg.cutterCost.toFixed(2)}</td></tr>`
   }
   if (rg.dumpTruck) {
-    materials += `<tr><td>Dump truck</td><td></td><td>$${rg.truckCost.toFixed(2)}</td></tr>`
+    materials += `<tr><td>Dump truck</td><td></td><td class="money">$${rg.truckCost.toFixed(2)}</td></tr>`
   }
-  materials += `<tr class="total-row"><td>Total</td><td></td><td>$${rg.totals.materialsCostTotal.toFixed(2)}</td></tr>`
+  materials += `<tr class="total-row"><td>Total</td><td></td><td class="money">$${rg.totals.materialsCostTotal.toFixed(2)}</td></tr>`
   return materials
 }

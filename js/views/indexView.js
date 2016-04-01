@@ -95,7 +95,7 @@ indexView.makeTable = function(cur) {
     totals.tax += rw.tax
     totals.total += rw.total
 
-    html += `<tr><td>Rainwise</td><td></td><td></td><td>$${disp[0]}</td><td>$${disp[0]}</td><td>$${disp[1]}</td><td>$${disp[2]}</td></tr>`
+    html += `<tr><td>Rainwise</td><td></td><td></td><td class="money">$${disp[0]}</td><td class="money">$${disp[0]}</td><td class="money">$${disp[1]}</td><td class="money">$${disp[2]}</td></tr>`
   }
 
   if (cur.rainGardens.all.length) {
@@ -108,7 +108,7 @@ indexView.makeTable = function(cur) {
     totals.subtotal += rgs.subtotal
     totals.tax += rgs.tax
     totals.total += rgs.total
-    html += `<tr><td>Rain gardens</td><td>${rgs.laborHrsTotal}</td><td>$${disp[0]}</td><td>$${disp[1]}</td><td>$${disp[2]}</td><td>$${disp[3]}</td><td>$${disp[4]}</td></tr>`
+    html += `<tr><td>Rain gardens</td><td>${rgs.laborHrsTotal}</td><td class="money">$${disp[0]}</td><td class="money">$${disp[1]}</td><td class="money">$${disp[2]}</td><td class="money">$${disp[3]}</td><td class="money">$${disp[4]}</td></tr>`
   }
   if (cur.cisterns.all.length) {
     let cisterns = cur.cisterns.uber
@@ -120,7 +120,7 @@ indexView.makeTable = function(cur) {
     totals.subtotal += cisterns.subtotal
     totals.tax += cisterns.tax
     totals.total += cisterns.total
-    html += `<tr><td>Cisterns</td><td>${cisterns.laborHrsTotal}</td><td>$${disp[0]}</td><td>$${disp[1]}</td><td>$${disp[2]}</td><td>$${disp[3]}</td><td>$${disp[4]}</td></tr>`
+    html += `<tr><td>Cisterns</td><td>${cisterns.laborHrsTotal}</td><td class="money">$${disp[0]}</td><td class="money">$${disp[1]}</td><td class="money">$${disp[2]}</td><td class="money">$${disp[3]}</td><td class="money">$${disp[4]}</td></tr>`
   }
 
   if (cur.bulkMaterials.all.length) {
@@ -131,7 +131,7 @@ indexView.makeTable = function(cur) {
     totals.subtotal += bulkTotals[0]
     totals.tax += bulkTotals[1]
     totals.total += bulkTotals[2]
-    html += `<tr><td>Bulk materials</td><td></td><td></td><td>$${disp[0]}</td><td>$${disp[0]}</td><td>$${disp[1]}</td><td>$${disp[2]}</td></tr>`
+    html += `<tr><td>Bulk materials</td><td></td><td></td><td class="money">$${disp[0]}</td><td class="money">$${disp[0]}</td><td class="money">$${disp[1]}</td><td class="money">$${disp[2]}</td></tr>`
   }
 
   for (let prop in totals) {
@@ -141,7 +141,7 @@ indexView.makeTable = function(cur) {
   }
 
   html +=`
-  <tr class="total-row"><td>Total</td><td>${totals.laborHours} hrs</td><td>$${totals.laborCost}</td><td>$${totals.materialsCost}</td><td>$${totals.subtotal}</td><td>$${totals.tax}</td><td>$${totals.total}</td></tr>
+  <tr class="total-row"><td>Total</td><td>${totals.laborHours} hrs</td><td class="money">$${totals.laborCost}</td><td class="money">$${totals.materialsCost}</td><td class="money">$${totals.subtotal}</td><td class="money">$${totals.tax}</td><td class="money">$${totals.total}</td></tr>
   </table>
   `
   return html
