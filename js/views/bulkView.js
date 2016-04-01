@@ -169,7 +169,7 @@ bulkView.makeSummary = function(bm) {
     }
   }
 
-  summary += `<tr class="total-row"><td>Total</td><td></td><td></td><td></td><td>$${grandTotal}</td></tr>`
+  summary += `<tr class="total-row"><td>Total</td><td></td><td></td><td></td><td>$${grandTotal.toFixed(2)}</td></tr>`
 
   return summary
 }
@@ -179,7 +179,7 @@ bulkView.makeSummaryRow = function(prop, vol) {
   let tax = util.salesTax(price)
   let total = util.round('round', price + tax, 0.01)
 
-  return `<tr><td>${prop}</td><td>${vol} yd</td><td>$${price}</td><td>$${tax}</td><td>$${total}</td></tr>`
+  return `<tr><td>${prop}</td><td>${vol} yd</td><td>$${price.toFixed(2)}</td><td>$${tax.toFixed(2)}</td><td>$${total.toFixed(2)}</td></tr>`
 }
 
 bulkView.makeDetails = function(curType) {
@@ -203,7 +203,7 @@ bulkView.makeDetails = function(curType) {
     totals.total += e.total
   })
 
-  details += `<tr class="total-row"><td>Totals</td><td>${curType}</td><td></td><td></td><td></td><td>${totals.volume} yd</td><td>$${totals.price}</td><td>$${totals.tax}</td><td>$${totals.total}</td></tr>`
+  details += `<tr class="total-row"><td>Totals</td><td>${curType}</td><td></td><td></td><td></td><td>${totals.volume} yd</td><td>$${totals.price.toFixed(2)}</td><td>$${totals.tax.toFixed(2)}</td><td>$${totals.total.toFixed(2)}</td></tr>`
 
   return details
 }
@@ -218,9 +218,9 @@ bulkView.makeRow = function(b) {
   <td>${b.lenFt}' ${b.lenIn}"</td>
   <td>${b.depth}"</td>
   <td>${b.volume} yd</td>
-  <td>$${b.price}</td>
-  <td>$${b.tax}</td>
-  <td>$${b.total}</td>
+  <td>$${b.price.toFixed(2)}</td>
+  <td>$${b.tax.toFixed(2)}</td>
+  <td>$${b.total.toFixed(2)}</td>
   <td><span data-id="${b.id}" class="icon-pencil2"></span></td>
   <td><span data-id="${b.id}" data-type="${b.type}" class="icon-bin2"></span></td>
   </tr>

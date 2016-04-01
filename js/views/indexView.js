@@ -64,7 +64,7 @@ indexView.handleSelector = function() {
       let curProject = util.findObjInArray(id, project.allProjects, 'client')
       project.current = curProject[0]
       project.populate(project.current)
-      projectView.clearDisplays()
+      indexView.clearDisplays()
       indexView.render(project.current)
     }
   })
@@ -145,4 +145,18 @@ indexView.makeTable = function(cur) {
   </table>
   `
   return html
+}
+
+indexView.clearDisplays = function() {
+  $('#project-summary').html('')
+  $('#rainwise-table').html('')
+  $('#rg-selector').html('')
+  $('#rg-tables table').html('')
+  $('#rg-display').hide()
+  $('#bulk-selector').html('')
+  $('#bulk-table').html('')
+  $('#bulk-display').hide()
+  $('#cistern-selector').html('')
+  $('#cistern-tables table').html('')
+  $('#cistern-display').hide()
 }

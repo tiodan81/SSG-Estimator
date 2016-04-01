@@ -11,3 +11,5 @@
 
 # Questions for jake
 * labor hours for bulk materials?
+* possible to have more than 1 of each cistern add-on?
+* pre-markup prices for EVERYTHING
