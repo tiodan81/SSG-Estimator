@@ -107,90 +107,9 @@ cisternView.handleNav = function() {
   })
 }
 
-cisternView.makeTables = function(cur) {
-  $('#cistern-table-summary').html(cisternView.makeSummary(cur))
-  $('#cistern-table-labor').html(cisternView.makeLabor(cur))
-  $('#cistern-table-materials').html(cisternView.makeMaterials(cur))
-}
-
-cisternView.makeSummary = function(cur) {
-  let summary = ''
-  summary += `
-  <tr><th>Item</th><th>Amount</th></tr>
-  <tr><td>Model</td><td>${cur.model}</td></tr>
-  <tr><td>Roof area</td><td>${cur.roofArea} ft²</td></tr>
-  <tr><td>Labor hours</td><td>${cur.laborHrsTotal}</td></tr>
-  <tr><td>Labor cost</td><td>$${cur.laborCostTotal}</td></tr>
-  <tr><td>Materials cost</td><td>$${cur.materialsCostTotal}</td></tr>
-  <tr><td>Tax</td><td>$${cur.tax}</td></tr>
-  <tr class="total-row"><td>Total</td><td>$${cur.total}</td></tr>
-  `
-  return summary
-}
-
-cisternView.makeLabor = function(cur) {
-  let labor = ''
-  labor += `
-  <tr><th>Item</th><th>Hours</th><th>Cost</th></tr>
-  <tr><td>Base</td><td>${cur.baseLaborHr}</td><td>$${cur.baseLaborCost}</td></tr>
-  <tr><td>Inflow</td><td>${cur.inflowLaborHr}</td><td>$${cur.inflowLaborCost}</td></tr>
-  <tr><td>Outflow</td><td>${cur.outflowLaborHr}</td><td>$${cur.outflowLaborCost}</td></tr>
-  `
-  if (cur.additionalLaborHr) {
-    labor += `<tr><td>Additional</td><td>${cur.additionalLaborHr}</td><td>$${cur.additionalLaborCost}</td></tr>`
-  }
-  labor += `<tr class="total-row"><td>Total</td><td>${cur.laborHrsTotal}</td><td>$${cur.laborCostTotal}</td></tr>`
-  return labor
-}
-
-cisternView.makeMaterials = function(cur) {
-  let materials = ''
-  materials += `
-  <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
-  <tr><td>Tank</td><td>1</td><td>$${cur.salePrice}</td></tr>
-  <tr><td>Paverbase</td><td>${cur.paverbase}yd</td><td>$${cur.paverbaseCost}</td></tr>
-  `
-  if (cur.manorStones != 0) {
-    materials += `<tr><td>Manor stones</td><td>${cur.manorStones}</td><td>$${cur.manorStoneCost}</td></tr>`
-  }
-  if (cur.cinderBlocks != 0) {
-    materials += `<tr><td>Cinder blocks</td><td>${cur.cinderBlocks}</td><td>$${cur.cinderBlockCost}</td></tr>`
-  }
-  materials += `
-  <tr><td>Inflow pipe</td><td>${cur.inflow}ft</td><td>$${cur.inflowPipeCost}</td></tr>
-  <tr><td>Inflow hardware</td><td>${cur.inflowHardware}</td><td>$${cur.inflowHdwCost}</td></tr>
-  <tr><td>Outflow pipe</td><td>${cur.outflow}ft</td><td>$${cur.outflowPipeCost}</td></tr>
-  <tr><td>Outflow hardware</td><td>${cur.outflowHardware}</td><td>$${cur.outflowHdwCost}</td></tr>
-  `
-  if (cur.slimlineRestraints) {
-    materials += `<tr><td>Slimeline restraints</td><td>1</td><td>$${cur.slimlineRestraints}</td></tr>`
-  }
-  if (cur.pump) {
-    materials += `<tr><td>Pump</td><td>${cur.pump}</td><td>$${cur.pumpCost}</td></tr>`
-  }
-  if (cur.diverter) {
-    materials += `<tr><td>Diverter</td><td>${cur.diverter}</td><td>$${cur.diverterCost}</td></tr>`
-  }
-  if (cur.gauge) {
-    materials += `<tr><td>Gauge</td><td>${cur.gauge}</td><td>$${cur.gaugeCost}</td></tr>`
-  }
-  if (cur.bulkheadKit) {
-    materials += `<tr><td>Bulkhead kit</td><td>1</td><td>$${cur.bulkheadKit}</td></tr>`
-  }
-  materials += `
-  <tr><td>Low-flow kit</td><td>1</td><td>$75.00</td></tr>
-  <tr class="total-row"><td>Total</td><td></td><td>$${cur.materialsCostTotal}</td></tr>
-  `
-  return materials
-}
-
 cisternView.editButtons = function() {
-  let buttons = ''
-  buttons += `
-  <span class="icon-pencil2"></span>
-  <span class="icon-bin2"></span>
-  `
-  $('#cistern-edit-buttons').empty().html(buttons)
+  $('#cistern-edit-buttons').show()
+  cisternView.handleEdit()
   cisternView.handleDelete()
 }
 
@@ -229,6 +148,7 @@ cisternView.handleDelete = function() {
 
 cisternView.populateForm = function(cur) {
   $('#cisternID').val(cur.id)
+  $('#cistern-roofArea').val(cur.roofArea)
   $('#cisternModel').val(cur.model)
   $('#cisternBase').val(cur.baseHeight)
   $('#gutterFt').val(cur.gutter)
@@ -246,4 +166,81 @@ cisternView.clearForm = function() {
   $('#cisternBase').val('1')
   $('#cisternForm input[type="number"]').val('')
   $('#cisternForm input[type="checkbox"]').prop('checked', false)
+}
+
+cisternView.makeTables = function(cur) {
+  $('#cistern-table-summary').html(cisternView.makeSummary(cur))
+  $('#cistern-table-labor').html(cisternView.makeLabor(cur))
+  $('#cistern-table-materials').html(cisternView.makeMaterials(cur))
+}
+
+cisternView.makeSummary = function(cur) {
+  let summary = ''
+  summary += `
+  <tr><th>Item</th><th>Amount</th></tr>
+  <tr><td>Model</td><td>${cur.model}</td></tr>
+  <tr><td>Roof area</td><td>${cur.roofArea} ft²</td></tr>
+  <tr><td>Labor hours</td><td>${cur.laborHrsTotal}</td></tr>
+  <tr><td>Labor cost</td><td class="money">$${cur.laborCostTotal.toFixed(2)}</td></tr>
+  <tr><td>Materials cost</td><td class="money">$${cur.materialsCostTotal.toFixed(2)}</td></tr>
+  <tr><td>Tax</td><td class="money">$${cur.tax.toFixed(2)}</td></tr>
+  <tr class="total-row"><td>Total</td><td class="money">$${cur.total.toFixed(2)}</td></tr>
+  `
+  return summary
+}
+
+cisternView.makeLabor = function(cur) {
+  let labor = ''
+  labor += `
+  <tr><th>Item</th><th>Hours</th><th>Cost</th></tr>
+  <tr><td>Base</td><td>${cur.baseLaborHr}</td><td class="money">$${cur.baseLaborCost.toFixed(2)}</td></tr>
+  <tr><td>Inflow</td><td>${cur.inflowLaborHr}</td><td class="money">$${cur.inflowLaborCost.toFixed(2)}</td></tr>
+  <tr><td>Outflow</td><td>${cur.outflowLaborHr}</td><td class="money">$${cur.outflowLaborCost.toFixed(2)}</td></tr>
+  `
+  if (cur.additionalLaborHr) {
+    labor += `<tr><td>Additional</td><td>${cur.additionalLaborHr}</td><td class="money">$${cur.additionalLaborCost.toFixed(2)}</td></tr>`
+  }
+  labor += `<tr class="total-row"><td>Total</td><td>${cur.laborHrsTotal}</td><td class="money">$${cur.laborCostTotal.toFixed(2)}</td></tr>`
+  return labor
+}
+
+cisternView.makeMaterials = function(cur) {
+  let materials = ''
+  materials += `
+  <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
+  <tr><td>Tank</td><td>1</td><td class="money">$${cur.salePrice.toFixed(2)}</td></tr>
+  <tr><td>Paverbase</td><td>${cur.paverbase} yd</td><td class="money">$${cur.paverbaseCost.toFixed(2)}</td></tr>
+  `
+  if (cur.manorStones != 0) {
+    materials += `<tr><td>Manor stones</td><td>${cur.manorStones}</td><td class="money">$${cur.manorStoneCost.toFixed(2)}</td></tr>`
+  }
+  if (cur.cinderBlocks != 0) {
+    materials += `<tr><td>Cinder blocks</td><td>${cur.cinderBlocks}</td><td class="money">$${cur.cinderBlockCost.toFixed(2)}</td></tr>`
+  }
+  materials += `
+  <tr><td>Inflow pipe</td><td>${cur.inflow} ft</td><td class="money">$${cur.inflowPipeCost.toFixed(2)}</td></tr>
+  <tr><td>Inflow hardware</td><td>${cur.inflowHardware}</td><td class="money">$${cur.inflowHdwCost.toFixed(2)}</td></tr>
+  <tr><td>Outflow pipe</td><td>${cur.outflow} ft</td><td class="money">$${cur.outflowPipeCost.toFixed(2)}</td></tr>
+  <tr><td>Outflow hardware</td><td>${cur.outflowHardware}</td><td class="money">$${cur.outflowHdwCost.toFixed(2)}</td></tr>
+  `
+  if (cur.slimlineRestraints) {
+    materials += `<tr><td>Slimline restraints</td><td>1</td><td class="money">$${cur.slimlineRestraints.toFixed(2)}</td></tr>`
+  }
+  if (cur.pump) {
+    materials += `<tr><td>Pump</td><td>${cur.pump}</td><td class="money">$${cur.pumpCost.toFixed(2)}</td></tr>`
+  }
+  if (cur.diverter) {
+    materials += `<tr><td>Diverter</td><td>${cur.diverter}</td><td class="money">$${cur.diverterCost.toFixed(2)}</td></tr>`
+  }
+  if (cur.gauge) {
+    materials += `<tr><td>Gauge</td><td>${cur.gauge}</td><td class="money">$${cur.gaugeCost.toFixed(2)}</td></tr>`
+  }
+  if (cur.bulkheadKit) {
+    materials += `<tr><td>Bulkhead kit</td><td>1</td><td class="money">$${cur.bulkheadKit.toFixed(2)}</td></tr>`
+  }
+  materials += `
+  <tr><td>Low-flow kit</td><td>1</td><td class="money">$75.00</td></tr>
+  <tr class="total-row"><td>Total</td><td></td><td class="money">$${cur.materialsCostTotal.toFixed(2)}</td></tr>
+  `
+  return materials
 }

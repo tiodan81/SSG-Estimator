@@ -21,7 +21,7 @@ userController.logout = function() {
   $('#login').show()
   $('#project-selector').html('<option value="default">Select a Project</option>')
   $('#project-summary').html('')
-  projectView.clearDisplays()
+  indexView.clearDisplays()
   loginView.init()
 }
 

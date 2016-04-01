@@ -64,7 +64,7 @@ indexView.handleSelector = function() {
       let curProject = util.findObjInArray(id, project.allProjects, 'client')
       project.current = curProject[0]
       project.populate(project.current)
-      projectView.clearDisplays()
+      indexView.clearDisplays()
       indexView.render(project.current)
     }
   })
@@ -88,45 +88,75 @@ indexView.makeTable = function(cur) {
 
   if (Object.keys(cur.rainwise.uber).length) {
     let rw = cur.rainwise.uber
+    let disp = [rw.subtotal, rw.tax, rw.total].map((e) => e.toFixed(2))
+
     totals.materialsCost += rw.subtotal
     totals.subtotal += rw.subtotal
     totals.tax += rw.tax
     totals.total += rw.total
-    html += `<tr><td>Rainwise</td><td></td><td></td><td>$${rw.subtotal}</td><td>$${rw.subtotal}</td><td>$${rw.tax}</td><td>$${rw.total}</td></tr>`
+
+    html += `<tr><td>Rainwise</td><td></td><td></td><td class="money">$${disp[0]}</td><td class="money">$${disp[0]}</td><td class="money">$${disp[1]}</td><td class="money">$${disp[2]}</td></tr>`
   }
 
   if (cur.rainGardens.all.length) {
     let rgs = cur.rainGardens.uber.totals
+    let disp = [rgs.laborCostTotal, rgs.materialsCostTotal, rgs.subtotal, rgs.tax, rgs.total].map((e) => e.toFixed(2))
+
     totals.laborHours += rgs.laborHrsTotal
     totals.laborCost += rgs.laborCostTotal
     totals.materialsCost += rgs.materialsCostTotal
     totals.subtotal += rgs.subtotal
     totals.tax += rgs.tax
     totals.total += rgs.total
-    html += `<tr><td>Rain gardens</td><td>${rgs.laborHrsTotal}</td><td>${rgs.laborCostTotal}</td><td>${rgs.materialsCostTotal}</td><td>${rgs.subtotal}</td><td>${rgs.tax}</td><td>${rgs.total}</td></tr>`
+    html += `<tr><td>Rain gardens</td><td>${rgs.laborHrsTotal}</td><td class="money">$${disp[0]}</td><td class="money">$${disp[1]}</td><td class="money">$${disp[2]}</td><td class="money">$${disp[3]}</td><td class="money">$${disp[4]}</td></tr>`
   }
   if (cur.cisterns.all.length) {
     let cisterns = cur.cisterns.uber
+    let disp = [cisterns.laborCostTotal, cisterns.materialsCostTotal, cisterns.subtotal, cisterns.tax, cisterns.total].map((e) => e.toFixed(2))
+
     totals.laborHours += cisterns.laborHrsTotal
     totals.laborCost += cisterns.laborCostTotal
     totals.materialsCost += cisterns.materialsCostTotal
     totals.subtotal += cisterns.subtotal
     totals.tax += cisterns.tax
     totals.total += cisterns.total
-    html += `<tr><td>Cisterns</td><td>${cisterns.laborHrsTotal}</td><td>${cisterns.laborCostTotal}</td><td>${cisterns.materialsCostTotal}</td><td>${cisterns.subtotal}</td><td>${cisterns.tax}</td><td>${cisterns.total}</td></tr>`
+    html += `<tr><td>Cisterns</td><td>${cisterns.laborHrsTotal}</td><td class="money">$${disp[0]}</td><td class="money">$${disp[1]}</td><td class="money">$${disp[2]}</td><td class="money">$${disp[3]}</td><td class="money">$${disp[4]}</td></tr>`
   }
 
   if (cur.bulkMaterials.all.length) {
     let bulkTotals = util.sumStrippedProps(cur.bulkMaterials.all, ['price', 'tax', 'total'])
+    let disp = bulkTotals.map((e) => e.toFixed(2))
+
     totals.materialsCost += bulkTotals[0]
     totals.subtotal += bulkTotals[0]
     totals.tax += bulkTotals[1]
     totals.total += bulkTotals[2]
-    html += `<tr><td>Bulk materials</td><td>n/a</td><td>n/a</td><td>$${bulkTotals[0]}</td><td>$${bulkTotals[0]}</td><td>$${bulkTotals[1]}</td><td>$${bulkTotals[2]}</td></tr>`
+    html += `<tr><td>Bulk materials</td><td></td><td></td><td class="money">$${disp[0]}</td><td class="money">$${disp[0]}</td><td class="money">$${disp[1]}</td><td class="money">$${disp[2]}</td></tr>`
   }
+
+  for (let prop in totals) {
+    if (prop !== 'laborHours') {
+      totals[prop] = totals[prop].toFixed(2)
+    }
+  }
+
   html +=`
-  <tr class="total-row"><td>Total</td><td>${totals.laborHours} hrs</td><td>$${totals.laborCost}</td><td>$${totals.materialsCost}</td><td>$${totals.subtotal}</td><td>$${totals.tax}</td><td>$${totals.total}</td></tr>
+  <tr class="total-row"><td>Total</td><td>${totals.laborHours} hrs</td><td class="money">$${totals.laborCost}</td><td class="money">$${totals.materialsCost}</td><td class="money">$${totals.subtotal}</td><td class="money">$${totals.tax}</td><td class="money">$${totals.total}</td></tr>
   </table>
   `
   return html
+}
+
+indexView.clearDisplays = function() {
+  $('#project-summary').html('')
+  $('#rainwise-table').html('')
+  $('#rg-selector').html('')
+  $('#rg-tables table').html('')
+  $('#rg-display').hide()
+  $('#bulk-selector').html('')
+  $('#bulk-table').html('')
+  $('#bulk-display').hide()
+  $('#cistern-selector').html('')
+  $('#cistern-tables table').html('')
+  $('#cistern-display').hide()
 }

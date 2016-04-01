@@ -260,11 +260,6 @@
 
           <input id="rg-save" type="submit" value="save">
 
-          <div id="rg-edit-buttons">
-            <span class="icon-pencil2"></span>
-            <span class="icon-bin2"></span>
-          </div>
-
         </form>
 
         <section id="rg-display">
@@ -273,7 +268,14 @@
           <div>
             <select id="rg-selector">
             </select>
+
+            <div id="rg-edit-buttons">
+              <span class="icon-pencil2"></span>
+              <span class="icon-bin2"></span>
+            </div>
+
           </div>
+
 
           <ul id="rg-nav">
             <button id="summary" class="button-primary">Summary</button>
@@ -415,8 +417,6 @@
 
           <input id="cistern-save" type="submit" value="save">
 
-          <div id="cistern-edit-buttons"></div>
-
         </form>
 
         <section id="cistern-display">
@@ -424,6 +424,11 @@
 
           <label>Tank ID:</label>
           <select id="cistern-selector"></select>
+
+          <div id="cistern-edit-buttons">
+            <span class="icon-pencil2"></span>
+            <span class="icon-bin2"></span>
+          </div>
 
           <ul id="cistern-nav">
             <button id="summary" class="button-primary">Summary</button>
@@ -443,7 +448,6 @@
     </main>
 
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script src="/js/vendor/jquery.aCollapTable.js"></script>
     <script src="https://cdn.firebase.com/js/client/2.4.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.6.1/lodash.min.js"></script>
     <script type="text/javascript" src="/js/vendor/page.js"></script>
@@ -465,7 +469,6 @@
     <!-- VIEWS -->
     <script type="text/javascript" src="/js/views/indexView.js"></script>
     <script type="text/javascript" src="/js/views/loginView.js"></script>
-    <script type="text/javascript" src="/js/views/projectView.js"></script>
     <script type="text/javascript" src="/js/views/rainwiseView.js"></script>
     <script type="text/javascript" src="/js/views/rgView.js"></script>
     <script type="text/javascript" src="/js/views/bulkView.js"></script>
