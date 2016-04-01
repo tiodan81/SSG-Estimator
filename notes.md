@@ -13,3 +13,5 @@
 * labor hours for bulk materials?
 * possible to have more than 1 of each cistern add-on?
 * pre-markup prices for EVERYTHING
+* where to display roof area? rg/cistern/rw ?
+* collapsible nav menu?
