@@ -88,45 +88,56 @@ indexView.makeTable = function(cur) {
 
   if (Object.keys(cur.rainwise.uber).length) {
     let rw = cur.rainwise.uber
+    let disp = [rw.subtotal, rw.tax, rw.total].map((e) => e.toFixed(2))
+
     totals.materialsCost += rw.subtotal
     totals.subtotal += rw.subtotal
     totals.tax += rw.tax
     totals.total += rw.total
-    html += `<tr><td>Rainwise</td><td></td><td></td><td>$${rw.subtotal}</td><td>$${rw.subtotal}</td><td>$${rw.tax}</td><td>$${rw.total}</td></tr>`
+
+    html += `<tr><td>Rainwise</td><td></td><td></td><td>$${disp[0]}</td><td>$${disp[0]}</td><td>$${disp[1]}</td><td>$${disp[2]}</td></tr>`
   }
 
   if (cur.rainGardens.all.length) {
     let rgs = cur.rainGardens.uber.totals
+    let disp = [rgs.laborCostTotal, rgs.materialsCostTotal, rgs.subtotal, rgs.tax, rgs.total].map((e) => e.toFixed(2))
+
     totals.laborHours += rgs.laborHrsTotal
     totals.laborCost += rgs.laborCostTotal
     totals.materialsCost += rgs.materialsCostTotal
     totals.subtotal += rgs.subtotal
     totals.tax += rgs.tax
     totals.total += rgs.total
-    html += `<tr><td>Rain gardens</td><td>${rgs.laborHrsTotal}</td><td>$${rgs.laborCostTotal}</td><td>$${rgs.materialsCostTotal}</td><td>$${rgs.subtotal}</td><td>$${rgs.tax}</td><td>$${rgs.total}</td></tr>`
+    html += `<tr><td>Rain gardens</td><td>${rgs.laborHrsTotal}</td><td>$${disp[0]}</td><td>$${disp[1]}</td><td>$${disp[2]}</td><td>$${disp[3]}</td><td>$${disp[4]}</td></tr>`
   }
   if (cur.cisterns.all.length) {
     let cisterns = cur.cisterns.uber
+    let disp = [cisterns.laborCostTotal, cisterns.materialsCostTotal, cisterns.subtotal, cisterns.tax, cisterns.total].map((e) => e.toFixed(2))
+
     totals.laborHours += cisterns.laborHrsTotal
     totals.laborCost += cisterns.laborCostTotal
     totals.materialsCost += cisterns.materialsCostTotal
     totals.subtotal += cisterns.subtotal
     totals.tax += cisterns.tax
     totals.total += cisterns.total
-    html += `<tr><td>Cisterns</td><td>${cisterns.laborHrsTotal}</td><td>$${cisterns.laborCostTotal}</td><td>$${cisterns.materialsCostTotal}</td><td>$${cisterns.subtotal}</td><td>$${cisterns.tax}</td><td>$${cisterns.total}</td></tr>`
+    html += `<tr><td>Cisterns</td><td>${cisterns.laborHrsTotal}</td><td>$${disp[0]}</td><td>$${disp[1]}</td><td>$${disp[2]}</td><td>$${disp[3]}</td><td>$${disp[4]}</td></tr>`
   }
 
   if (cur.bulkMaterials.all.length) {
     let bulkTotals = util.sumStrippedProps(cur.bulkMaterials.all, ['price', 'tax', 'total'])
+    let disp = bulkTotals.map((e) => e.toFixed(2))
+
     totals.materialsCost += bulkTotals[0]
     totals.subtotal += bulkTotals[0]
     totals.tax += bulkTotals[1]
     totals.total += bulkTotals[2]
-    html += `<tr><td>Bulk materials</td><td></td><td></td><td>$${bulkTotals[0]}</td><td>$${bulkTotals[0]}</td><td>$${bulkTotals[1]}</td><td>$${bulkTotals[2]}</td></tr>`
+    html += `<tr><td>Bulk materials</td><td></td><td></td><td>$${disp[0]}</td><td>$${disp[0]}</td><td>$${disp[1]}</td><td>$${disp[2]}</td></tr>`
   }
 
   for (let prop in totals) {
-    totals[prop] = util.round('round', totals[prop], 0.01)
+    if (prop !== 'laborHours') {
+      totals[prop] = totals[prop].toFixed(2)
+    }
   }
 
   html +=`
