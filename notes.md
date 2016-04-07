@@ -17,7 +17,6 @@
 * collapsible nav menu?
 
 # Bugs
-* cistern pipe allows negative numbers
 * round all bulk final totals up to 0.5yd
 * want excess soil dump cost in bulk materials
 * need hourly labor factors for different BM
@@ -28,6 +27,7 @@
 * RG shows 1.5yd of mulch = $40 but price says $40/yd
 * RG w/rock only for dispersion shows 0yd, $4.05
 * ceil all hours to 0.5
+* bulk inches form fields look shitty
 
 next: paths & patios
 * paths
