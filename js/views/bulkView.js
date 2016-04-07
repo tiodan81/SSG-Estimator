@@ -121,35 +121,10 @@ bulkView.handleDelete = function() {
   $('#bulk-table .icon-bin2').off('click').on('click', function(e) {
     let $curId = $(this).data('id')
     let $curType = $(this).data('type')
-    let all = project.current.bulkMaterials.all
 
-    all.forEach((bm, i) => {
-      if (bm.id === $curId) {
-        all.splice(i, 1)
-      }
-    })
-
-    if (all.length) {
-      if (util.picker(all, 'type').indexOf($curType) === -1) {
-        let firstRemainingType = all[0].type
-        $('#bulk-selector > option[value="' + $curType + '"]').remove()
-        $('#bulk-selector').val(firstRemainingType)
-        bulkView.renderDetails(firstRemainingType)
-        bulkView.handleEdit()
-        bulkView.handleDelete()
-      } else {
-        bulkView.renderDetails($curType)
-        bulkView.handleEdit()
-        bulkView.handleDelete()
-      }
-
-    } else {
-      project.current.bulkMaterials = { all: [], uber: {} }
-      $('#bulk-display').hide()
-    }
-
-    project.current.bulkMaterials.uber = bulk.makeUber(all)
-    project.updateComponent(project.current, 'bulkMaterials')
+    bulkController.delete($curId, $curType)
+    bulkView.handleEdit()
+    bulkView.handleDelete()
   })
 }
 
