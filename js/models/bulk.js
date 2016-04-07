@@ -90,6 +90,12 @@ bulk.makeUber = function(all) {
     }
   })
 
+  for (let prop in uber) {
+    if (prop !== 'totals') {
+      uber[prop] = util.round('ceil', uber[prop], 0.5)
+    }
+  }
+
   return uber
 }
 
