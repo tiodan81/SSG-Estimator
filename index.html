@@ -105,7 +105,7 @@
         <form id="rainwiseForm">
 
           <label>Gutter regrade:</label>
-          <input type="number" id="gutterFt" placeholder="ft">
+          <input type="number" id="gutterFt" min="0" placeholder="ft">
 
           <label>
             <input id="rw-inspection" type="checkbox">
@@ -138,7 +138,7 @@
           <input type="text" id="rgID" placeholder="rain garden name" required>
 
           <label>Roof area:</label>
-          <input type="number" id="rg-roofArea" placeholder="ft²" required>
+          <input type="number" id="rg-roofArea" min="0" placeholder="ft²" required>
 
           <label>
             <input id="infiltKnown" type="checkbox">
@@ -147,11 +147,11 @@
 
           <div id="rgInfiltContainer">
             <label>Infiltration rate:</label>
-            <input type="number" id="rgInfiltRate" step="0.01" placeholder="in/hr">
+            <input type="number" id="rgInfiltRate" min="0" step="0.01" placeholder="in/hr">
           </div>
 
           <label>Plant budget:</label>
-          <input type="number" id="rgPlantBudget" placeholder="$$$" required>
+          <input type="number" id="rgPlantBudget" min="0" placeholder="$$$" required>
 
           <div id="rg-inflows">
             <label class="label-body">Number of inflows
@@ -176,7 +176,7 @@
               </label>
 
               <label>Inflow 1 length:</label>
-              <input type="number" id="rgInfLength1" placeholder="ft" required>
+              <input type="number" id="rgInfLength1" min="0" placeholder="ft" required>
             </div>
 
             <div id="rgInflow2-container">
@@ -193,7 +193,7 @@
               </label>
 
               <label>Inflow 2 length:</label>
-              <input type="number" id="rgInfLength2" placeholder="ft">
+              <input type="number" id="rgInfLength2" min="0" placeholder="ft">
             </div>
 
           </div>
@@ -218,7 +218,7 @@
               </label>
 
               <label>Outflow 1 length:</label>
-              <input type="number" id="rgOutLength1" placeholder="ft" required>
+              <input type="number" id="rgOutLength1" min="0" placeholder="ft" required>
             </div>
 
             <div id="rgOutflow2-container">
@@ -235,7 +235,7 @@
               </label>
 
               <label>Outflow 2 length:</label>
-              <input type="number" id="rgOutLength2" placeholder="ft">
+              <input type="number" id="rgOutLength2" min="0" placeholder="ft">
             </div>
           </div>
 
@@ -315,15 +315,15 @@
           </select>
 
           <label>Width:</label>
-          <input type="number" id="bulk-width-ft" class="dimension" placeholder="feet" required>
+          <input type="number" id="bulk-width-ft" class="dimension" min="0" placeholder="feet" required>
           <input type="number" id="bulk-width-in" class="dimension" min="0" max="11" placeholder="inches (optional)">
 
           <label>Length:</label>
-          <input type="number" id="bulk-length-ft" class="dimension" placeholder="feet" required>
+          <input type="number" id="bulk-length-ft" class="dimension" min="0" placeholder="feet" required>
           <input type="number" id="bulk-length-in" class="dimension" min="0" max="11" placeholder="inches (optional)">
 
           <label>Depth:</label>
-          <input type="number" id="bulk-depth" class="dimension" placeholder="inches" required>
+          <input type="number" id="bulk-depth" class="dimension" min="0" placeholder="inches" required>
 
           <input id="bulk-save" type="submit" value="save">
         </form>
@@ -354,7 +354,7 @@
           <input type="text" id="cisternID" placeholder="tank ID" required>
 
           <label>Roof area:</label>
-          <input type="number" id="cistern-roofArea" placeholder="ft²" required>
+          <input type="number" id="cistern-roofArea" min="0" placeholder="ft²" required>
 
           <label>Model:</label>
           <select id="cisternModel">
@@ -390,13 +390,13 @@
           </select>
 
           <label>3" inflow pipe:</label>
-          <input type="number" id="cisternInflow" placeholder="ft" required>
+          <input type="number" id="cisternInflow" min="0" placeholder="ft" required>
 
           <label>3" outflow pipe:</label>
-          <input type="number" id="cisternOutflow" placeholder="ft" required>
+          <input type="number" id="cisternOutflow" min="0" placeholder="ft" required>
 
           <label>Additional labor:</label>
-          <input type="number" id="cisternAddLabor" placeholder="hours (optional)">
+          <input type="number" id="cisternAddLabor" min="0" placeholder="hours (optional)">
 
           <label>Add-ons:</label>
 
