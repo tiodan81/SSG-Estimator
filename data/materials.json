@@ -12,8 +12,8 @@
   "plumbing": {
     "pvc3In": 5.5,
     "pvc4In": 7,
-    "gutter": 7.5,
-    "lowFlowKit": 75,
+    "gutter": 5,
+    "lowFlowKit": 100,
     "hardware": 20,
     "slimlineRestraints": 117,
     "bulkheadKit": 120,
@@ -27,7 +27,7 @@
   "fees": {
     "sodDump": 42,
     "sodCutter": 142,
-    "dumpTruck": 350,
+    "dumpTruck": 250,
     "rainwiseInspection": 150
   },
   "misc": {
