@@ -1,9 +1,16 @@
 {
   "bulk": {
-    "paverbase": 55,
-    "bioretention": 45,
-    "mulch": 40,
-    "drainageRock": 40.5
+    "topsoil": 38.5,
+    "fillSoil": 15,
+    "bioretention": 42.5,
+    "compost": 38.5,
+    "mulch": 39.5,
+    "soilRemoval": 25,
+    "quarterMinus": 40.5,
+    "fiveEighthsMinus": 38.99,
+    "fiveEighthsClean": 39.5,
+    "drainageRock": 40.5,
+    "basalt": 75
   },
   "stone": {
     "Manor stone": 6.18,

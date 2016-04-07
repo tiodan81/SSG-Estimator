@@ -13,9 +13,9 @@
 * pre-markup prices for EVERYTHING
 * where to display roof area? rg/cistern/rw ?
 
+* need price for nugget
+
 # Bugs
-* round all bulk final totals up to 0.5yd
-* add other BMs
 * need hourly labor factors for different BM
 * BM reminder note:
   0 - 1 SSGTruckLoad: no fee

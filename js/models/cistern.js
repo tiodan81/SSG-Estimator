@@ -14,7 +14,7 @@ cistern.cisternMaker = function(ci, r, m, h, inf, out, al, pump, div, gauge) {
   this.pump = pump || 0
   this.diverter = div || 0
   this.gauge = gauge || 0
-  this.paverbase = 0
+  this.quarterMinus = 0
   this.stoneType = ''
   this.manorStones = 0
   this.cinderBlocks = 0
@@ -37,7 +37,7 @@ cistern.cisternMaker = function(ci, r, m, h, inf, out, al, pump, div, gauge) {
   this.gaugeLaborCost = 0
   this.additionalLaborCost = 0
   this.salePrice = 0
-  this.paverbaseCost = 0
+  this.quarterMinusCost = 0
   this.manorStoneCost = 0
   this.cinderBlockCost = 0
   this.inflowPipeCost = 0
@@ -102,9 +102,9 @@ cistern.calculateHardware = function(pipe) {
 cistern.calcBaseLabor = function(c) {
   let labor
   if (c.baseHeight === 0) {
-    labor = 4 + Math.ceil((c.paverbase + c.manorStones + c.cinderBlocks) / 3)
+    labor = 4 + Math.ceil((c.quarterMinus + c.manorStones + c.cinderBlocks) / 3)
   } else {
-    labor = 10 + Math.ceil((c.paverbase + c.manorStones + c.cinderBlocks) / 3)
+    labor = 10 + Math.ceil((c.quarterMinus + c.manorStones + c.cinderBlocks) / 3)
   }
   if (c.model === 'B420' || c.model === 'B265' || c.model === 'B530') {
     labor += 2
@@ -116,21 +116,21 @@ cistern.calculateBaseMaterials = function (c) {
   let modelInfo = cistern.tankModels[c.model]
   c.salePrice = cistern.tankSalePrice(c.model, modelInfo)
   if (modelInfo.slimline) {
-    c.paverbase = util.round('ceil', cistern.volumeRect(modelInfo.width, modelInfo.depth, c.baseHeight), 0.5)
+    c.quarterMinus = util.round('ceil', cistern.volumeRect(modelInfo.width, modelInfo.depth, c.baseHeight), 0.5)
     c.stoneType = 'Cinder block'
     c.cinderBlocks = cistern.calcCinderBlocks(modelInfo.width, c.baseHeight)
     c.cinderBlockCost = util.round('round', (c.cinderBlocks * materials.stone[c.stoneType]), 0.01)
     c.slimlineRestraints = materials.plumbing.slimlineRestraints
   } else {
-    c.paverbase = util.round('ceil', cistern.volumeCyl(modelInfo.diameter, c.baseHeight), 0.5)
+    c.quarterMinus = util.round('ceil', cistern.volumeCyl(modelInfo.diameter, c.baseHeight), 0.5)
     c.stoneType = 'Manor stone'
     c.manorStones = cistern.calcManorStones(modelInfo.diameter, c.baseHeight)
     c.manorStoneCost = util.round('round', (c.manorStones * materials.stone[c.stoneType]), 0.01)
     c.slimlineRestraints = 0
   }
   c.bulkheadKit = c.model.charAt(0) === 'P' ? materials.plumbing.bulkheadKit : 0
-  c.paverbaseCost = util.round('round', (c.paverbase * materials.bulk.paverbase), 0.01)
-  c.baseMaterialsCost = util.round('round', c.paverbaseCost + c.cinderBlockCost + c.manorStoneCost + c.slimlineRestraints + c.bulkheadKit, 0.01)
+  c.quarterMinusCost = util.round('round', (c.quarterMinus * materials.bulk.quarterMinus), 0.01)
+  c.baseMaterialsCost = util.round('round', c.quarterMinusCost + c.cinderBlockCost + c.manorStoneCost + c.slimlineRestraints + c.bulkheadKit, 0.01)
 }
 
 cistern.calculatePlumbingMaterials = function(c) {

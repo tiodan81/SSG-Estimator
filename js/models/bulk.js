@@ -64,14 +64,17 @@ bulk.storeLocally = function(b) {
 
 bulk.makeUber = function(all) {
   let uber = {
-    mulch: 0,
-    bioretention: 0,
-    groCo: 0,
+    topsoil: 0,
     fillSoil: 0,
-    paverbase: 0,
-    drainageRock: 0,
-    fiveEighthsClean: 0,
+    bioretention: 0,
+    compost: 0,
+    mulch: 0,
+    soilRemoval: 0,
+    quarterMinus: 0,
     fiveEighthsMinus: 0,
+    fiveEighthsClean: 0,
+    drainageRock: 0,
+    basalt: 0,
     playChips: 0,
     nugget: 0
   }
