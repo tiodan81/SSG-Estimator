@@ -11,6 +11,8 @@ bulk.bulkMaker = function(i, t, wf, wi, lf, li, d) {
   this.lenIn = li || 0
   this.depth = d || 0
   this.volume = 0
+  this.laborHrs = 0
+  this.laborCost = 0
   this.price = 0
   this.tax = 0
   this.total = 0
@@ -28,12 +30,43 @@ bulk.build = function() {
 }
 
 bulk.calcs = function(b) {
-  let type = materials.bulk[b.type]
+  let unitCost = materials.bulk[b.type]
 
   b.volume = util.round('ceil', ((b.widFt * 12 + b.widIn) * (b.lenFt * 12 + b.lenIn) * b.depth) / 46656, 0.1)
-  b.price = util.round('round', util.materialCost(b.volume, type), 0.01)
+  b.laborHrs = bulk.laborHours(b.type, b.volume)
+  b.laborCost = util.laborCost(b.laborHrs)
+  b.price = util.round('round', util.materialCost(b.volume, unitCost) + b.laborCost, 0.01)
   b.tax = util.salesTax(b.price)
   b.total = util.round('round', b.price + b.tax, 0.01)
+}
+
+bulk.laborHours = function(type, volume) {
+  const onePtFive = ['topsoil', 'fillSoil', 'bioretention', 'quarterMinus', 'fiveEighthsMinus', 'fiveEighthsClean', 'drainageRock']
+  const one = ['compost', 'mulch']
+  const three = ['basalt']
+  let multiplier
+
+  if (type === 'soilRemoval') {
+    let dumpHrs = util.round('floor', volume / 5, 1.0) * 3
+    if (dumpHrs === 0) {
+      dumpHrs = 1
+    }
+    return util.round('ceil', (2 * volume) + dumpHrs, 0.5)
+
+  } else if (onePtFive.indexOf(type) >= 0) {
+    multiplier = 1.5
+
+  } else if (one.indexOf(type) >= 0) {
+    multiplier = 1
+
+  } else if (three.indexOf(type) >= 0) {
+    multiplier = 3
+
+  } else {
+    return new Error('type not found')
+  }
+
+  return util.round('ceil', volume * multiplier, 0.5)
 }
 
 bulk.saveToProject = function(b) {

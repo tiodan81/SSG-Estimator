@@ -16,20 +16,24 @@
 * need price for nugget
 
 # Bugs
-* need hourly labor factors for different BM
+* ceil ALL hours to 0.5
+
+* add labor hours for BM
+
 * BM reminder note:
   0 - 1 SSGTruckLoad: no fee
   delivery: $100/material
   dumpTruck: $250/day
 * fix alignment of BM grand total field
-* add labor hours for BM
+* bulk inches form fields look shitty
+
 * RG shows 1.5yd of mulch = $40 but price says $40/yd
 * RG w/rock only for dispersion shows 0yd, $4.05
-* ceil all hours to 0.5
-* bulk inches form fields look shitty
+
 * collapse nav menu on small viewports
 
-next: paths & patios
+
+# next: paths & patios
 * paths
   * gravel
   * edging (black metal, logs)

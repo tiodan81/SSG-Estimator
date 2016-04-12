@@ -47,7 +47,7 @@ bulkView.handleSave = function() {
 }
 
 bulkView.renderSummary = function() {
-  $('#bulk-table').html(bulkView.makeSummary(project.current.bulkMaterials.uber))
+  $('#bulk-table').html(bulkView.makeSummary(project.current.bulkMaterials))
   $('#bulk-selector').hide()
   if ($('#bulk-display').css('display') === 'none') {
     $('#bulk-display').show()
@@ -67,8 +67,10 @@ bulkView.renderDetails = function(t) {
 
 bulkView.populateSelector = function(b) {
   let cur = b.type
+  let displayCur = util.camelCaseToLowerCase(cur)
+
   if ($('#bulk-selector option[value="' + cur + '"]').length === 0) {
-    let option = '<option value="' + cur + '">' + cur + '</option>'
+    let option = '<option value="' + cur + '">' + displayCur + '</option>'
     $('#bulk-selector').append(option)
   }
 }
@@ -128,8 +130,10 @@ bulkView.handleDelete = function() {
   })
 }
 
-bulkView.makeSummary = function(uber) {
-  let summary = `<tr><th>Type</th><th>Volume</th><th>Price</th><th>Tax</th><th>Total</th></tr>`
+bulkView.makeSummary = function(bm) {
+  const hours = util.sumStrippedProps(bm.all, ['laborHrs'])
+  const uber = bm.uber
+  let summary = `<tr><th>Type</th><th>Volume</th><th>Hours</th><th>Price</th><th>Tax</th><th>Total</th></tr>`
   let grandTotal = 0
 
   for (let prop in uber) {
@@ -143,7 +147,7 @@ bulkView.makeSummary = function(uber) {
     }
   }
 
-  summary += `<tr class="total-row"><td>Total</td><td></td><td></td><td></td><td class="money">$${grandTotal.toFixed(2)}</td></tr>`
+  summary += `<tr class="total-row"><td>Total</td><td></td><td>${hours}</td><td></td><td></td><td class="money">$${grandTotal.toFixed(2)}</td></tr>`
 
   return summary
 }
@@ -155,11 +159,12 @@ bulkView.makeSummaryRow = function(prop, vol, price, tax, total) {
 bulkView.makeDetails = function(curType) {
   let totals = {
     volume: 0,
+    hours: 0,
     price: 0,
     tax: 0,
     total: 0
   }
-  let details = `<tr><th>ID</th><th>Type</th><th>Width</th><th>Length</th><th>Depth</th><th>Volume</th><th>Price</th><th>Tax</th><th>Total</th></tr>`
+  let details = `<tr><th>ID</th><th>Type</th><th>Width</th><th>Length</th><th>Depth</th><th>Volume</th><th>Hours</th><th>Price*</th><th>Tax</th><th>Total</th></tr>`
   let filtered = project.current.bulkMaterials.all.filter((bm) => bm.type === curType)
 
   filtered.map((f) => {
@@ -167,15 +172,29 @@ bulkView.makeDetails = function(curType) {
   })
 
   filtered.forEach((e) => {
+    totals.hours += e.laborHrs
     totals.volume += e.volume
   })
 
   totals.volume = util.round('ceil', totals.volume, 0.5)
-  totals.price = util.round('round', util.materialCost(totals.volume, materials.bulk[curType]), 0.01)
+  totals.price = util.round('round', util.materialCost(totals.volume, materials.bulk[curType]) + util.laborCost(totals.hours), 0.01)
   totals.tax = util.salesTax(totals.price)
   totals.total = util.round('round', totals.price + totals.tax, 0.01)
 
-  details += `<tr class="total-row"><td>Totals</td><td>${curType}</td><td></td><td></td><td></td><td>${totals.volume} yd</td><td class="money">$${totals.price.toFixed(2)}</td><td class="money">$${totals.tax.toFixed(2)}</td><td class="money">$${totals.total.toFixed(2)}</td></tr>`
+  details += `
+  <tr class="total-row">
+  <td>Totals</td>
+  <td>${util.camelCaseToLowerCase(curType)}</td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>${totals.volume} yd</td>
+  <td>${totals.hours}</td>
+  <td class="money">$${totals.price.toFixed(2)}</td>
+  <td class="money">$${totals.tax.toFixed(2)}</td>
+  <td class="money">$${totals.total.toFixed(2)}</td>
+  </tr>
+  `
 
   return details
 }
@@ -185,11 +204,12 @@ bulkView.makeRow = function(b) {
   row += `
   <tr>
   <td>${b.id}</td>
-  <td>${b.type}</td>
+  <td>${util.camelCaseToLowerCase(b.type)}</td>
   <td>${b.widFt}' ${b.widIn}"</td>
   <td>${b.lenFt}' ${b.lenIn}"</td>
   <td>${b.depth}"</td>
   <td>${b.volume} yd</td>
+  <td>${b.laborHrs}</td>
   <td></td>
   <td></td>
   <td></td>

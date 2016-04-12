@@ -47,7 +47,7 @@ util.plucky = function (key, obj) {
 
 //returns array of objects with desired props
 util.objectStripper = function(arr, props) {
-  var newarr = []
+  let newarr = []
   arr.forEach(function(e) {
     newarr.push(_.pick(e, props))
   })
@@ -70,4 +70,8 @@ util.sumStrippedProps = function (arr, props) {
 util.picker = function(arr, prop) {
   return arr.map((obj) => obj[prop])
             .filter((v, i, a) => a.indexOf(v) == i)
+}
+
+util.camelCaseToLowerCase = function(str) {
+  return str.replace(/([A-Z])/g, ' $1').toLowerCase()
 }
