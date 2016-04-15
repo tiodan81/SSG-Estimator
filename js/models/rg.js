@@ -190,10 +190,10 @@ rg.laborHrs = (c) => {
 
 rg.baseHrs = (c) => {
   let sodHrs = rg.sodHrs(c.sodRmMethod, c.area.footprint)
-  let excavationHrs = util.round('ceil', (c.area.baseArea / 2) + 3, 0.25)
+  let excavationHrs = util.round('ceil', (c.area.baseArea / 2) + 3, 0.5)
   let bioretenHrs = Math.round(2 * c.baseMaterials.bioretention + 1)
   let mulchHrs = Math.round(2 * c.baseMaterials.mulchVolume + 1)
-  let plantingHrs = util.round('ceil', (c.area.footprint / 20) + 4, 0.25)
+  let plantingHrs = util.round('ceil', (c.area.footprint / 20) + 4, 0.5)
 
   return {
     sodHrs:         sodHrs,
@@ -207,9 +207,9 @@ rg.baseHrs = (c) => {
 
 rg.sodHrs = (method, footprint) => {
   if (method === 'cutter') {
-    return util.round('ceil', footprint / 171, 0.25)
+    return util.round('ceil', footprint / 171, 0.5)
   } else if (method === 'manual') {
-    return util.round('ceil', footprint / 60, 0.25)
+    return util.round('ceil', footprint / 60, 0.5)
   } else {
     return 0
   }
@@ -221,11 +221,11 @@ rg.channelHrs = (mat, len, veg) => {
   let plantingHrs = veg ? len / 4 : 0
   let rockHrs = mat.drainageRock + 1
 
-  return util.round('ceil', excavationHrs + bioretenHrs + plantingHrs + rockHrs, 0.25)
+  return util.round('ceil', excavationHrs + bioretenHrs + plantingHrs + rockHrs, 0.5)
 }
 
 rg.pipeHrs = (len) => {
-  return util.round('ceil', len / 4, 0.25)
+  return util.round('ceil', len / 4, 0.5)
 }
 
 rg.laborCost = (c) => {
@@ -258,7 +258,7 @@ rg.totals = (c) => {
 
   let materialsCost = util.round('round', c.baseMaterialCost.total + c.plumbingMaterialCost.total + c.plantCost + c.truckCost + c.cutterCost, 0.01)
   let laborCost = util.round('round', c.baseLaborCost.total + c.dispersionLaborCost + c.inflow1LaborCost + c.inflow2LaborCost + c.outflow1LaborCost + c.outflow2LaborCost, 0.01)
-  let laborHrs = util.round('ceil', c.baseHrs.total + c.dispersionHrs + c.inflow1Hrs + c.inflow2Hrs + c.outflow1Hrs + c.outflow2Hrs, 0.25)
+  let laborHrs = util.round('ceil', c.baseHrs.total + c.dispersionHrs + c.inflow1Hrs + c.inflow2Hrs + c.outflow1Hrs + c.outflow2Hrs, 0.5)
   let subtotal = util.round('round', materialsCost + laborCost, 0.01)
   let tax = util.round('round', util.salesTax(subtotal), 0.01)
   let total = util.round('round', subtotal + tax, 0.01)
