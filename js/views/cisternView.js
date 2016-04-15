@@ -209,7 +209,7 @@ cisternView.makeMaterials = function(cur) {
   materials += `
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
   <tr><td>Tank</td><td>1</td><td class="money">$${cur.salePrice.toFixed(2)}</td></tr>
-  <tr><td>Paverbase</td><td>${cur.paverbase} yd</td><td class="money">$${cur.paverbaseCost.toFixed(2)}</td></tr>
+  <tr><td>1/4" minus</td><td>${cur.quarterMinus} yd</td><td class="money">$${cur.quarterMinusCost.toFixed(2)}</td></tr>
   `
   if (cur.manorStones != 0) {
     materials += `<tr><td>Manor stones</td><td>${cur.manorStones}</td><td class="money">$${cur.manorStoneCost.toFixed(2)}</td></tr>`

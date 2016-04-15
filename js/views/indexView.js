@@ -124,14 +124,30 @@ indexView.makeTable = function(cur) {
   }
 
   if (cur.bulkMaterials.all.length) {
-    let bulkTotals = util.sumStrippedProps(cur.bulkMaterials.all, ['price', 'tax', 'total'])
-    let disp = bulkTotals.map((e) => e.toFixed(2))
+    let uber = cur.bulkMaterials.uber
+    let hours = util.round('ceil', util.plucky('hours', project.current.bulkMaterials.uber), 0.5)
+    let laborCost = util.round('round', util.plucky('laborCost', project.current.bulkMaterials.uber), 0.01)
+    let materialCost = util.round('round', util.plucky('materialCost', project.current.bulkMaterials.uber), 0.01)
+    let subtotal = util.round('round', util.plucky('subtotal', project.current.bulkMaterials.uber), 0.01)
+    let tax = util.round('round', util.plucky('tax', project.current.bulkMaterials.uber), 0.01)
+    let total = util.round('round', util.plucky('total', project.current.bulkMaterials.uber), 0.01)
 
-    totals.materialsCost += bulkTotals[0]
-    totals.subtotal += bulkTotals[0]
-    totals.tax += bulkTotals[1]
-    totals.total += bulkTotals[2]
-    html += `<tr><td>Bulk materials</td><td></td><td></td><td class="money">$${disp[0]}</td><td class="money">$${disp[0]}</td><td class="money">$${disp[1]}</td><td class="money">$${disp[2]}</td></tr>`
+    totals.laborHours += hours
+    totals.laborCost += laborCost
+    totals.materialsCost += materialCost
+    totals.subtotal += subtotal
+    totals.tax += tax
+    totals.total += total
+    html += `
+    <tr>
+    <td>Bulk materials</td>
+    <td>${hours}</td>
+    <td class="money">$${laborCost.toFixed(2)}</td>
+    <td class="money">$${materialCost.toFixed(2)}</td>
+    <td class="money">$${subtotal.toFixed(2)}</td>
+    <td class="money">$${tax.toFixed(2)}</td>
+    <td class="money">$${total.toFixed(2)}</td>
+    </tr>`
   }
 
   for (let prop in totals) {
