@@ -16,9 +16,6 @@
 * need price for nugget
 
 # Bugs
-* ceil ALL hours to 0.5
-
-* BM details jumps to selector[0] on nav but selector doesn't follow
 
 * BM reminder note:
   0 - 1 SSGTruckLoad: no fee

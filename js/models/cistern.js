@@ -99,19 +99,6 @@ cistern.calculateHardware = function(pipe) {
   return Math.ceil(pipe * 0.05)
 }
 
-cistern.calcBaseLabor = function(c) {
-  let labor
-  if (c.baseHeight === 0) {
-    labor = 4 + Math.ceil((c.quarterMinus + c.manorStones + c.cinderBlocks) / 3)
-  } else {
-    labor = 10 + Math.ceil((c.quarterMinus + c.manorStones + c.cinderBlocks) / 3)
-  }
-  if (c.model === 'B420' || c.model === 'B265' || c.model === 'B530') {
-    labor += 2
-  }
-  return labor
-}
-
 cistern.calculateBaseMaterials = function (c) {
   let modelInfo = cistern.tankModels[c.model]
   c.salePrice = cistern.tankSalePrice(c.model, modelInfo)
@@ -164,6 +151,19 @@ cistern.calculateLabor = function (c) {
   c.inflowLaborCost = util.laborCost(c.inflowLaborHr)
   c.outflowLaborCost = util.laborCost(c.outflowLaborHr)
   c.additionalLaborCost = util.laborCost(c.additionalLaborHr)
+}
+
+cistern.calcBaseLabor = function(c) {
+  let labor
+  if (c.baseHeight === 0) {
+    labor = 4 + Math.ceil((c.quarterMinus + c.manorStones + c.cinderBlocks) / 3)
+  } else {
+    labor = 10 + Math.ceil((c.quarterMinus + c.manorStones + c.cinderBlocks) / 3)
+  }
+  if (c.model === 'B420' || c.model === 'B265' || c.model === 'B530') {
+    labor += 2
+  }
+  return labor
 }
 
 cistern.calculateMaterialsCostTotal = function(c) {
