@@ -275,7 +275,7 @@ rgView.makeMaterials = (rg) => {
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
   <tr><td>Planting</td><td></td><td class="money">$${mat.plantCost.toFixed(2)}</td></tr>
   <tr><td>Bioretention</td><td>${mat.bio} yd</td><td class="money">$${mat.bioCost.toFixed(2)}</td></tr>
-  <tr><td>Mulch</td><td>${rg.baseMaterials.bioretention} yd</td><td class="money">$${rg.baseMaterialCost.mulchCost.toFixed(2)}</td></tr>
+  <tr><td>Mulch</td><td>${rg.baseMaterials.mulchVolume} yd</td><td class="money">$${rg.baseMaterialCost.mulchCost.toFixed(2)}</td></tr>
   <tr><td>Drain rock</td><td>${mat.rock} yd</td><td class="money">$${mat.rockCost.toFixed(2)}</td></tr>
   <tr><td>Pond liner</td><td>${mat.pond} ft²</td><td class="money">$${mat.pondCost.toFixed(2)}</td></tr>
   `
