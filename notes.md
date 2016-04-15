@@ -17,11 +17,8 @@
 
 # Bugs
 
-* BM reminder note:
-  0 - 1 SSGTruckLoad: no fee
-  delivery: $100/material
-  dumpTruck: $250/day
-* fix alignment of BM grand total field
+* Jake auto owner on all projects
+
 * bulk inches form fields look shitty
 
 * RG shows 1.5yd of mulch = $40 but price says $40/yd

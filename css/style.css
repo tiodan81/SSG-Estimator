@@ -6,6 +6,10 @@ nav {
 	margin-right: 1.5rem;
 }
 
+p {
+	margin-bottom: 1.5rem;
+}
+
 #main-nav li {
   display: inline-block;
 	text-transform: uppercase;
