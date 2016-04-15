@@ -22,7 +22,6 @@
 * bulk inches form fields look shitty
 
 * RG shows 1.5yd of mulch = $40 but price says $40/yd
-* RG w/rock only for dispersion shows 0yd, $4.05
 
 * collapse nav menu on small viewports
 
