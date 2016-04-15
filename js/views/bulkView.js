@@ -95,7 +95,7 @@ bulkView.handleNav = function() {
       if ($nextNav === 'summary') {
         bulkView.renderSummary()
       } else if ($nextNav === 'details') {
-        let $type = $('#bulk-selector > option').val()
+        let $type = $('#bulk-selector').val()
         bulkView.renderDetails($type)
         bulkView.handleEdit()
         bulkView.handleDelete()
