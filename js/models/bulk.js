@@ -11,9 +11,10 @@ bulk.bulkMaker = function(i, t, wf, wi, lf, li, d) {
   this.lenIn = li || 0
   this.depth = d || 0
   this.volume = 0
+  this.materialCost = 0
   this.laborHrs = 0
   this.laborCost = 0
-  this.price = 0
+  this.subtotal = 0
   this.tax = 0
   this.total = 0
 }
@@ -30,14 +31,13 @@ bulk.build = function() {
 }
 
 bulk.calcs = function(b) {
-  let unitCost = materials.bulk[b.type]
-
   b.volume = util.round('ceil', ((b.widFt * 12 + b.widIn) * (b.lenFt * 12 + b.lenIn) * b.depth) / 46656, 0.1)
+  b.materialCost = util.materialCost(b.volume, materials.bulk[b.type])
   b.laborHrs = bulk.laborHours(b.type, b.volume)
   b.laborCost = util.laborCost(b.laborHrs)
-  b.price = util.round('round', util.materialCost(b.volume, unitCost) + b.laborCost, 0.01)
-  b.tax = util.salesTax(b.price)
-  b.total = util.round('round', b.price + b.tax, 0.01)
+  b.subtotal = util.round('round', b.materialCost + b.laborCost, 0.01)
+  b.tax = util.salesTax(b.subtotal)
+  b.total = util.round('round', b.subtotal + b.tax, 0.01)
 }
 
 bulk.laborHours = function(type, volume) {
@@ -96,41 +96,47 @@ bulk.storeLocally = function(b) {
 }
 
 bulk.makeUber = function(all) {
-  let uber = {
-    topsoil: 0,
-    fillSoil: 0,
-    bioretention: 0,
-    compost: 0,
-    mulch: 0,
-    soilRemoval: 0,
-    quarterMinus: 0,
-    fiveEighthsMinus: 0,
-    fiveEighthsClean: 0,
-    drainageRock: 0,
-    basalt: 0,
-    playChips: 0,
-    nugget: 0
+  let uber = {}
+  let totals = {
+    volume: 0,
+    hours: 0,
+
   }
+  let strippedAll
 
   if (!all.length) {
     return {}
   }
 
-  all.forEach((e) => {
-    let curType = e.type
+  strippedAll = util.objectStripper(all, ['type', 'volume'])
 
-    if (uber.hasOwnProperty(curType)) {
-      uber[curType] += e.volume
-    } else {
-      console.log('property ' + curType + ' not found in uber');
+  strippedAll.forEach((e) => {
+    if (!uber.hasOwnProperty(e.type)) {
+      uber[e.type] = {
+        volume: e.volume,
+        materialCost: 0,
+        hours: 0,
+        laborCost: 0,
+        subtotal: 0,
+        tax: 0,
+        total: 0
+      }
+    } else if (uber.hasOwnProperty(e.type)) {
+      uber[e.type].volume += e.volume
     }
   })
 
   for (let prop in uber) {
-    if (prop !== 'totals') {
-      uber[prop] = util.round('ceil', uber[prop], 0.5)
-    }
+    uber[prop].volume = util.round('ceil', uber[prop].volume, 0.5)
+    uber[prop].materialCost = util.materialCost(uber[prop].volume, materials.bulk[prop])
+    uber[prop].hours = bulk.laborHours(prop, uber[prop].volume)
+    uber[prop].laborCost = util.laborCost(uber[prop].hours)
+    uber[prop].subtotal = util.round('round', uber[prop].materialCost + uber[prop].laborCost, 0.01)
+    uber[prop].tax = util.salesTax(uber[prop].subtotal)
+    uber[prop].total = util.round('round', uber[prop].subtotal + uber[prop].tax, 0.01)
   }
+
+
 
   return uber
 }

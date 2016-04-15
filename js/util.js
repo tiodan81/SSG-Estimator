@@ -11,7 +11,7 @@ util.laborCost = (hr) => {
 
 //ADD THE MARKUP TO THIS FUNCTION!
 util.materialCost = (qty, rate) => {
-  return qty * rate
+  return util.round('round', qty * rate, 0.01)
 }
 
 util.salesTax = (price) => {

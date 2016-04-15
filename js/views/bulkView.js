@@ -47,7 +47,7 @@ bulkView.handleSave = function() {
 }
 
 bulkView.renderSummary = function() {
-  $('#bulk-table').html(bulkView.makeSummary(project.current.bulkMaterials))
+  $('#bulk-table').html(bulkView.makeSummary(project.current.bulkMaterials.uber))
   $('#bulk-selector').hide()
   if ($('#bulk-display').css('display') === 'none') {
     $('#bulk-display').show()
@@ -130,56 +130,51 @@ bulkView.handleDelete = function() {
   })
 }
 
-bulkView.makeSummary = function(bm) {
-  const hours = util.sumStrippedProps(bm.all, ['laborHrs'])
-  const uber = bm.uber
-  let summary = `<tr><th>Type</th><th>Volume</th><th>Hours</th><th>Price</th><th>Tax</th><th>Total</th></tr>`
+//param should be uber?
+bulkView.makeSummary = function(uber) {
+  let summary = `<tr><th>Type</th><th>Volume</th><th>Hours</th><th>Price*</th><th>Tax</th><th>Total</th></tr>`
+  let grandVol = 0
+  let grandHours = 0
+  let grandSubtotal = 0
+  let grandTax = 0
   let grandTotal = 0
 
-  for (let prop in uber) {
-    if (uber[prop] > 0) {
-
-      let price = util.round('round', util.materialCost(uber[prop], materials.bulk[prop]), 0.01)
-      let tax = util.salesTax(price)
-      let total = util.round('round', price + tax, 0.01)
-      grandTotal += total
-      summary += bulkView.makeSummaryRow(prop, uber[prop], price, tax, total)
-    }
+  for (let type in uber) {
+    grandVol += uber[type].volume
+    grandHours += uber[type].hours
+    grandSubtotal += uber[type].subtotal
+    grandTax += uber[type].tax
+    grandTotal += uber[type].total
+    summary += bulkView.makeSummaryRow(type, uber[type].volume, uber[type].hours, uber[type].subtotal, uber[type].tax, uber[type].total)
   }
 
-  summary += `<tr class="total-row"><td>Total</td><td></td><td>${hours}</td><td></td><td></td><td class="money">$${grandTotal.toFixed(2)}</td></tr>`
+  summary += `
+  <tr class="total-row">
+  <td>Total</td>
+  <td>${grandVol} yd</td>
+  <td>${grandHours}</td>
+  <td class="money">$${grandSubtotal.toFixed(2)}</td>
+  <td class="money">$${grandTax.toFixed(2)}</td>
+  <td class="money">$${grandTotal.toFixed(2)}</td>
+  </tr>
+  `
 
   return summary
 }
 
-bulkView.makeSummaryRow = function(prop, vol, price, tax, total) {
-  return `<tr><td>${prop}</td><td>${vol} yd</td><td class="money">$${price.toFixed(2)}</td><td class="money">$${tax.toFixed(2)}</td><td class="money">$${total.toFixed(2)}</td></tr>`
+bulkView.makeSummaryRow = function(type, vol, hours, subtotal, tax, total) {
+  return `<tr><td>${util.camelCaseToLowerCase(type)}</td><td>${vol} yd</td><td>${hours}</td><td class="money">$${subtotal.toFixed(2)}</td><td class="money">$${tax.toFixed(2)}</td><td class="money">$${total.toFixed(2)}</td></tr>`
 }
 
 bulkView.makeDetails = function(curType) {
-  let totals = {
-    volume: 0,
-    hours: 0,
-    price: 0,
-    tax: 0,
-    total: 0
-  }
   let details = `<tr><th>ID</th><th>Type</th><th>Width</th><th>Length</th><th>Depth</th><th>Volume</th><th>Hours</th><th>Price*</th><th>Tax</th><th>Total</th></tr>`
-  let filtered = project.current.bulkMaterials.all.filter((bm) => bm.type === curType)
+  let totals = project.current.bulkMaterials.uber[curType]
+  let filtered = project.current.bulkMaterials.all
+                  .filter((bm) => bm.type === curType)
 
   filtered.map((f) => {
     return details += bulkView.makeRow(f)
   })
-
-  filtered.forEach((e) => {
-    totals.hours += e.laborHrs
-    totals.volume += e.volume
-  })
-
-  totals.volume = util.round('ceil', totals.volume, 0.5)
-  totals.price = util.round('round', util.materialCost(totals.volume, materials.bulk[curType]) + util.laborCost(totals.hours), 0.01)
-  totals.tax = util.salesTax(totals.price)
-  totals.total = util.round('round', totals.price + totals.tax, 0.01)
 
   details += `
   <tr class="total-row">
@@ -190,11 +185,10 @@ bulkView.makeDetails = function(curType) {
   <td></td>
   <td>${totals.volume} yd</td>
   <td>${totals.hours}</td>
-  <td class="money">$${totals.price.toFixed(2)}</td>
+  <td class="money">$${totals.subtotal.toFixed(2)}</td>
   <td class="money">$${totals.tax.toFixed(2)}</td>
   <td class="money">$${totals.total.toFixed(2)}</td>
-  </tr>
-  `
+  </tr>`
 
   return details
 }
@@ -209,7 +203,7 @@ bulkView.makeRow = function(b) {
   <td>${b.lenFt}' ${b.lenIn}"</td>
   <td>${b.depth}"</td>
   <td>${b.volume} yd</td>
-  <td>${b.laborHrs}</td>
+  <td></td>
   <td></td>
   <td></td>
   <td></td>

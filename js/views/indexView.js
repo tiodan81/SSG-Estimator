@@ -125,23 +125,29 @@ indexView.makeTable = function(cur) {
 
   if (cur.bulkMaterials.all.length) {
     let uber = cur.bulkMaterials.uber
-    let price = 0
-    let tax = 0
-    let total = 0
+    let hours = util.round('ceil', util.plucky('hours', project.current.bulkMaterials.uber), 0.5)
+    let laborCost = util.round('round', util.plucky('laborCost', project.current.bulkMaterials.uber), 0.01)
+    let materialCost = util.round('round', util.plucky('materialCost', project.current.bulkMaterials.uber), 0.01)
+    let subtotal = util.round('round', util.plucky('subtotal', project.current.bulkMaterials.uber), 0.01)
+    let tax = util.round('round', util.plucky('tax', project.current.bulkMaterials.uber), 0.01)
+    let total = util.round('round', util.plucky('total', project.current.bulkMaterials.uber), 0.01)
 
-    for (let prop in uber) {
-      if (uber[prop] > 0) {
-        price += util.round('round', util.materialCost(uber[prop], materials.bulk[prop]), 0.01)
-      }
-    }
-
-    tax = util.salesTax(price)
-    total = util.round('round', price + tax, 0.01)
-    totals.materialsCost += price
-    totals.subtotal += price
+    totals.laborHours += hours
+    totals.laborCost += laborCost
+    totals.materialsCost += materialCost
+    totals.subtotal += subtotal
     totals.tax += tax
     totals.total += total
-    html += `<tr><td>Bulk materials</td><td></td><td></td><td class="money">$${price.toFixed(2)}</td><td class="money">$${price.toFixed(2)}</td><td class="money">$${tax.toFixed(2)}</td><td class="money">$${total.toFixed(2)}</td></tr>`
+    html += `
+    <tr>
+    <td>Bulk materials</td>
+    <td>${hours}</td>
+    <td class="money">$${laborCost.toFixed(2)}</td>
+    <td class="money">$${materialCost.toFixed(2)}</td>
+    <td class="money">$${subtotal.toFixed(2)}</td>
+    <td class="money">$${tax.toFixed(2)}</td>
+    <td class="money">$${total.toFixed(2)}</td>
+    </tr>`
   }
 
   for (let prop in totals) {
