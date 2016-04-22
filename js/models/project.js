@@ -53,18 +53,19 @@ project.exists = function(newProject) {
 project.saveNew = function(newProject) {
   let obj = {}
   obj[newProject.client] = newProject
-  let projectString = JSON.stringify(obj)
+
   fbProjects.update(
     obj,
-  function(error) {
-    if (error) {
-      console.log('Project failed to save. ' + error)
-    } else {
-      console.log('Saved new project ' + newProject.client)
-      project.allProjects.push(newProject)
-      project.current = newProject
+    function(error) {
+      if (error) {
+        console.log('Project failed to save. ' + error)
+      } else {
+        console.log('Saved new project ' + newProject.client)
+        project.allProjects.push(newProject)
+        project.current = newProject
+      }
     }
-  })
+  )
 }
 
 project.updateComponent = function(cur, key) {

@@ -51,7 +51,8 @@ user.authenticate = function(pwd) {
     } else {
       console.log('Authenticated successfully with payload: ', authData)
       user.uid = authData.uid
-      user.getProjectList()
+      user.isAdmin(user.uid)
+      user.getProjectList(user.uid)
     }
   })
 }
@@ -68,7 +69,6 @@ user.setProjectOwner = function(newProject) {
   let userRef = fbUsers.child(user.uid)
   let obj = {}
   obj[newProject.client] = true
-  let userString = JSON.stringify(obj)
   if (userRef) {
     userRef.child('projects').update(obj)
   } else {
@@ -76,10 +76,10 @@ user.setProjectOwner = function(newProject) {
   }
 }
 
-user.getProjectList = function() {
-  console.log('loading projects for user ' + user.uid)
+user.getProjectList = function(uid) {
+  console.log('loading projects for user ' + uid)
 
-  fbUsers.child(user.uid).child('projects').once('value').then(function(snapshot) {
+  fbUsers.child(uid).child('projects').once('value').then(function(snapshot) {
     let loadingProjects = []
 
     snapshot.forEach(function(proj) {

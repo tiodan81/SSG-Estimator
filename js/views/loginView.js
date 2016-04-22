@@ -13,7 +13,7 @@ loginView.handleCreate = function() {
     e.preventDefault()
     let email = $('#new-user').val()
     let pwd = $('#new-password').val()
-    user.create(userEmail, pwd)
+    user.create(email, pwd)
     $('#new-user, #new-password').val('')
   })
 }
