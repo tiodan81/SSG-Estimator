@@ -1,14 +1,21 @@
-var rainwiseController = {}
+const $ = require('jquery')
+const rainwise = require('../models/rainwise')
+const rainwiseView = require('../views/rainwiseView')
 
-rainwiseController.init = function() {
+const init = function() {
   rainwiseView.init()
 }
 
-rainwiseController.save = function() {
+const save = function() {
   let newRW = rainwise.build()
   rainwise.calcs(newRW)
   rainwise.saveToProject(newRW)
   rainwiseView.render(newRW)
   rainwiseView.clearForm()
   $('#rainwise-edit-buttons').show()
+}
+
+module.exports = {
+  init: init,
+  save: save
 }

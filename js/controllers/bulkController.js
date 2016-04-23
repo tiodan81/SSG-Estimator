@@ -1,10 +1,15 @@
-var bulkController = {}
+const $ = require('jquery')
+const project = require('../models/project')
+const bulk = require('../models/bulk')
+const bulkView = require('../views/bulkView')
+const util = require('../util')
 
-bulkController.init = function() {
+
+const init = function() {
   bulkView.init()
 }
 
-bulkController.save = function() {
+const save = function() {
   let newBulk = bulk.build()
   bulk.calcs(newBulk)
   bulk.saveToProject(newBulk)
@@ -16,7 +21,7 @@ bulkController.save = function() {
   $('#bulk-selector').val(newBulk.type)
 }
 
-bulkController.delete = function(curId, curType) {
+const remove = function(curId, curType) {
   let all = project.current.bulkMaterials.all
 
   all.forEach((bm, i) => {
@@ -44,4 +49,10 @@ bulkController.delete = function(curId, curType) {
   project.current.bulkMaterials.uber = bulk.makeUber(all)
   project.updateComponent(project.current, 'bulkMaterials')
 
+}
+
+module.exports = {
+  init: init,
+  save: save,
+  remove: remove
 }

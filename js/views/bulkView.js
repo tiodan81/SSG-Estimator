@@ -1,3 +1,5 @@
+const bulkController = require('../controllers/bulkController')
+
 var bulkView = {}
 
 bulkView.init = function() {
@@ -124,7 +126,7 @@ bulkView.handleDelete = function() {
     let $curId = $(this).data('id')
     let $curType = $(this).data('type')
 
-    bulkController.delete($curId, $curType)
+    bulkController.remove($curId, $curType)
     bulkView.handleEdit()
     bulkView.handleDelete()
   })

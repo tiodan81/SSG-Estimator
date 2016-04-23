@@ -1,12 +1,18 @@
-var cisternController = {}
+const cistern = require('../models/cistern')
+const cisternView = require('../views/cisternView')
 
-cisternController.init = function() {
+const init = function() {
   cisternView.init()
 }
 
-cisternController.save = function() {
+const save = function() {
   let newCistern = cistern.buildCistern()
   cistern.allCalcs(newCistern)
   cistern.saveToProject(newCistern)
   cisternView.render(newCistern)
+}
+
+module.exports = {
+  init: init,
+  save: save
 }

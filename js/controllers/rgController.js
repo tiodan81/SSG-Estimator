@@ -1,10 +1,12 @@
-var rgController = {}
+const $ = require('jquery')
+const rg = require('../models/rg')
+const rgView = require('../views/rgView')
 
-rgController.init = function() {
+const init = function() {
   rgView.init()
 }
 
-rgController.save = function() {
+const save = function() {
   let $infKnown = $('#infiltKnown:checked').length ? true : false
 
   if ($infKnown) {
@@ -29,4 +31,9 @@ rgController.save = function() {
     rgView.render(low)
     rgView.render(high)
   }
+}
+
+module.exports = {
+  init: init,
+  save: save
 }

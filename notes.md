@@ -17,15 +17,12 @@
 
 # Bugs
 
-* Jake auto owner on all projects
-
 * bulk inches form fields look shitty
-
-* RG shows 1.5yd of mulch = $40 but price says $40/yd
 
 * collapse nav menu on small viewports
 
 * REMOVE NUKE() before deploying
+* don't deploy notes.md
 
 # next: paths & patios
 * paths

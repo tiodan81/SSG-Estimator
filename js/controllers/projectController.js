@@ -1,6 +1,9 @@
-var projectController = {}
+const $ = require('jquery')
+const project = require('../models/project')
+const user = require('../models/user')
+const indexView = require('../views/indexView')
 
-projectController.create = function() {
+const create = function() {
   let newProject = project.build()
 
   project.exists(newProject)
@@ -13,3 +16,5 @@ projectController.create = function() {
     .siblings().show()
   indexView.render(newProject)
 }
+
+module.exports = create

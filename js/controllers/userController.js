@@ -1,6 +1,10 @@
-var userController = {}
+const $ = require('jquery')
+const user = require('../models/user')
+const indexView = require('../views/indexView')
+const loginView = require('../views/loginView')
+const project = require('../models/project')
 
-userController.checkLogin = function() {
+const checkLogin = function() {
   let auth = user.isLoggedIn()
 
   if (auth) {
@@ -17,11 +21,11 @@ userController.checkLogin = function() {
   }
 }
 
-userController.loginInit = function() {
+const loginInit = function() {
   loginView.init()
 }
 
-userController.logout = function() {
+const logout = function() {
   user.logout()
   project.clear()
   $('#logout').hide()
@@ -32,13 +36,18 @@ userController.logout = function() {
   loginView.init()
 }
 
-userController.userInit = function() {
+const userInit = function() {
   project.getJSON()
   indexView.init()
   $('#project-selector').val('default')
   loginView.showLogoutNav()
 }
 
+module.exports = {
+  userInit: userInit,
+  loginInit: loginInit,
+  logout: logout
+}
 
 $(function() {
   userController.checkLogin()
