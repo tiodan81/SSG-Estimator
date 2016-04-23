@@ -2,9 +2,16 @@ var userController = {}
 
 userController.checkLogin = function() {
   let auth = user.isLoggedIn()
+
   if (auth) {
     user.uid = auth.uid
-    user.getProjectList()
+    user.isAdmin(user.uid).then((admin) => {
+      if (admin) {
+        user.getAllProjects()
+      } else {
+        user.getProjectList(user.uid)
+      }
+    }, console.log)
   } else {
     loginView.init()
   }

@@ -1,6 +1,7 @@
 const firebase = new Firebase('https://ssgestimator.firebaseio.com/')
 const fbProjects = firebase.child('projects')
 const fbUsers = firebase.child('users')
+const fbAdmins = firebase.child('admins')
 
 const nuke = function() {
   fbProjects.remove()
@@ -11,6 +12,7 @@ const nuke = function() {
 var user = {
   email: '',
   uid: '',
+  admin: false,
   projects: []
 }
 
@@ -51,7 +53,13 @@ user.authenticate = function(pwd) {
     } else {
       console.log('Authenticated successfully with payload: ', authData)
       user.uid = authData.uid
-      user.getProjectList()
+      user.isAdmin(user.uid).then((admin) => {
+        if (admin) {
+          user.getAllProjects()
+        } else {
+          user.getProjectList(user.uid)
+        }
+      }, console.log)
     }
   })
 }
@@ -64,11 +72,16 @@ user.logout = function() {
   return firebase.unauth()
 }
 
+user.isAdmin = function(uid) {
+  return fbAdmins.child(uid).once('value').then(function(s) {
+    return s.val()
+  })
+}
+
 user.setProjectOwner = function(newProject) {
   let userRef = fbUsers.child(user.uid)
   let obj = {}
   obj[newProject.client] = true
-  let userString = JSON.stringify(obj)
   if (userRef) {
     userRef.child('projects').update(obj)
   } else {
@@ -76,10 +89,10 @@ user.setProjectOwner = function(newProject) {
   }
 }
 
-user.getProjectList = function() {
-  console.log('loading projects for user ' + user.uid)
+user.getProjectList = function(uid) {
+  console.log('loading projects for user ' + uid)
 
-  fbUsers.child(user.uid).child('projects').once('value').then(function(snapshot) {
+  fbUsers.child(uid).child('projects').once('value').then(function(snapshot) {
     let loadingProjects = []
 
     snapshot.forEach(function(proj) {
@@ -92,6 +105,16 @@ user.getProjectList = function() {
     })
 
     return Promise.all(loadingProjects)
+  })
+  .then(userController.userInit())
+}
+
+user.getAllProjects = function() {
+  fbProjects.once('value').then(function(snap) {
+    snap.forEach(function(proj) {
+      project.allProjects.push(proj.val())
+      indexView.populateSelector(proj.val())
+    })
   })
   .then(userController.userInit())
 }
