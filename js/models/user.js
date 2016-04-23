@@ -1,6 +1,7 @@
 const firebase = new Firebase('https://ssgestimator.firebaseio.com/')
 const fbProjects = firebase.child('projects')
 const fbUsers = firebase.child('users')
+const fbAdmins = firebase.child('admins')
 
 const nuke = function() {
   fbProjects.remove()
@@ -11,6 +12,7 @@ const nuke = function() {
 var user = {
   email: '',
   uid: '',
+  admin: false,
   projects: []
 }
 
@@ -51,8 +53,13 @@ user.authenticate = function(pwd) {
     } else {
       console.log('Authenticated successfully with payload: ', authData)
       user.uid = authData.uid
-      user.isAdmin(user.uid)
-      user.getProjectList(user.uid)
+      user.isAdmin(user.uid).then((admin) => {
+        if (admin) {
+          user.getAllProjects()
+        } else {
+          user.getProjectList(user.uid)
+        }
+      }, console.log)
     }
   })
 }
@@ -63,6 +70,12 @@ user.isLoggedIn = function() {
 
 user.logout = function() {
   return firebase.unauth()
+}
+
+user.isAdmin = function(uid) {
+  return fbAdmins.child(uid).once('value').then(function(s) {
+    return s.val()
+  })
 }
 
 user.setProjectOwner = function(newProject) {
@@ -92,6 +105,16 @@ user.getProjectList = function(uid) {
     })
 
     return Promise.all(loadingProjects)
+  })
+  .then(userController.userInit())
+}
+
+user.getAllProjects = function() {
+  fbProjects.once('value').then(function(snap) {
+    snap.forEach(function(proj) {
+      project.allProjects.push(proj.val())
+      indexView.populateSelector(proj.val())
+    })
   })
   .then(userController.userInit())
 }
