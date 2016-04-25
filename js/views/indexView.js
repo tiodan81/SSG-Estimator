@@ -1,52 +1,55 @@
-var indexView = {}
+const $ = require('jquery')
+const project = require('../models/project')
+const projectController = require('../controllers/projectController')
+const utill = require('../util')
 
-indexView.init = function() {
+const init = function() {
   $('#home-content').show()
     .siblings().hide()
   if (project.current.client) {
-    indexView.render(project.current)
+    render(project.current)
   }
-  indexView.handleCreateButton()
-  indexView.handleSelector()
+  handleCreateButton()
+  handleSelector()
 }
 
-indexView.handleCreateButton = function() {
+const handleCreateButton = function() {
   $('#project-create-button').off('click').on('click', function(e) {
     e.preventDefault()
     $('#project-select-container').hide()
     $('#projectForm').show()
-    indexView.handleProjectForm()
-    indexView.handleProjectCancel()
+    handleProjectForm()
+    handleProjectCancel()
   })
 }
 
-indexView.handleProjectForm = function() {
+const handleProjectForm = function() {
   $('#projectForm').off('submit').on('submit', function(e) {
     e.preventDefault()
     projectController.create()
   })
 }
 
-indexView.handleProjectCancel = function() {
+const handleProjectCancel = function() {
   $('#project-cancel').off('click').on('click', function(e) {
-    indexView.clearForm()
+    clearForm()
     $('#projectForm').hide()
       .siblings().show()
   })
 }
 
-indexView.render = function(project) {
-  $('#project-summary').show().html(indexView.makeTable(project))
+const render = function(project) {
+  $('#project-summary').show().html(makeTable(project))
 }
 
-indexView.clearForm = function() {
+const clearForm = function() {
   $('#project-client').val('')
   $('#project-city').val('Seattle')
   $('#project-labor-rate').val('45')
   $('#project-markup-rate').val('35')
 }
 
-indexView.populateSelector = function(project) {
+const populateSelector = function(project) {
   let client = project.client
   if($('#project-selector option[value="' + client + '"]').length === 0) {
     let option = '<option value="' + client + '">' + client + '</option>'
@@ -54,7 +57,7 @@ indexView.populateSelector = function(project) {
   }
 }
 
-indexView.handleSelector = function() {
+const handleSelector = function() {
   $('#project-selector').off('change').on('change', function() {
     let id = $(this).val()
     if (id === 'default') {
@@ -64,13 +67,13 @@ indexView.handleSelector = function() {
       let curProject = util.findObjInArray(id, project.allProjects, 'client')
       project.current = curProject[0]
       project.populate(project.current)
-      indexView.clearDisplays()
-      indexView.render(project.current)
+      clearDisplays()
+      render(project.current)
     }
   })
 }
 
-indexView.makeTable = function(cur) {
+const makeTable = function(cur) {
   let html = `
     <h2>${cur.client}</h2>
     <table id="project-table">
@@ -163,7 +166,7 @@ indexView.makeTable = function(cur) {
   return html
 }
 
-indexView.clearDisplays = function() {
+const clearDisplays = function() {
   $('#project-summary').html('')
   $('#rainwise-table').html('')
   $('#rg-selector').html('')
@@ -175,4 +178,12 @@ indexView.clearDisplays = function() {
   $('#cistern-selector').html('')
   $('#cistern-tables table').html('')
   $('#cistern-display').hide()
+}
+
+module.exports = {
+  init: init,
+  render: render,
+  clearForm: clearForm,
+  clearDisplays: clearDisplays,
+  populateSelector: populateSelector
 }

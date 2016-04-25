@@ -1,8 +1,10 @@
-var bulk = {
-  current: {}
-}
+const $ = require('jquery')
+const util = require('../util')
+const user = require('./user')
+const project = require('./project')
+const materials = require('../../data/materials.json')
 
-bulk.bulkMaker = function(i, t, wf, wi, lf, li, d) {
+const bulkMaker = function(i, t, wf, wi, lf, li, d) {
   this.id = i || ''
   this.type = t || ''
   this.widFt = wf || 0
@@ -19,7 +21,7 @@ bulk.bulkMaker = function(i, t, wf, wi, lf, li, d) {
   this.total = 0
 }
 
-bulk.build = function() {
+const build = function() {
   let $id = $('#bulk-id').val()
   let $type = $('#bulk-type').val()
   let $widFt = +($('#bulk-width-ft').val())
@@ -27,20 +29,20 @@ bulk.build = function() {
   let $lenFt = +($('#bulk-length-ft').val())
   let $lenIn = +($('#bulk-length-in').val()) || 0
   let $depth = +($('#bulk-depth').val())
-  return new bulk.bulkMaker($id, $type, $widFt, $widIn, $lenFt, $lenIn, $depth)
+  return new bulkMaker($id, $type, $widFt, $widIn, $lenFt, $lenIn, $depth)
 }
 
-bulk.calcs = function(b) {
+const calcs = function(b) {
   b.volume = util.round('ceil', ((b.widFt * 12 + b.widIn) * (b.lenFt * 12 + b.lenIn) * b.depth) / 46656, 0.1)
   b.materialCost = util.materialCost(b.volume, materials.bulk[b.type])
-  b.laborHrs = bulk.laborHours(b.type, b.volume)
+  b.laborHrs = laborHours(b.type, b.volume)
   b.laborCost = util.laborCost(b.laborHrs)
   b.subtotal = util.round('round', b.materialCost + b.laborCost, 0.01)
   b.tax = util.salesTax(b.subtotal)
   b.total = util.round('round', b.subtotal + b.tax, 0.01)
 }
 
-bulk.laborHours = function(type, volume) {
+const laborHours = function(type, volume) {
   const onePtFive = ['topsoil', 'fillSoil', 'bioretention', 'quarterMinus', 'fiveEighthsMinus', 'fiveEighthsClean', 'drainageRock']
   const one = ['compost', 'mulch']
   const three = ['basalt']
@@ -69,17 +71,17 @@ bulk.laborHours = function(type, volume) {
   return util.round('ceil', volume * multiplier, 0.5)
 }
 
-bulk.saveToProject = function(b) {
+const saveToProject = function(b) {
   if(user.uid && project.current.client) {
-    bulk.storeLocally(b)
-    project.current.bulkMaterials.uber = bulk.makeUber(project.current.bulkMaterials.all)
+    storeLocally(b)
+    project.current.bulkMaterials.uber = makeUber(project.current.bulkMaterials.all)
     project.updateComponent(project.current, 'bulkMaterials')
   } else {
     return new Error('Either you\'re not signed in or haven\'t initiated a project!')
   }
 }
 
-bulk.storeLocally = function(b) {
+const storeLocally = function(b) {
   let all = project.current.bulkMaterials.all
   let $exists = util.findObjInArray(b.id, all, 'id')
 
@@ -92,10 +94,10 @@ bulk.storeLocally = function(b) {
   } else {
     all.push(b)
   }
-  bulk.current = b
+  exports.current = b
 }
 
-bulk.makeUber = function(all) {
+const makeUber = function(all) {
   let uber = {}
   let totals = {
     volume: 0,
@@ -136,12 +138,10 @@ bulk.makeUber = function(all) {
     uber[prop].total = util.round('round', uber[prop].subtotal + uber[prop].tax, 0.01)
   }
 
-
-
   return uber
 }
 
-bulk.preventDuplicates = function() {
+const preventDuplicates = function() {
   let $id = $('#bulk-id').val()
   let $exists = util.findObjInArray($id, project.current.bulkMaterials.all, 'id').length
   if ($exists) {
@@ -149,4 +149,13 @@ bulk.preventDuplicates = function() {
   } else {
     return false
   }
+}
+
+module.exports = {
+  current: {},
+  build: build,
+  calc: calc,
+  saveToProject: saveToProject,
+  makeUber: makeUber,
+  preventDuplicates: preventDuplicates
 }

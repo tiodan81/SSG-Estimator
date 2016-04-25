@@ -1,34 +1,38 @@
-var rgView = {}
+const $ = require('jquery')
+const _ = require('lodash')
+const project = require('../models/project')
+const rg = require('../models/rg')
+const rgController = require('../controllers/rgController')
 
-rgView.init = () => {
+const init = () => {
   $('#rg-content').show()
     .siblings().hide()
-  rgView.displayExisting()
-  rgView.infiltDisplay()
-  $('#rg-inflow-num').off('change').on('change', rgView.flowQty)
-  $('#rg-outflow-num').off('change').on('change', rgView.flowQty)
-  $('.rgflowtype').off('click').on('click', rgView.vegDisplay)
-  rgView.handleSave()
-  rgView.handleSelector()
-  rgView.handleNav()
+  displayExisting()
+  infiltDisplay()
+  $('#rg-inflow-num').off('change').on('change', flowQty)
+  $('#rg-outflow-num').off('change').on('change', flowQty)
+  $('.rgflowtype').off('click').on('click', vegDisplay)
+  handleSave()
+  handleSelector()
+  handleNav()
 }
 
-rgView.displayExisting = () => {
-  let $existing = project.current.rainGardens
-  if ($existing.all.length) {
+const displayExisting = () => {
+  let existing = project.current.rainGardens
+  if (existing.all.length) {
     $('#rg-selector').empty()
-    $existing.all.forEach((e) => {
-      rgView.populateSelector(e)
+    existing.all.forEach((e) => {
+      populateSelector(e)
     })
-    rgView.populateSelector($existing.uber)
-    rg.current = $existing.all[0]    //handle on project load? like this it won't save state on nav within session
-    rgView.render(rg.current)
+    populateSelector(existing.uber)
+    rg.current = existing.all[0]
+    render(rg.current)
   } else {
     return
   }
 }
 
-rgView.infiltDisplay = function() {
+const infiltDisplay = function() {
   $('#infiltKnown').off('click').on('click', function() {
     if (this.checked) {
       $('#rgInfiltContainer').show()
@@ -38,7 +42,7 @@ rgView.infiltDisplay = function() {
   })
 }
 
-rgView.flowQty = function() {
+const flowQty = function() {
   if ($(this).val() == 2) {
     $(this).parent().siblings('div:last').show()
   } else {
@@ -46,7 +50,7 @@ rgView.flowQty = function() {
   }
 }
 
-rgView.vegDisplay = function() {
+const vegDisplay = function() {
   let $val = $(this).val()
   if ($val ==='channel') {
     $(this).parent().siblings('.rgVegContainer').show()
@@ -55,7 +59,7 @@ rgView.vegDisplay = function() {
   }
 }
 
-rgView.handleSave = () => {
+const handleSave = () => {
   $('#rg-form').off('submit').on('submit', function(e) {
     e.preventDefault()
     let $val = $('#rg-save').val()
@@ -66,27 +70,27 @@ rgView.handleSave = () => {
         return false
       }
       rgController.save()
-      rgView.clearForm()
+      clearForm()
     } else if ($val === 'update') {
       rgController.save()
-      rgView.clearForm()
+      clearForm()
       $('#rg-save').val('save')
     }
   })
 }
 
-rgView.render = function(cur) {
-  rgView.populateSelector(cur)
+const render = function(cur) {
+  populateSelector(cur)
   $('#rg-selector').val(cur.id)
-  rgView.makeTables(cur)
+  makeTables(cur)
   if ($('#rg-display').css('display') === 'none') {
     $('#rg-display').show()
   }
-  rgView.showSummary()
-  rgView.editButtons()
+  showSummary()
+  editButtons()
 }
 
-rgView.populateSelector = (cur) => {
+const populateSelector = (cur) => {
   let curId = cur.id
   if ($('#rg-selector option[value="' + curId + '"]').length === 0) {
     let option = '<option value="' + curId + '">' + curId + '</option>'
@@ -94,17 +98,17 @@ rgView.populateSelector = (cur) => {
   }
 }
 
-rgView.handleSelector = function() {
+const handleSelector = function() {
   $('#rg-selector').off('change').on('change', function() {
     const id = $('#rg-selector').val()
     const re = /(low estimate)/
 
     if (id === 'All rain gardens') {
-      rgView.makeTables(project.current.rainGardens.uber)
+      makeTables(project.current.rainGardens.uber)
       $('#rg-edit-buttons').hide()
     } else {
       let curRG = util.findObjInArray(id, project.current.rainGardens.all, 'id')
-      rgView.makeTables(curRG[0])
+      makeTables(curRG[0])
       rg.current = curRG[0]
 
       if (re.test(id)) {
@@ -113,11 +117,11 @@ rgView.handleSelector = function() {
         $('#rg-edit-buttons').show()
       }
     }
-    rgView.showSummary()
+    showSummary()
   })
 }
 
-rgView.handleNav = function() {
+const handleNav = function() {
   $('#rg-nav > button').off('click').on('click', function() {
     let $curNav = $('#rg-nav > .button-primary').attr('id')
     let $nextNav = $(this).attr('id')
@@ -133,7 +137,7 @@ rgView.handleNav = function() {
   })
 }
 
-rgView.showSummary = function() {
+const showSummary = function() {
   let $selected = $('#rg-nav .button-primary').attr('id')
   if ($selected != 'summary') {
     $('#rg-nav > #summary').addClass('button-primary')
@@ -143,20 +147,20 @@ rgView.showSummary = function() {
   }
 }
 
-rgView.editButtons = function() {
+const editButtons = function() {
   $('#rg-edit-buttons').show()
-  rgView.handleEdit()
-  rgView.handleDelete()
+  handleEdit()
+  handleDelete()
 }
 
-rgView.handleEdit = function() {
+const handleEdit = function() {
   $('#rg-edit-buttons .icon-pencil2').off('click').on('click', function(e) {
-    rgView.populateForm(rg.current)
+    populateForm(rg.current)
     $('#rg-save').val('update')
   })
 }
 
-rgView.handleDelete = function() {
+const handleDelete = function() {
   $('#rg-edit-buttons .icon-bin2').off('click').on('click', function() {
     let old = rg.current.id
     let low = old + ' - low estimate'
@@ -173,9 +177,9 @@ rgView.handleDelete = function() {
     if (all.length) {
       rg.current = all[0]
       $('#rg-selector').val(rg.current.id)
-      rgView.makeTables(rg.current)
-      rgView.showSummary()
-      rgView.editButtons()
+      makeTables(rg.current)
+      showSummary()
+      editButtons()
     } else {
       rg.current = {}
       project.current.rainGardens = { all: [], uber: {} }
@@ -185,8 +189,7 @@ rgView.handleDelete = function() {
   })
 }
 
-rgView.populateForm = function(cur) {
-  //need to show/display appropriate fields for infilt, inout2
+const populateForm = function(cur) {
   $('#rgID').val(cur.id)
   $('#rg-roofArea').val(cur.roof)
   $('#infiltKnown').prop('checked', cur.infKnown)
@@ -211,7 +214,7 @@ rgView.populateForm = function(cur) {
   $('#rgDumpTruck').prop('checked', cur.dumpTruck)
 }
 
-rgView.clearForm = function() {
+const clearForm = function() {
   $('#rg-form input[type="text"]').val('')
   $('#rg-form input[type="number"]').val('')
   $('#rg-form input[type="checkbox"]').prop('checked', false)
@@ -222,13 +225,13 @@ rgView.clearForm = function() {
   $('#rgOutflow2-container').hide()
 }
 
-rgView.makeTables = (rg) => {
-  $('#rg-table-summary').html(rgView.makeSummary(rg))
-  $('#rg-table-labor').html(rgView.makeLabor(rg))
-  $('#rg-table-materials').html(rgView.makeMaterials(rg))
+const makeTables = (rg) => {
+  $('#rg-table-summary').html(makeSummary(rg))
+  $('#rg-table-labor').html(makeLabor(rg))
+  $('#rg-table-materials').html(makeMaterials(rg))
 }
 
-rgView.makeSummary = (rg) => {
+const makeSummary = (rg) => {
   let summary = ''
   summary += `
   <tr><th>Item</th><th>Amount</th></tr>
@@ -241,7 +244,7 @@ rgView.makeSummary = (rg) => {
   return summary
 }
 
-rgView.makeLabor = (rg) => {
+const makeLabor = (rg) => {
   let labor = ''
   labor += `
   <tr><th>Item</th><th>Hours</th><th>Cost</th></tr>
@@ -268,7 +271,7 @@ rgView.makeLabor = (rg) => {
   return labor
 }
 
-rgView.makeMaterials = (rg) => {
+const makeMaterials = (rg) => {
   let mat = rg.materialSummary
   let materials = ''
   materials += `
@@ -294,4 +297,10 @@ rgView.makeMaterials = (rg) => {
   }
   materials += `<tr class="total-row"><td>Total</td><td></td><td class="money">$${rg.totals.materialsCostTotal.toFixed(2)}</td></tr>`
   return materials
+}
+
+module.exports = {
+  init: init,
+  render: render,
+  populateSelector: populateSelector
 }

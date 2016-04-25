@@ -1,9 +1,11 @@
-var cistern = {
-  tankModels: [],
-  current: {}
-}
+const $ = require('jquery')
+const util = require('../util')
+const project = require('./project')
+const cisternView = require('../views/cisternView')
+const materials = require('../../data/materials.json')
+const tankModels = require('../../data/cisternModels.json')
 
-cistern.cisternMaker = function(ci, r, m, h, inf, out, al, pump, div, gauge) {
+const cisternMaker = function(ci, r, m, h, inf, out, al, pump, div, gauge) {
   this.id = ci || ''
   this.roofArea = r || 0
   this.model = m || ''
@@ -57,7 +59,7 @@ cistern.cisternMaker = function(ci, r, m, h, inf, out, al, pump, div, gauge) {
   this.total = 0
 }
 
-cistern.buildCistern = function() {
+const buildCistern = function() {
   let $id =     $('#cisternID').val()
   let $roof =   +($('#cistern-roofArea').val())
   let $m =      $('#cisternModel').val()
@@ -68,18 +70,18 @@ cistern.buildCistern = function() {
   let $pump =   $('#cistern-pump:checked').length ? 1 : 0
   let $div =    $('#cistern-diverter:checked').length ? 1 : 0
   let $gauge =  $('#cistern-gauge:checked').length ? 1 : 0
-  return new cistern.cisternMaker($id, $roof, $m, $bh, $inf, $out, $al, $pump, $div, $gauge)
+  return new cisternMaker($id, $roof, $m, $bh, $inf, $out, $al, $pump, $div, $gauge)
 }
 
-cistern.volumeCyl = function(d, h) {
+const volumeCyl = function(d, h) {
   return (Math.PI * Math.pow((d / 24), 2) * ((h / 2) + 0.33)) / 27
 }
 
-cistern.volumeRect = function(w, d, h) {
+const volumeRect = function(w, d, h) {
   return ((w * d / 144) * ((1/3) + ((2/3) * (3/5) * h))) / 27
 }
 
-cistern.tankSalePrice = function (model, info) {
+const tankSalePrice = function (model, info) {
   if (model === 'B420' || model === 'B265' || model === 'B530') {
     return Math.ceil(info.purchasePrice + info.delivery)
   } else {
@@ -87,31 +89,31 @@ cistern.tankSalePrice = function (model, info) {
   }
 }
 
-cistern.calcManorStones = function (d, h) {
+const calcManorStones = function (d, h) {
   return Math.ceil(Math.PI * d / 16) * h
 }
 
-cistern.calcCinderBlocks = function(l, h) {
+const calcCinderBlocks = function(l, h) {
   return Math.ceil(l / 16) * 3 * h
 }
 
-cistern.calculateHardware = function(pipe) {
+const calculateHardware = function(pipe) {
   return Math.ceil(pipe * 0.05)
 }
 
-cistern.calculateBaseMaterials = function (c) {
-  let modelInfo = cistern.tankModels[c.model]
-  c.salePrice = cistern.tankSalePrice(c.model, modelInfo)
+const calculateBaseMaterials = function (c) {
+  let modelInfo = tankModels[c.model]
+  c.salePrice = tankSalePrice(c.model, modelInfo)
   if (modelInfo.slimline) {
-    c.quarterMinus = util.round('ceil', cistern.volumeRect(modelInfo.width, modelInfo.depth, c.baseHeight), 0.5)
+    c.quarterMinus = util.round('ceil', volumeRect(modelInfo.width, modelInfo.depth, c.baseHeight), 0.5)
     c.stoneType = 'Cinder block'
-    c.cinderBlocks = cistern.calcCinderBlocks(modelInfo.width, c.baseHeight)
+    c.cinderBlocks = calcCinderBlocks(modelInfo.width, c.baseHeight)
     c.cinderBlockCost = util.round('round', (c.cinderBlocks * materials.stone[c.stoneType]), 0.01)
     c.slimlineRestraints = materials.plumbing.slimlineRestraints
   } else {
-    c.quarterMinus = util.round('ceil', cistern.volumeCyl(modelInfo.diameter, c.baseHeight), 0.5)
+    c.quarterMinus = util.round('ceil', volumeCyl(modelInfo.diameter, c.baseHeight), 0.5)
     c.stoneType = 'Manor stone'
-    c.manorStones = cistern.calcManorStones(modelInfo.diameter, c.baseHeight)
+    c.manorStones = calcManorStones(modelInfo.diameter, c.baseHeight)
     c.manorStoneCost = util.round('round', (c.manorStones * materials.stone[c.stoneType]), 0.01)
     c.slimlineRestraints = 0
   }
@@ -120,12 +122,12 @@ cistern.calculateBaseMaterials = function (c) {
   c.baseMaterialsCost = util.round('round', c.quarterMinusCost + c.cinderBlockCost + c.manorStoneCost + c.slimlineRestraints + c.bulkheadKit, 0.01)
 }
 
-cistern.calculatePlumbingMaterials = function(c) {
+const calculatePlumbingMaterials = function(c) {
   let pipeType = c.roof
   c.inflowPipeCost = util.round('round', util.materialCost(c.inflow, materials.plumbing.pvc3In), 0.01)
   c.outflowPipeCost = util.round('round', util.materialCost(c.outflow, materials.plumbing.pvc3In), 0.01)
-  c.inflowHardware = cistern.calculateHardware(c.inflow)
-  c.outflowHardware = cistern.calculateHardware(c.outflow)
+  c.inflowHardware = calculateHardware(c.inflow)
+  c.outflowHardware = calculateHardware(c.outflow)
   c.inflowHdwCost = util.round('round', util.materialCost(c.inflowHardware, materials.plumbing.hardware), 0.01)
   c.outflowHdwCost = util.round('round', util.materialCost(c.outflowHardware, materials.plumbing.hardware), 0.01)
   c.pumpCost = c.pump ? materials.plumbing.cisternPump : 0
@@ -136,8 +138,8 @@ cistern.calculatePlumbingMaterials = function(c) {
   c.outflowMaterialsCost = util.round('round', c.outflowPipeCost + c.outflowHdwCost + materials.plumbing.lowFlowKit, 0.01)
 }
 
-cistern.calculateLabor = function (c) {
-  c.baseLaborHr = cistern.calcBaseLabor(c)
+const calculateLabor = function (c) {
+  c.baseLaborHr = calcBaseLabor(c)
   c.pumpLaborHr = c.pump ? 6.5 : 0
   c.diverterLaborHr = c.diverter ? 2 : 0
   c.gaugeLaborHr = c.gauge ? 2 : 0
@@ -153,7 +155,7 @@ cistern.calculateLabor = function (c) {
   c.additionalLaborCost = util.laborCost(c.additionalLaborHr)
 }
 
-cistern.calcBaseLabor = function(c) {
+const calcBaseLabor = function(c) {
   let labor
   if (c.baseHeight === 0) {
     labor = 4 + Math.ceil((c.quarterMinus + c.manorStones + c.cinderBlocks) / 3)
@@ -166,57 +168,57 @@ cistern.calcBaseLabor = function(c) {
   return labor
 }
 
-cistern.calculateMaterialsCostTotal = function(c) {
+const calculateMaterialsCostTotal = function(c) {
   return util.round('round', c.salePrice + c.baseMaterialsCost + c.inflowMaterialsCost + c.outflowMaterialsCost, 0.01)
 }
 
-cistern.calculateLaborCostTotal = function(c) {
+const calculateLaborCostTotal = function(c) {
   return util.round('round', c.baseLaborCost + c.inflowLaborCost + c.outflowLaborCost + c.additionalLaborCost, 0.01)
 }
 
-cistern.calcSubTotal = function(c) {
+const calcSubTotal = function(c) {
   return util.round('round', c.laborCostTotal + c.materialsCostTotal, 0.01)
 }
 
-cistern.calculateTotals = function(c) {
-  c.materialsCostTotal = cistern.calculateMaterialsCostTotal(c)
-  c.laborCostTotal = cistern.calculateLaborCostTotal(c)
+const calculateTotals = function(c) {
+  c.materialsCostTotal = calculateMaterialsCostTotal(c)
+  c.laborCostTotal = calculateLaborCostTotal(c)
   c.subtotal = c.materialsCostTotal + c.laborCostTotal
   c.tax = util.salesTax(c.subtotal)
   c.total = util.round('round', c.subtotal + c.tax, 0.01)
 }
 
-cistern.allCalcs = function(cur) {
-  cistern.calculateBaseMaterials(cur)
-  cistern.calculatePlumbingMaterials(cur)
-  cistern.calculateLabor(cur)
-  cistern.calculateTotals(cur)
+const allCalcs = function(cur) {
+  calculateBaseMaterials(cur)
+  calculatePlumbingMaterials(cur)
+  calculateLabor(cur)
+  calculateTotals(cur)
 }
 
-cistern.preventDuplicates = function() {
+const preventDuplicates = function() {
   let $id = $('#cisternID').val()
-  let $exists = util.findObjInArray($id, project.current.cisterns.all, 'id').length
-  if ($exists) {
+  let exists = util.findObjInArray($id, project.current.cisterns.all, 'id').length
+  if (exists) {
     return true
   } else {
     return false
   }
 }
 
-cistern.saveToProject = function(newCistern) {
+const saveToProject = function(newCistern) {
   if(user.uid && project.current.client) {
-    cistern.storeLocally(newCistern)
+    storeLocally(newCistern)
     project.updateComponent(project.current, 'cisterns')
   } else {
     console.log('Either you\'re not signed in or haven\'t initiated a project!')
   }
 }
 
-cistern.storeLocally = function(newCistern) {
+const storeLocally = function(newCistern) {
   let cur = project.current.cisterns.all
-  let $exists = util.findObjInArray(newCistern.id, cur, 'id')
+  let exists = util.findObjInArray(newCistern.id, cur, 'id')
 
-  if ($exists.length) {
+  if (exists.length) {
     cur.forEach((c,i) => {
       if (newCistern.id === c.id) {
         cur[i] = newCistern
@@ -226,22 +228,23 @@ cistern.storeLocally = function(newCistern) {
     cur.push(newCistern)
   }
 
-  cistern.updateUberTank(newCistern)
-  cistern.current = newCistern
+  updateUberTank(newCistern)
+  exports.current = newCistern
 }
 
 
-cistern.updateUberTank = function() {
-  let cisterns = project.current.cisterns
-  let uber = cistern.makeUberTank(cisterns.all)
+const updateUberTank = function() {
+  const cisterns = project.current.cisterns
+  const uber = makeUberTank(cisterns.all)
   cisterns.uber = uber
   if (cisterns.all.length > 1) {
     cisternView.populateSelector(uber)
   }
 }
 
-cistern.makeUberTank = function(arr) {
-  let obj = new cistern.cisternMaker()
+const makeUberTank = function(arr) {
+  let obj = new cisternMaker()
+
   arr.forEach(function(e) {
     Object.keys(e).forEach(function(prop) {
       if (typeof(e[prop]) === 'number') {
@@ -253,4 +256,13 @@ cistern.makeUberTank = function(arr) {
   })
   obj.id = 'All tanks'
   return obj
+}
+
+module.exports = {
+  current: {},
+  buildCistern: buildCistern,
+  allCalcs: allCalcs,
+  saveToProject: saveToProject,
+  preventDuplicates: preventDuplicates,
+  updateUberTank: updateUberTank
 }

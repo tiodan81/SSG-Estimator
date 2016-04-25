@@ -1,34 +1,36 @@
+const $ = require('jquery')
 const bulkController = require('../controllers/bulkController')
+const project = require('../models/project')
+const bulk = require('../models/bulk')
+const util = require('../util')
 
-var bulkView = {}
-
-bulkView.init = function() {
+const init = function() {
   $('#bulk-content').show()
     .siblings().hide()
-  bulkView.displayExisting()
-  bulkView.handleSave()
+  displayExisting()
+  handleSave()
 }
 
-bulkView.displayExisting = function() {
-  let $existing = project.current.bulkMaterials
+const displayExisting = function() {
+  let existing = project.current.bulkMaterials
 
-  if ($existing.all.length) {
+  if (existing.all.length) {
     $('#bulk-selector').empty()
 
-    $existing.all.forEach((e) => {
-      bulkView.populateSelector(e)
+    existing.all.forEach((e) => {
+      populateSelector(e)
     })
     $('#bulk-selector').hide()
     $('#bulk-nav > button:first-child').addClass('button-primary')
       .siblings().removeClass('button-primary')
-    bulkView.renderSummary()
-    bulkView.handleNav()
+    renderSummary()
+    handleNav()
   } else {
     return
   }
 }
 
-bulkView.handleSave = function() {
+const handleSave = function() {
   $('#bulk-form').off('submit').on('submit', function(e) {
     e.preventDefault()
     let $val = $('#bulk-save').val()
@@ -39,35 +41,35 @@ bulkView.handleSave = function() {
         return false
       }
       bulkController.save()
-      bulkView.clearForm()
+      clearForm()
     } else if ($val === 'update') {
       bulkController.save()
-      bulkView.clearForm()
+      clearForm()
       $('#bulk-save').val('save')
     }
   })
 }
 
-bulkView.renderSummary = function() {
-  $('#bulk-table').html(bulkView.makeSummary(project.current.bulkMaterials.uber))
+const renderSummary = function() {
+  $('#bulk-table').html(makeSummary(project.current.bulkMaterials.uber))
   $('#bulk-selector').hide()
   if ($('#bulk-display').css('display') === 'none') {
     $('#bulk-display').show()
   }
 }
 
-bulkView.renderDetails = function(t) {
-  $('#bulk-table').html(bulkView.makeDetails(t))
+const renderDetails = function(t) {
+  $('#bulk-table').html(makeDetails(t))
   if ($('#bulk-display').css('display') === 'none') {
     $('#bulk-display').show()
   }
   $('#bulk-selector').show()
-  bulkView.handleSelector()
-  bulkView.handleEdit()
-  bulkView.handleDelete()
+  handleSelector()
+  handleEdit()
+  handleDelete()
 }
 
-bulkView.populateSelector = function(b) {
+const populateSelector = function(b) {
   let cur = b.type
   let displayCur = util.camelCaseToLowerCase(cur)
 
@@ -77,15 +79,15 @@ bulkView.populateSelector = function(b) {
   }
 }
 
-bulkView.handleSelector = function() {
+const handleSelector = function() {
   $('#bulk-selector').off('change').on('change', function() {
     let type = $('#bulk-selector').val()
     let curBulk = util.findObjInArray(type, project.current.bulkMaterials.all, 'type')[0]
-    bulkView.renderDetails(curBulk.type)
+    renderDetails(curBulk.type)
   })
 }
 
-bulkView.handleNav = function() {
+const handleNav = function() {
   $('#bulk-nav > button').off('click').on('click', function() {
     let $curNav = $('#bulk-nav > .button-primary').text()
     let $nextNav = $(this).text()
@@ -95,12 +97,12 @@ bulkView.handleNav = function() {
         .siblings().removeClass('button-primary')
 
       if ($nextNav === 'summary') {
-        bulkView.renderSummary()
+        renderSummary()
       } else if ($nextNav === 'details') {
         let $type = $('#bulk-selector').val()
-        bulkView.renderDetails($type)
-        bulkView.handleEdit()
-        bulkView.handleDelete()
+        renderDetails($type)
+        handleEdit()
+        handleDelete()
       }
 
     } else {
@@ -109,31 +111,30 @@ bulkView.handleNav = function() {
   })
 }
 
-bulkView.handleEdit = function() {
+const handleEdit = function() {
   $('#bulk-table .icon-pencil2').off('click').on('click', function() {
     let curId = $(this).data('id')
     project.current.bulkMaterials.all.forEach((bm) => {
       if (bm.id === curId) {
-        bulkView.populateForm(bm)
+        populateForm(bm)
         $('#bulk-save').val('update')
       }
     })
   })
 }
 
-bulkView.handleDelete = function() {
+const handleDelete = function() {
   $('#bulk-table .icon-bin2').off('click').on('click', function(e) {
     let $curId = $(this).data('id')
     let $curType = $(this).data('type')
 
     bulkController.remove($curId, $curType)
-    bulkView.handleEdit()
-    bulkView.handleDelete()
+    handleEdit()
+    handleDelete()
   })
 }
 
-//param should be uber?
-bulkView.makeSummary = function(uber) {
+const makeSummary = function(uber) {
   let summary = `<tr><th>Type</th><th>Volume</th><th>Hours</th><th>Price*</th><th>Tax</th><th>Total</th></tr>`
   let grandVol = 0
   let grandHours = 0
@@ -147,7 +148,7 @@ bulkView.makeSummary = function(uber) {
     grandSubtotal += uber[type].subtotal
     grandTax += uber[type].tax
     grandTotal += uber[type].total
-    summary += bulkView.makeSummaryRow(type, uber[type].volume, uber[type].hours, uber[type].subtotal, uber[type].tax, uber[type].total)
+    summary += makeSummaryRow(type, uber[type].volume, uber[type].hours, uber[type].subtotal, uber[type].tax, uber[type].total)
   }
 
   summary += `
@@ -164,18 +165,18 @@ bulkView.makeSummary = function(uber) {
   return summary
 }
 
-bulkView.makeSummaryRow = function(type, vol, hours, subtotal, tax, total) {
+const makeSummaryRow = function(type, vol, hours, subtotal, tax, total) {
   return `<tr><td>${util.camelCaseToLowerCase(type)}</td><td>${vol} yd</td><td>${hours}</td><td class="money">$${subtotal.toFixed(2)}</td><td class="money">$${tax.toFixed(2)}</td><td class="money">$${total.toFixed(2)}</td></tr>`
 }
 
-bulkView.makeDetails = function(curType) {
+const makeDetails = function(curType) {
   let details = `<tr><th>ID</th><th>Type</th><th>Width</th><th>Length</th><th>Depth</th><th>Volume</th><th>Hours</th><th>Price*</th><th>Tax</th><th>Total</th></tr>`
   let totals = project.current.bulkMaterials.uber[curType]
   let filtered = project.current.bulkMaterials.all
                   .filter((bm) => bm.type === curType)
 
   filtered.map((f) => {
-    return details += bulkView.makeRow(f)
+    return details += makeRow(f)
   })
 
   details += `
@@ -195,7 +196,7 @@ bulkView.makeDetails = function(curType) {
   return details
 }
 
-bulkView.makeRow = function(b) {
+const makeRow = function(b) {
   let row = ''
   row += `
   <tr>
@@ -216,7 +217,7 @@ bulkView.makeRow = function(b) {
   return row
 }
 
-bulkView.populateForm = function(bm) {
+const populateForm = function(bm) {
   $('#bulk-id').val(bm.id)
   $('#bulk-type').val(bm.type)
   $('#bulk-width-ft').val(bm.widFt)
@@ -226,7 +227,14 @@ bulkView.populateForm = function(bm) {
   $('#bulk-depth').val(bm.depth)
 }
 
-bulkView.clearForm = function() {
+const clearForm = function() {
   $('#bulk-form input[type="text"]').val('')
   $('#bulk-form input[type="number"]').val('')
+}
+
+module.exports = {
+  init: init,
+  renderDetails: renderDetails,
+  handleNav: handleNav,
+  populateSelector: populateSelector
 }

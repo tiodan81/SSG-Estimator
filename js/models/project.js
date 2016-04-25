@@ -1,22 +1,9 @@
-let materials = {}
+const $ = require('jquery')
+const user = require('./user')
+const firebase = require('../firebase')
+const fbProjects = firebase.child('projects')
 
-var project = {
-  allProjects: [],
-  current: {}
-}
-
-project.getJSON = function() {
-  $.getJSON('/data/cisternModels.json', function(data) {
-    cistern.tankModels = data
-  })
-  if (!Object.keys(materials).length) {
-    $.getJSON('/data/materials.json', function(data) {
-      materials = data
-    })
-  }
-}
-
-project.maker = function(client, city, labor, mkup, owner) {
+const projectMaker = function(client, city, labor, mkup, owner) {
   this.client = client
   this.city = city
   this.laborRate = labor
@@ -28,16 +15,16 @@ project.maker = function(client, city, labor, mkup, owner) {
   this.cisterns = { all: [], uber: {} }
 }
 
-project.build = function() {
+const build = function() {
   let client = $('#project-client').val()
   let city = $('#project-city').val()
   let labor = +($('#project-labor-rate').val())
   let markup = +('1.' + $('#project-markup-rate').val())
   let owner = user.uid
-  return new project.maker(client, city, labor, markup, owner)
+  return new projectMaker(client, city, labor, markup, owner)
 }
 
-project.exists = function(newProject) {
+const exists = function(newProject) {
   let projectNode = fbProjects.child(newProject.client)
   projectNode.once('value', function(snapshot) {
     let exists = snapshot.exists()
@@ -45,12 +32,12 @@ project.exists = function(newProject) {
       alert('Cannot save. Project with name ' + newProject.client + ' already exists.')
       return false
     } else {
-      project.saveNew(newProject)
+      saveNew(newProject)
     }
   })
 }
 
-project.saveNew = function(newProject) {
+const saveNew = function(newProject) {
   let obj = {}
   obj[newProject.client] = newProject
 
@@ -61,14 +48,14 @@ project.saveNew = function(newProject) {
         console.log('Project failed to save. ' + error)
       } else {
         console.log('Saved new project ' + newProject.client)
-        project.allProjects.push(newProject)
-        project.current = newProject
+        exports.allProjects.push(newProject)
+        exports.current = newProject
       }
     }
   )
 }
 
-project.updateComponent = function(cur, key) {
+const updateComponent = function(cur, key) {
   let node = fbProjects.child(cur.client)
   let obj = {}
   obj[key] = cur[key]
@@ -83,11 +70,7 @@ project.updateComponent = function(cur, key) {
   })
 }
 
-project.addOwner = function() {
-  //if curUser is owner, allow to add other users as owners/viewers
-}
-
-project.populate = function(cur) {
+const populate = function(cur) {
   let components = ['cisterns', 'bulkMaterials', 'rainGardens', 'rainwise']
 
   components.forEach((e) => {
@@ -97,7 +80,17 @@ project.populate = function(cur) {
   })
 }
 
-project.clear = function() {
-  project.allProjects = []
-  project.current = {}
+const clear = function() {
+  exports.allProjects = []
+  exports.current = {}
+}
+
+module.exports = {
+  allProjects: [],
+  current: {},
+  build: build,
+  exists: exists,
+  updateComponent: updateComponent,
+  populate: populate,
+  clear: clear
 }

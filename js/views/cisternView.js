@@ -1,63 +1,68 @@
-var cisternView = {}
+const $ = require('jquery')
+const project = require('../models/project')
+const cistern = require('../models/cistern')
+const cisternController = require('../controllers/cisternController')
 
-cisternView.init = function() {
+const init = function() {
   $('#cistern-content').show()
     .siblings().hide()
-  cisternView.displayExisting()
-  cisternView.handleSave()
-  cisternView.handleSelector()
-  cisternView.handleNav()
-  cisternView.handleEdit()
-  cisternView.handleDelete()    //see rgVIew.editButtons
+  displayExisting()
+  handleSave()
+  handleSelector()
+  handleNav()
+  handleEdit()
+  handleDelete()
 }
 
-cisternView.displayExisting = function() {
-  let $existing = project.current.cisterns
-  if ($existing.all.length) {
+const displayExisting = function() {
+  let existing = project.current.cisterns
+  if (existing.all.length) {
     $('#cistern-selector').empty()
-    $existing.all.forEach(function(e) {
-      cisternView.populateSelector(e)
+    existing.all.forEach(function(e) {
+      populateSelector(e)
     })
-    cisternView.populateSelector($existing.uber)
-    cistern.current = $existing.all[0]
-    cisternView.render(cistern.current)
+    populateSelector(existing.uber)
+    cistern.current = existing.all[0]
+    render(cistern.current)
   } else {
     return
   }
 }
 
-cisternView.handleSave = function() {
+const handleSave = function() {
   $('#cisternForm').off('submit').on('submit', function(e) {
     e.preventDefault()
     let $val = $('#cistern-save').val()
     if ($val === 'save') {
       let dupe = cistern.preventDuplicates()
+
       if (dupe) {
         alert('That id has already been used. Please choose a different id.')
         return false
       }
+
       cisternController.save()
-      cisternView.clearForm()
+      clearForm()
     } else if ($val === 'update') {
       cisternController.save()
-      cisternView.clearForm()
+      clearForm()
       $('#cistern-save').val('save')
     }
   })
 }
 
-cisternView.render = function(cur) {
-  cisternView.populateSelector(cur)
+const render = function(cur) {
+  populateSelector(cur)
   $('#cistern-selector').val(cur.id)
-  cisternView.makeTables(cur)
+  makeTables(cur)
   if ($('#cistern-display').css('display') === 'none') {
     $('#cistern-display').show()
   }
-  cisternView.showSummary()
-  cisternView.editButtons()
+  showSummary()
+  editButtons()
 }
 
-cisternView.populateSelector = function(cur) {
+const populateSelector = function(cur) {
   let curId = cur.id
   if ($('#cistern-selector option[value="' + curId + '"]').length === 0) {
     let option = '<option value="' + curId + '">' + curId + '</option>'
@@ -65,7 +70,7 @@ cisternView.populateSelector = function(cur) {
   }
 }
 
-cisternView.showSummary = function() {
+const showSummary = function() {
   let $selected = $('#cistern-nav .button-primary').attr('id')
   if ($selected != 'summary') {
     $('#cistern-nav > #summary').addClass('button-primary')
@@ -75,23 +80,25 @@ cisternView.showSummary = function() {
   }
 }
 
-cisternView.handleSelector = function() {
+const handleSelector = function() {
   $('#cistern-selector').off('change').on('change', function() {
     let id = $('#cistern-selector').val()
+
     if (id === 'All tanks') {
-      cisternView.makeTables(project.current.cisterns.uber)
+      makeTables(project.current.cisterns.uber)
       $('#cistern-edit-buttons').hide()
     } else {
       let curCistern = util.findObjInArray(id, project.current.cisterns.all, 'id')
-      cisternView.makeTables(curCistern[0])
+      makeTables(curCistern[0])
       cistern.current = curCistern[0]
       $('#cistern-edit-buttons').show()
     }
-    cisternView.showSummary()
+
+    showSummary()
   })
 }
 
-cisternView.handleNav = function() {
+const handleNav = function() {
   $('#cistern-nav > button').off('click').on('click', function() {
     let $curNav = $('#cistern-nav > .button-primary').attr('id')
     let $nextNav = $(this).attr('id')
@@ -107,46 +114,50 @@ cisternView.handleNav = function() {
   })
 }
 
-cisternView.editButtons = function() {
+const editButtons = function() {
   $('#cistern-edit-buttons').show()
-  cisternView.handleEdit()
-  cisternView.handleDelete()
+  handleEdit()
+  handleDelete()
 }
 
-cisternView.handleEdit = function() {
+const handleEdit = function() {
   $('#cistern-edit-buttons .icon-pencil2').off('click').on('click', function(e) {
-    cisternView.populateForm(cistern.current)
+    populateForm(cistern.current)
     $('#cistern-save').val('update')
   })
 }
 
-cisternView.handleDelete = function() {
+const handleDelete = function() {
   $('#cistern-edit-buttons .icon-bin2').off('click').on('click', function(e) {
     let old = cistern.current
     let all = project.current.cisterns.all
+
     all.forEach(function(e, i) {
       if (e.id === old.id) {
         all.splice(i, 1)
       }
     })
+
     $('#cistern-selector > option[value="' + old.id + '"]').remove()
     cistern.updateUberTank()
+
     if (all.length) {
       cistern.current = all[0]
       $('#cistern-selector').val(cistern.current.id)
-      cisternView.makeTables(cistern.current)
-      cisternView.showSummary()
-      cisternView.editButtons()
+      makeTables(cistern.current)
+      showSummary()
+      editButtons()
     } else {
       cistern.current = {}
       project.current.cisterns = { all: [], uber: {} }
       $('#cistern-display').hide()
     }
+
     project.updateComponent(project.current, 'cisterns')
   })
 }
 
-cisternView.populateForm = function(cur) {
+const populateForm = function(cur) {
   $('#cisternID').val(cur.id)
   $('#cistern-roofArea').val(cur.roofArea)
   $('#cisternModel').val(cur.model)
@@ -160,7 +171,7 @@ cisternView.populateForm = function(cur) {
   $('#cistern-gauge').prop('checked', cur.gauge)
 }
 
-cisternView.clearForm = function() {
+const clearForm = function() {
   $('#cisternForm input[type="text"]').val('')
   $('#cisternModel').val('B420')
   $('#cisternBase').val('1')
@@ -168,13 +179,13 @@ cisternView.clearForm = function() {
   $('#cisternForm input[type="checkbox"]').prop('checked', false)
 }
 
-cisternView.makeTables = function(cur) {
-  $('#cistern-table-summary').html(cisternView.makeSummary(cur))
-  $('#cistern-table-labor').html(cisternView.makeLabor(cur))
-  $('#cistern-table-materials').html(cisternView.makeMaterials(cur))
+const makeTables = function(cur) {
+  $('#cistern-table-summary').html(makeSummary(cur))
+  $('#cistern-table-labor').html(makeLabor(cur))
+  $('#cistern-table-materials').html(makeMaterials(cur))
 }
 
-cisternView.makeSummary = function(cur) {
+const makeSummary = function(cur) {
   let summary = ''
   summary += `
   <tr><th>Item</th><th>Amount</th></tr>
@@ -189,7 +200,7 @@ cisternView.makeSummary = function(cur) {
   return summary
 }
 
-cisternView.makeLabor = function(cur) {
+const makeLabor = function(cur) {
   let labor = ''
   labor += `
   <tr><th>Item</th><th>Hours</th><th>Cost</th></tr>
@@ -204,7 +215,7 @@ cisternView.makeLabor = function(cur) {
   return labor
 }
 
-cisternView.makeMaterials = function(cur) {
+const makeMaterials = function(cur) {
   let materials = ''
   materials += `
   <tr><th>Item</th><th>Qty</th><th>Cost</th></tr>
@@ -243,4 +254,10 @@ cisternView.makeMaterials = function(cur) {
   <tr class="total-row"><td>Total</td><td></td><td class="money">$${cur.materialsCostTotal.toFixed(2)}</td></tr>
   `
   return materials
+}
+
+module.exports = {
+  init: init,
+  render: render,
+  populateSelector: populateSelector
 }

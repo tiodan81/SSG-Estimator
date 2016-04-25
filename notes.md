@@ -24,6 +24,8 @@
 * REMOVE NUKE() before deploying
 * don't deploy notes.md
 
+* check rgView 24
+
 # next: paths & patios
 * paths
   * gravel

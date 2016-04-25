@@ -1,22 +1,24 @@
-var rainwiseView = {}
+const $ = require('jquery')
+const project = require('../models/project')
+const rainwiseController = require('../controllers/rainwiseController')
 
-rainwiseView.init = function() {
+const init = function() {
   $('#rainwise-content').show()
     .siblings().hide()
-  rainwiseView.displayExisting()
-  rainwiseView.handleSave()
+  displayExisting()
+  handleSave()
 }
 
-rainwiseView.displayExisting = function() {
-  let $existing = project.current.rainwise.uber
-  if (Object.keys($existing).length) {
-    rainwiseView.render($existing)
+const displayExisting = function() {
+  let existing = project.current.rainwise.uber
+  if (Object.keys(existing).length) {
+    render(existing)
   } else {
     $('#rainwise-edit-buttons').hide()
   }
 }
 
-rainwiseView.handleSave = function() {
+const handleSave = function() {
   $('#rainwiseForm').off('submit').on('submit', function(e) {
     e.preventDefault()
     let $val = $('#rainwise-save').val()
@@ -29,23 +31,23 @@ rainwiseView.handleSave = function() {
   })
 }
 
-rainwiseView.render = function(rw) {
-  $('#rainwise-table').html(rainwiseView.makeTable(rw))
+const render = function(rw) {
+  $('#rainwise-table').html(makeTable(rw))
   if ($('#rainwise-display').css('display') === 'none') {
     $('#rainwise-display').show()
   }
-  rainwiseView.handleEdit()
-  rainwiseView.handleDelete()
+  handleEdit()
+  handleDelete()
 }
 
-rainwiseView.handleEdit = function() {
+const handleEdit = function() {
   $('#rainwise-edit-buttons .icon-pencil2').off('click').on('click', function(e) {
-    rainwiseView.populateForm(project.current.rainwise.uber)
+    populateForm(project.current.rainwise.uber)
     $('#rainwise-save').val('update')
   })
 }
 
-rainwiseView.handleDelete = function() {
+const handleDelete = function() {
   $('#rainwise-edit-buttons .icon-bin2').off('click').on('click', function(e) {
     project.current.rainwise.uber = {}
     $('#rainwise-table').empty()
@@ -54,12 +56,12 @@ rainwiseView.handleDelete = function() {
   })
 }
 
-rainwiseView.populateForm = function(rw) {
+const populateForm = function(rw) {
   $('#gutterFt').val(rw.gutterLength)
   $('#rw-inspection').prop('checked', rw.inspection)
 }
 
-rainwiseView.makeTable = function(rw) {
+const makeTable = function(rw) {
   let table = `<tr><th>Item</th><th>Amount</th><th>Cost</th><th>Tax</th><th>Total</th></tr>`
   if (rw.gutterLength) {
     table += `<tr><td>Gutter</td><td>${rw.gutterLength} ft</td><td class="money">$${rw.gutterCost.toFixed(2)}</td><td class="money">$${rw.tax.toFixed(2)}</td><td class="money">$${rw.gutterTotal.toFixed(2)}</td></tr>`
@@ -71,7 +73,13 @@ rainwiseView.makeTable = function(rw) {
   return table
 }
 
-rainwiseView.clearForm = function() {
+const clearForm = function() {
   $('#gutterFt').val('')
   $('#rw-inspection').prop('checked', false)
+}
+
+module.exports = {
+  init: init,
+  render: render,
+  clearForm: clearForm
 }

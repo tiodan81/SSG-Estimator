@@ -37,7 +37,6 @@ const logout = function() {
 }
 
 const userInit = function() {
-  project.getJSON()
   indexView.init()
   $('#project-selector').val('default')
   loginView.showLogoutNav()

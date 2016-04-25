@@ -1,22 +1,12 @@
-const firebase = new Firebase('https://ssgestimator.firebaseio.com/')
+const firebase = require('../firebase')
 const fbProjects = firebase.child('projects')
 const fbUsers = firebase.child('users')
 const fbAdmins = firebase.child('admins')
+const project = require('./project')
+const indexView = require('../views/indexView')
+const userController = require('../controllers/userController')
 
-const nuke = function() {
-  fbProjects.remove()
-  fbUsers.remove()
-  page('/')
-}
-
-var user = {
-  email: '',
-  uid: '',
-  admin: false,
-  projects: []
-}
-
-user.create = function(email, pwd) {
+const create = function(email, pwd) {
   firebase.createUser({
     email     : email,
     password  : pwd
@@ -36,15 +26,15 @@ user.create = function(email, pwd) {
     } else {
       console.log(userData)
       console.log('Successfully created user account with uid: ', userData.uid)
-      user.email = email
-      user.authenticate(pwd)
+      exports.email = email
+      authenticate(pwd)
     }
   })
 }
 
-user.authenticate = function(pwd) {
+const authenticate = function(pwd) {
   firebase.authWithPassword({
-    email     : user.email,
+    email     : exports.email,
     password  : pwd
   }, function(error, authData) {
     if (error) {
@@ -52,34 +42,34 @@ user.authenticate = function(pwd) {
       alert('Login failed. Please try again or create a new account.')
     } else {
       console.log('Authenticated successfully with payload: ', authData)
-      user.uid = authData.uid
-      user.isAdmin(user.uid).then((admin) => {
+      exports.uid = authData.uid
+      isAdmin(exports.uid).then((admin) => {
         if (admin) {
-          user.getAllProjects()
+          getAllProjects()
         } else {
-          user.getProjectList(user.uid)
+          getProjectList(exports.uid)
         }
       }, console.log)
     }
   })
 }
 
-user.isLoggedIn = function() {
+const isLoggedIn = function() {
   return firebase.getAuth()
 }
 
-user.logout = function() {
+const logout = function() {
   return firebase.unauth()
 }
 
-user.isAdmin = function(uid) {
+const isAdmin = function(uid) {
   return fbAdmins.child(uid).once('value').then(function(s) {
     return s.val()
   })
 }
 
-user.setProjectOwner = function(newProject) {
-  let userRef = fbUsers.child(user.uid)
+const setProjectOwner = function(newProject) {
+  let userRef = fbUsers.child(exports.uid)
   let obj = {}
   obj[newProject.client] = true
   if (userRef) {
@@ -89,7 +79,7 @@ user.setProjectOwner = function(newProject) {
   }
 }
 
-user.getProjectList = function(uid) {
+const getProjectList = function(uid) {
   console.log('loading projects for user ' + uid)
 
   fbUsers.child(uid).child('projects').once('value').then(function(snapshot) {
@@ -109,7 +99,7 @@ user.getProjectList = function(uid) {
   .then(userController.userInit())
 }
 
-user.getAllProjects = function() {
+const getAllProjects = function() {
   fbProjects.once('value').then(function(snap) {
     snap.forEach(function(proj) {
       project.allProjects.push(proj.val())
@@ -117,4 +107,19 @@ user.getAllProjects = function() {
     })
   })
   .then(userController.userInit())
+}
+
+module.exports = {
+  email: '',
+  uid: '',
+  admin: false,
+  projects: [],
+  create: create,
+  authenticate: authenticate,
+  isLoggedIn: isLoggedIn,
+  logout: logout,
+  isAdmin: isAdmin,
+  setProjectOwner: setProjectOwner,
+  getProjectList: getProjectList,
+  getAllProjects: getAllProjects
 }

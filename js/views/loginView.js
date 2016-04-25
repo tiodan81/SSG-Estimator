@@ -1,14 +1,16 @@
-var loginView = {}
+const $ = require('jquery')
+const user = require('../models/user')
+const userController = require('../controllers/userController')
 
-loginView.init = function() {
+const init = function() {
   $('#login-content').show()
     .siblings().hide()
-  loginView.showLoginNav()
-  loginView.handleCreate()
-  loginView.handleLogin()
+  showLoginNav()
+  handleCreate()
+  handleLogin()
 }
 
-loginView.handleCreate = function() {
+const handleCreate = function() {
   $('#new-user-form').off('submit').on('submit', function(e) {
     e.preventDefault()
     let email = $('#new-user').val()
@@ -18,27 +20,32 @@ loginView.handleCreate = function() {
   })
 }
 
-loginView.handleLogin = function() {
+const handleLogin = function() {
   $('#login-form').off('submit').on('submit', function(e) {
     e.preventDefault()
     user.email = $('#username').val()
     let pwd = $('#password').val()
     user.authenticate(pwd)
-    loginView.showLogoutNav()
+    showLogoutNav()
     $('#username, #password').val('')
   })
 }
 
-loginView.showLoginNav = function() {
+const showLoginNav = function() {
   $('#login-nav').text('Login')
     .removeClass('logout').addClass('login')
   $('#main-nav li:last').siblings().hide()
-  $('.login').on('click', loginView.init)
+  $('.login').on('click', init)
 }
 
-loginView.showLogoutNav = function() {
+const showLogoutNav = function() {
   $('#login-nav').text('Logout')
     .removeClass('login').addClass('logout')
   $('#main-nav li').show()
   $('.logout').on('click', userController.logout)
+}
+
+module.exports = {
+  init: init,
+  showLogoutNav: showLogoutNav
 }
