@@ -17,14 +17,13 @@
 
 # Bugs
 
+* markup !!!
+
 * bulk inches form fields look shitty
 
 * collapse nav menu on small viewports
 
-* REMOVE NUKE() before deploying
 * don't deploy notes.md
-
-* check rgView 24
 
 # next: paths & patios
 * paths
