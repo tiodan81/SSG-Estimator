@@ -4,6 +4,7 @@
   "description": "project planning tool for Stone Soup Gardens",
   "main": "server.js",
   "scripts": {
+    "build": "webpack --config webpack.config.js",
     "babel": "babel --presets es2015 js --out-dir lib"
   },
   "author": "Dan Schwartz",

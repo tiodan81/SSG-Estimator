@@ -4,22 +4,22 @@ const indexView = require('../views/indexView')
 const loginView = require('../views/loginView')
 const project = require('../models/project')
 
-const checkLogin = function() {
-  let auth = user.isLoggedIn()
-
-  if (auth) {
-    user.uid = auth.uid
-    user.isAdmin(user.uid).then((admin) => {
-      if (admin) {
-        user.getAllProjects()
-      } else {
-        user.getProjectList(user.uid)
-      }
-    }, console.log)
-  } else {
-    loginView.init()
-  }
-}
+// const checkLogin = function() {
+//   let auth = user.isLoggedIn()
+//
+//   if (auth) {
+//     user.uid = auth.uid
+//     user.isAdmin(user.uid).then((admin) => {
+//       if (admin) {
+//         user.getAllProjects()
+//       } else {
+//         user.getProjectList(user.uid)
+//       }
+//     }, console.log)
+//   } else {
+//     loginView.init()
+//   }
+// }
 
 const loginInit = function() {
   loginView.init()
@@ -47,7 +47,3 @@ module.exports = {
   loginInit: loginInit,
   logout: logout
 }
-
-$(function() {
-  userController.checkLogin()
-})
