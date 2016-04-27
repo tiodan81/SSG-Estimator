@@ -1,3 +1,4 @@
+const page = require('page')
 const indexView = require('views/indexView')
 const userController = require('controllers/userController')
 const rainwiseController = require('controllers/rainwiseController')
