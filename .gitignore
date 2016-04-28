@@ -5,3 +5,4 @@ node_modules
 rgNotes.md
 **/.DS_Store
 invoice.pages
+dist
