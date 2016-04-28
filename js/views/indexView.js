@@ -1,7 +1,7 @@
 const $ = require('jquery')
 const project = require('../models/project')
 const projectController = require('../controllers/projectController')
-const utill = require('../util')
+const util = require('../util')
 
 const init = function() {
   $('#home-content').show()

@@ -1,7 +1,6 @@
 const $ = require('jquery')
 const user = require('./user')
-const firebase = require('../firebase')
-const fbProjects = firebase.child('projects')
+const fbProjects = user.fbProjects
 
 const projectMaker = function(client, city, labor, mkup, owner) {
   this.client = client

@@ -1,13 +1,14 @@
-const firebase = require('../firebase')
-const fbProjects = firebase.child('projects')
-const fbUsers = firebase.child('users')
-const fbAdmins = firebase.child('admins')
+const firebase = require('firebase')
+const fbRef = new Firebase('https://ssgestimator.firebaseio.com/')
+const fbProjects = fbRef.child('projects')
+const fbUsers = fbRef.child('users')
+const fbAdmins = fbRef.child('admins')
 const project = require('./project')
 const indexView = require('../views/indexView')
 const userController = require('../controllers/userController')
 
 const create = function(email, pwd) {
-  firebase.createUser({
+  fbRef.createUser({
     email     : email,
     password  : pwd
   }, function(error, userData) {
@@ -33,7 +34,7 @@ const create = function(email, pwd) {
 }
 
 const authenticate = function(pwd) {
-  firebase.authWithPassword({
+  fbRef.authWithPassword({
     email     : exports.email,
     password  : pwd
   }, function(error, authData) {
@@ -55,11 +56,11 @@ const authenticate = function(pwd) {
 }
 
 const isLoggedIn = function() {
-  return firebase.getAuth()
+  return fbRef.getAuth()
 }
 
 const logout = function() {
-  return firebase.unauth()
+  return fbRef.unauth()
 }
 
 const isAdmin = function(uid) {
@@ -114,6 +115,7 @@ module.exports = {
   uid: '',
   admin: false,
   projects: [],
+  fbProjects: fbProjects,
   create: create,
   authenticate: authenticate,
   isLoggedIn: isLoggedIn,

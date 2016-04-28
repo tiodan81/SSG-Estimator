@@ -17,4 +17,6 @@ const create = function() {
   indexView.render(newProject)
 }
 
-module.exports = create
+module.exports = {
+  create: create
+}
