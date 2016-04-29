@@ -14,8 +14,7 @@
   "dependencies": {
     "express": "^4.13.3",
     "lodash": "^4.6.1",
-    "page": "^1.6.4",
-    "pushstate-server": "^1.8.1"
+    "page": "^1.6.4"
   },
   "devDependencies": {
     "babel-cli": "^6.4.5",
