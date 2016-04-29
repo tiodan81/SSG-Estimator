@@ -4,6 +4,7 @@ const user = require('../models/user')
 const indexView = require('../views/indexView')
 
 const create = function() {
+  console.log(project);
   let newProject = project.build()
 
   project.exists(newProject)

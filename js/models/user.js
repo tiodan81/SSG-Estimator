@@ -115,7 +115,6 @@ module.exports = {
   uid: '',
   admin: false,
   projects: [],
-  fbProjects: fbProjects,
   create: create,
   authenticate: authenticate,
   isLoggedIn: isLoggedIn,

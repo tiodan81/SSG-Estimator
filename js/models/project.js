@@ -1,6 +1,9 @@
 const $ = require('jquery')
+const firebase = require('firebase')
+const fbRef = new Firebase('https://ssgestimator.firebaseio.com/')
 const user = require('./user')
-const fbProjects = user.fbProjects
+const fbProjects = fbRef.child('projects')
+
 
 const projectMaker = function(client, city, labor, mkup, owner) {
   this.client = client
@@ -24,6 +27,7 @@ const build = function() {
 }
 
 const exists = function(newProject) {
+  console.log(fbRef);
   let projectNode = fbProjects.child(newProject.client)
   projectNode.once('value', function(snapshot) {
     let exists = snapshot.exists()
