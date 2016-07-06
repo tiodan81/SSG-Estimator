@@ -21,9 +21,9 @@ loginView.handleCreate = function() {
 loginView.handleLogin = function() {
   $('#login-form').off('submit').on('submit', function(e) {
     e.preventDefault()
-    user.email = $('#username').val()
+    let email = $('#username').val()
     let pwd = $('#password').val()
-    user.authenticate(pwd)
+    user.authenticate(email, pwd)
     loginView.showLogoutNav()
     $('#username, #password').val('')
   })

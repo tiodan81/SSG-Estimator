@@ -16,7 +16,7 @@ project.getJSON = function() {
   }
 }
 
-project.maker = function(client, city, labor, mkup, owner) {
+project.Maker = function(client, city, labor, mkup, owner) {
   this.client = client
   this.city = city
   this.laborRate = labor
@@ -34,7 +34,7 @@ project.build = function() {
   let labor = +($('#project-labor-rate').val())
   let markup = +('1.' + $('#project-markup-rate').val())
   let owner = user.uid
-  return new project.maker(client, city, labor, markup, owner)
+  return new project.Maker(client, city, labor, markup, owner)
 }
 
 project.exists = function(newProject) {
@@ -61,7 +61,7 @@ project.saveNew = function(newProject) {
         console.log('Project failed to save. ' + error)
       } else {
         console.log('Saved new project ' + newProject.client)
-        project.allProjects.push(newProject)
+        project.addProject(newProject)
         project.current = newProject
       }
     }
@@ -81,6 +81,10 @@ project.updateComponent = function(cur, key) {
       console.log('Saved component ' + key)
     }
   })
+}
+
+project.addProject = function(proj) {
+  project.allProjects.push(proj)
 }
 
 project.addOwner = function() {

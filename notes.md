@@ -25,8 +25,6 @@
 
 * collapse nav menu on small viewports
 
-* REMOVE NUKE() before deploying
-
 # next: paths & patios
 * paths
   * gravel

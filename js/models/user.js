@@ -3,12 +3,6 @@ const fbProjects = firebase.child('projects')
 const fbUsers = firebase.child('users')
 const fbAdmins = firebase.child('admins')
 
-const nuke = function() {
-  fbProjects.remove()
-  fbUsers.remove()
-  page('/')
-}
-
 var user = {
   email: '',
   uid: '',
@@ -37,14 +31,14 @@ user.create = function(email, pwd) {
       console.log(userData)
       console.log('Successfully created user account with uid: ', userData.uid)
       user.email = email
-      user.authenticate(pwd)
+      user.authenticate(email, pwd)
     }
   })
 }
 
-user.authenticate = function(pwd) {
+user.authenticate = function(email, pwd) {
   firebase.authWithPassword({
-    email     : user.email,
+    email     : email,
     password  : pwd
   }, function(error, authData) {
     if (error) {
@@ -52,7 +46,8 @@ user.authenticate = function(pwd) {
       alert('Login failed. Please try again or create a new account.')
     } else {
       console.log('Authenticated successfully with payload: ', authData)
-      user.uid = authData.uid
+      user.email = email
+      user.setUserID(authData.uid)
       user.isAdmin(user.uid).then((admin) => {
         if (admin) {
           user.getAllProjects()
@@ -70,6 +65,10 @@ user.isLoggedIn = function() {
 
 user.logout = function() {
   return firebase.unauth()
+}
+
+user.setUserID = function(id) {
+  return user.uid = id
 }
 
 user.isAdmin = function(uid) {
@@ -98,7 +97,7 @@ user.getProjectList = function(uid) {
     snapshot.forEach(function(proj) {
       let curProj = proj.key()
       let loadProjPromise = fbProjects.child(curProj).once('value').then(function(snap) {
-        project.allProjects.push(snap.val())
+        project.addProject(snap.val())    // TODO: MVC this
         indexView.populateSelector(snap.val())
       })
       loadingProjects.push(loadProjPromise)
@@ -112,7 +111,7 @@ user.getProjectList = function(uid) {
 user.getAllProjects = function() {
   fbProjects.once('value').then(function(snap) {
     snap.forEach(function(proj) {
-      project.allProjects.push(proj.val())
+      project.addProject(proj.val())    //TODO: MVC this
       indexView.populateSelector(proj.val())
     })
   })

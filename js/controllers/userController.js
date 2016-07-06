@@ -4,12 +4,12 @@ userController.checkLogin = function() {
   let auth = user.isLoggedIn()
 
   if (auth) {
-    user.uid = auth.uid
-    user.isAdmin(user.uid).then((admin) => {
+    user.setUserID(auth.uid)
+    user.isAdmin(auth.uid).then((admin) => {
       if (admin) {
         user.getAllProjects()
       } else {
-        user.getProjectList(user.uid)
+        user.getProjectList(auth.uid)
       }
     }, console.log)
   } else {
