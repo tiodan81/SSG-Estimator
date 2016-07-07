@@ -97,7 +97,7 @@ user.getProjectList = function(uid) {
     snapshot.forEach(function(proj) {
       let curProj = proj.key()
       let loadProjPromise = fbProjects.child(curProj).once('value').then(function(snap) {
-        project.addProject(snap.val())    // TODO: MVC this
+        project.addProject(snap.val())
         indexView.populateSelector(snap.val())
       })
       loadingProjects.push(loadProjPromise)
@@ -111,7 +111,7 @@ user.getProjectList = function(uid) {
 user.getAllProjects = function() {
   fbProjects.once('value').then(function(snap) {
     snap.forEach(function(proj) {
-      project.addProject(proj.val())    //TODO: MVC this
+      project.addProject(proj.val())
       indexView.populateSelector(proj.val())
     })
   })

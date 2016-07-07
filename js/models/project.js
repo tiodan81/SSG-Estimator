@@ -6,9 +6,6 @@ var project = {
 }
 
 project.getJSON = function() {
-  $.getJSON('/data/cisternModels.json', function(data) {
-    cistern.tankModels = data
-  })
   if (!Object.keys(materials).length) {
     $.getJSON('/data/materials.json', function(data) {
       materials = data

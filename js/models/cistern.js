@@ -1,5 +1,4 @@
 var cistern = {
-  tankModels: [],
   current: {}
 }
 
@@ -100,7 +99,7 @@ cistern.calculateHardware = function(pipe) {
 }
 
 cistern.calculateBaseMaterials = function (c) {
-  let modelInfo = cistern.tankModels[c.model]
+  let modelInfo = materials.cisternModels[c.model]
   c.salePrice = cistern.tankSalePrice(c.model, modelInfo)
   if (modelInfo.slimline) {
     c.quarterMinus = util.round('ceil', cistern.volumeRect(modelInfo.width, modelInfo.depth, c.baseHeight), 0.5)
